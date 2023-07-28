@@ -10,14 +10,15 @@
     :row-selection="{
       ...rowSelection,
     }"
-    :scroll="{ y: 'calc(100vh - 370px)' }"
   >
     <template #title>
       {{ $t('menu.article.list') }}
     </template>
     <template #extra>
       <a-space :size="16">
-        <a-button type="primary" icon="plus">新增</a-button>
+        <a-button type="primary">
+          <a-space :size="8"> <icon-plus></icon-plus>新增</a-space>
+        </a-button>
         <a-button :disabled="!rowSelection.selectedRowKeys?.length"
           >导出</a-button
         >
@@ -58,6 +59,21 @@
         {
           label: '行业资讯',
           value: 'OTHER_NEWS',
+        },
+      ],
+    },
+    {
+      field: 'status',
+      label: '状态',
+      valueType: 'select',
+      options: [
+        {
+          label: '已发布',
+          value: 1,
+        },
+        {
+          label: '未发布',
+          value: 0,
         },
       ],
     },

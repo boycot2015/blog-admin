@@ -1,6 +1,11 @@
 <template>
   <a-spin style="width: 100%">
-    <a-card style="border-width: 0 0 1px 0">
+    <a-card
+      style="border-width: 0 0 1px 0"
+      :body-style="{
+        padding: '16px 16px 8px',
+      }"
+    >
       <slot name="tabs"></slot>
       <Form
         v-bind="{
@@ -70,12 +75,9 @@
 <script lang="ts" setup>
   import { ref, watch } from 'vue';
   import useLoading from '@/hooks/loading';
-  import type {
-    FormInstance,
-    // FormItemInstance,
-  } from '@arco-design/web-vue/es/form';
+  import type { FormInstance } from '@arco-design/web-vue/es/form';
   import type { PaginationProps } from '@arco-design/web-vue/es/pagination';
-  import type { Pagination, Options } from '@/types/global';
+  import type { Pagination } from '@/types/global';
   import type {
     TableColumnData,
     TableData,
@@ -83,22 +85,13 @@
     TableRowSelection,
     TableExpandable,
   } from '@arco-design/web-vue/es/table/interface';
-
   import { BaseType } from '@arco-design/web-vue/es/_utils/types';
+  import type { FormItemProps } from './types';
   import Form from './form.vue';
-  //   import Table from './table.vue';
+
   const checkAll = ref(false);
-  //   const emits = defineEmits(['action']);
-  export type FormItemProps = {
-    labelColFlex?: number | string;
-    field: string;
-    label: string;
-    valueType: string;
-    span?: number;
-    options?: Options[];
-  };
   type ProTableProps = {
-    formItems: FormItemProps[] | undefined;
+    formItems: FormItemProps[];
     columns?: TableColumnData[] | undefined;
     data?: TableData[] | undefined;
     bordered?: boolean | TableBorder | undefined;
@@ -135,7 +128,13 @@
       : [];
     emits('update:selectedKeys', selectedKeys);
   });
-  const scroll = ref({ x: '100%', y: 'calc(100vh - 370px)', ...props.scroll });
+  const scroll = ref({
+    x: '100%',
+    y:
+      (props.scroll &&
+        (props.scroll?.y !== 'auto' ? 'calc(100vh - 365px)' : 'auto')) ||
+      'calc(100vh - 365px)',
+  });
   const fetchData = async () => {
     try {
       if (!props.request) return;
@@ -178,10 +177,10 @@
     fetchData();
   };
   const showMore = (val: boolean) => {
-    if (props.scroll === false) {
+    if (props.scroll && props.scroll.y === 'auto') {
       return;
     }
-    scroll.value.y = val ? 'calc(100vh - 405px)' : 'calc(100vh - 370px)';
+    scroll.value.y = val ? `calc(100vh - 405px)` : 'calc(100vh - 365px)';
   };
 </script>
 
