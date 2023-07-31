@@ -25,11 +25,14 @@ export interface ArticleRecord {
   updateTime: '2023-07-26 23:14:31';
 }
 export interface DataResult extends Pagination {
-  records: ArticleRecord[];
+  0: ArticleRecord[];
+  1: Pagination;
 }
 interface paramsProps extends Pagination {
   title?: string;
 }
 export function queryArticleList(params: paramsProps) {
-  return axios.get<DataResult>('/article/list', { params });
+  return axios.get<DataResult>('/article', { params }).then((res) => {
+    return { data: { records: res.data[0], total: res.data[1] } };
+  });
 }

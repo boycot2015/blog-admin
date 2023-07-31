@@ -35,6 +35,7 @@
   import useLoading from '@/hooks/loading';
   import { queryContentData } from '@/api/dashboard';
   import { useI18n } from 'vue-i18n';
+  import { isValidKey } from '@/utils/is';
   //   import type { TableData } from '@arco-design/web-vue/es/table/interface';
   import type { ContentDataRecord } from '@/api/dashboard';
 
@@ -43,23 +44,23 @@
   const { loading, setLoading } = useLoading();
   const statisticList = ref<ContentDataRecord[]>([
     {
-      title: t('workplace.onlineContent'),
+      title: t('workplace.totalNum'),
       value: 0,
-      prop: 'articleNum',
+      prop: 'total',
       imgUrl:
         '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/288b89194e657603ff40db39e8072640.svg~tplv-49unhts6dw-image.image',
     },
     {
-      title: t('workplace.putIn'),
+      title: t('workplace.articleNum'),
       value: 0,
-      prop: 'picNum',
+      prop: 'publicData',
       imgUrl:
         '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/fdc66b07224cdf18843c6076c2587eb5.svg~tplv-49unhts6dw-image.image',
     },
     {
-      title: t('workplace.newDay'),
+      title: t('workplace.visitorNum'),
       value: 0,
-      prop: 'recruitNum',
+      prop: 'visitorData',
       imgUrl:
         '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/77d74c9a245adeae1ec7fb5d4539738d.svg~tplv-49unhts6dw-image.image',
     },
@@ -74,12 +75,12 @@
   const fetchData = async () => {
     try {
       setLoading(true);
-      const { data } = await queryContentData();
+      const { data } = (await queryContentData()) as any;
       statisticList.value.map((el: ContentDataRecord) => {
         // eslint-disable-next-line no-restricted-syntax
         for (const key in data) {
-          if (el.prop === key) {
-            el.value = data[key];
+          if (el.prop === key && isValidKey(key, data)) {
+            el.value = data[key].total >= 0 ? data[key].total : data[key];
           }
         }
         return el;

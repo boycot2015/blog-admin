@@ -45,11 +45,13 @@
     {
       field: 'title',
       label: '标题名称',
+      showColon: true,
       valueType: 'text',
     },
     {
       field: 'articleType',
       label: '文章分类',
+      showColon: true,
       valueType: 'select',
       options: [
         {
@@ -65,6 +67,7 @@
     {
       field: 'status',
       label: '状态',
+      showColon: true,
       valueType: 'select',
       options: [
         {
@@ -80,6 +83,7 @@
     {
       field: 'publishTime',
       label: '发布时间',
+      showColon: true,
       span: 12,
       valueType: 'time',
     },
@@ -118,8 +122,10 @@
       },
     },
     {
-      dataIndex: 'publishTime',
+      dataIndex: 'updateTime',
       title: '发布时间',
+      render: ({ record }) =>
+        new Date(record.createTime).toLocaleString().replace(/\//g, '-'),
       width: 180,
       sortable: {
         sortDirections: ['descend', 'ascend'],
@@ -133,14 +139,14 @@
       width: 150,
       render: ({ record }) => <a-switch v-model={record.status}></a-switch>,
     },
-    {
-      dataIndex: 'isRecommended',
-      title: '是否推荐',
-      width: 150,
-      render: ({ record }) => (
-        <a-switch v-model={record.isRecommended}></a-switch>
-      ),
-    },
+    // {
+    //   dataIndex: 'isRecommended',
+    //   title: '是否推荐',
+    //   width: 150,
+    //   render: ({ record }) => (
+    //     <a-switch v-model={record.isRecommended}></a-switch>
+    //   ),
+    // },
     {
       dataIndex: 'operation',
       title: '操作',

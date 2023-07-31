@@ -26,7 +26,7 @@ const ARTICLE: AppRouteRecordRaw = {
     {
       path: '/article/add',
       name: 'AddArticle',
-      component: () => import('@/views/article/index.vue'),
+      component: () => import('@/views/article/add.vue'),
       meta: {
         locale: 'menu.article.add',
         requiresAuth: true,

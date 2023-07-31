@@ -1,6 +1,7 @@
 <template>
   <a-spin style="width: 100%">
     <a-card
+      v-if="props.formItems"
       style="border-width: 0 0 1px 0"
       :body-style="{
         padding: '16px 16px 8px',
@@ -11,6 +12,7 @@
         v-bind="{
           ...props,
         }"
+        show-more
         :form-items="props.formItems"
         @search="search"
         @reset="reset"
@@ -62,6 +64,7 @@
               show-page-size
               :page-size-options="[10, 20, 30, 50, 100]"
               :total="pageData.total"
+              v-bind="props.pagination"
               @change="pageChange"
               @page-size-change="pageSizeChange"
             ></a-pagination>
@@ -91,11 +94,11 @@
 
   const checkAll = ref(false);
   type ProTableProps = {
-    formItems: FormItemProps[];
+    formItems?: FormItemProps[];
     columns?: TableColumnData[] | undefined;
     data?: TableData[] | undefined;
     bordered?: boolean | TableBorder | undefined;
-    rowKey: string;
+    rowKey?: string | undefined;
     checkAll?: string | boolean;
     rowSelection?: TableRowSelection | undefined;
     expandable?: TableExpandable | undefined;
@@ -104,7 +107,7 @@
     title?: string | undefined;
     request?: ((args: any) => Promise<any>) | undefined;
     scroll?: { x?: number | string; y?: number | string };
-    selectedKeys: any[] | undefined;
+    selectedKeys?: BaseType[] | undefined;
   };
   const props = defineProps<ProTableProps>();
   const emits = defineEmits(['update:selectedKeys']);
@@ -123,8 +126,9 @@
     emits('update:selectedKeys', selectedKeys);
   });
   watch(checkAll, () => {
+    if (!props.rowKey) return;
     selectedKeys.value = checkAll.value
-      ? renderList.value?.map((el) => el[props.rowKey])
+      ? renderList.value?.map((el) => el[props.rowKey || ''])
       : [];
     emits('update:selectedKeys', selectedKeys);
   });
@@ -142,10 +146,13 @@
       const { current, pageSize: size } = pageData.value;
       const params = { current, size, ...formData.value };
       const { data } = await props.request(params);
+
       renderList.value = data.records;
       pageData.value.total = data.total;
-      if (checkAll.value) {
-        selectedKeys.value = renderList.value?.map((el) => el[props.rowKey]);
+      if (checkAll.value && props.rowKey) {
+        selectedKeys.value = renderList.value?.map(
+          (el) => el[props.rowKey || '']
+        );
       }
     } catch (err) {
       // you can report use errorHandler or other
@@ -185,8 +192,30 @@
 </script>
 
 <style scoped lang="less">
-  .general-card {
-    min-height: 395px;
+  //   .general-card {
+  //     min-height: 395px;
+  //   }
+  :deep(.arco-form) {
+    .arco-form-item {
+      padding: 0 5px;
+      border: 1px solid var(--color-neutral-3);
+    }
+  }
+  :deep(.arco-picker),
+  :deep(.arco-select-view-single),
+  :deep(.arco-input-wrapper) {
+    background-color: #fff;
+    border: none;
+  }
+  .arco-picker,
+  .arco-select-view-single,
+  .arco-input-wrapper {
+    background-color: #fff;
+    border: 1px solid var(--color-neutral-3);
+    &:hover {
+      background-color: #fff;
+      border: 1px solid rgba(var(--primary-6));
+    }
   }
   :deep(.arco-table-tr) {
     height: 44px;

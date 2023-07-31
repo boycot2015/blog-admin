@@ -51,3 +51,9 @@ export function isExist(obj: any): boolean {
 export function isWindow(el: any): el is Window {
   return el === window;
 }
+export function isValidKey(
+  key: string | number | symbol,
+  object: object
+): key is keyof typeof object {
+  return key in object;
+}

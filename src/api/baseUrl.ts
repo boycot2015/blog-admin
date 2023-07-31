@@ -4,7 +4,7 @@
 let baseUrl = 'http://192.168.3.109:8080';
 let baseServeUrl = '';
 let baseWebUrl = '';
-console.log(import.meta.env.MODE, 'import.meta.env.VITE_API_BASE_URL');
+// console.log(import.meta.env.MODE, 'import.meta.env.VITE_API_BASE_URL');
 const env =
   import.meta.env.MODE === 'development'
     ? 'development'
@@ -20,7 +20,7 @@ switch (env) {
     baseUrl = 'https://skycrane.dev.yunzhonghe.com';
     baseUrl = 'https://skycrane.show.yunzhonghe.com'; // aliyun预演环境url
     baseUrl = 'http://blog.api.boycot.top'; // aliyun预演环境url
-    baseUrl = 'http://doc.yunzhonghe.com/mock/422'; // mock url
+    // baseUrl = 'http://doc.yunzhonghe.com/mock/422'; // mock url
     break;
   case 'test':
     baseServeUrl = 'http://gateway.test.limofang.cn';

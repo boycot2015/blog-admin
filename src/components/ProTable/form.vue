@@ -1,14 +1,19 @@
 <template>
   <a-row :gutter="16">
-    <a-form ref="formRef" :model="formData" layout="inline">
+    <a-form
+      ref="formRef"
+      :model="formData"
+      :label-align="props.labelAlign"
+      :layout="props.layout || 'inline'"
+    >
       <a-col
         v-for="(item, index) in props.formItems"
         v-show="showMore || index < 3"
         :key="item.field"
         :span="item.span || 6"
         :xs="24"
-        :sm="12"
-        :md="8"
+        :sm="props.layout == 'horizontal' ? 24 : 12"
+        :md="props.layout == 'horizontal' ? 24 : 8"
         :lg="item.span || 6"
         :xl="item.span || 6"
       >
@@ -25,6 +30,14 @@
             style="width: 100%"
             :placeholder="(item.attrs && item.attrs.placeholder) || '请输入'"
           ></a-input>
+          <a-textarea
+            v-if="item.valueType === 'textarea'"
+            v-model="formData[item.field]"
+            style="width: 100%"
+            show-word-limit
+            :max-length="500"
+            :placeholder="(item.attrs && item.attrs.placeholder) || '请输入'"
+          ></a-textarea>
           <a-select
             v-if="item.valueType === 'select' && item.options"
             v-model="formData[item.field]"
@@ -48,18 +61,21 @@
               defaultValue: ['00:00:00', '23:59:59'],
             }"
           ></a-range-picker>
+          <slot v-if="item.slotName"></slot>
         </a-form-item>
       </a-col>
-      <a-col :span="6">
+      <a-col :span="props.layout == 'horizontal' ? 24 : 6">
         <a-space :size="16">
-          <a-button type="outline" @click="onShowMore">
+          <a-button v-if="props.showMore" type="outline" @click="onShowMore">
             <a-space :size="5">
-              <span>{{ !showMore ? '展开' : '收起' }}</span>
+              <span>{{ !showMore ? '展开' : '收起' }}条件</span>
               <icon-down v-if="!showMore" /> <icon-up v-else
             /></a-space>
           </a-button>
-          <a-button type="primary" @click="search">搜索</a-button>
-          <a-button @click="reset">重置</a-button>
+          <a-button type="primary" @click="search">{{
+            props.submitText || '搜索'
+          }}</a-button>
+          <a-button @click="reset">{{ props.resetText || '重置' }}</a-button>
         </a-space>
       </a-col>
     </a-form>
@@ -68,10 +84,16 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import type { FormInstance } from '@arco-design/web-vue/es/form';
+  import type { FormInstance, FieldRule } from '@arco-design/web-vue/es/form';
   import type { FormItemProps } from './types';
 
   export type FormProp = {
+    layout?: 'inline' | 'horizontal' | 'vertical' | undefined;
+    submitText?: string;
+    resetText?: string;
+    labelAlign?: 'left' | 'right';
+    showMore?: boolean;
+    rules?: FieldRule | FieldRule[];
     formItems: FormItemProps[];
   };
   const emits = defineEmits(['search', 'reset', 'showMore']);
@@ -84,7 +106,11 @@
     emits('showMore', showMore.value);
   };
   const search = () => {
-    emits('search', formData.value);
+    formRef.value?.validate((val) => {
+      if (val) {
+        emits('search', formData.value);
+      }
+    });
   };
   const reset = () => {
     formRef.value?.resetFields();
@@ -95,21 +121,6 @@
 <style scoped lang="less">
   .general-card {
     min-height: 395px;
-  }
-  :deep(.arco-form) {
-    .arco-form-item {
-      padding: 0 5px;
-      border: 1px solid var(--color-neutral-3);
-      .arco-form-item-label::after {
-        content: ':';
-      }
-      .arco-picker,
-      .arco-select-view-single,
-      .arco-input-wrapper {
-        background-color: #fff;
-        border: none;
-      }
-    }
   }
   :deep(.arco-table-tr) {
     height: 44px;

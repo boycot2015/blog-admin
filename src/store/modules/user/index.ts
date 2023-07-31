@@ -17,7 +17,7 @@ const useUserStore = defineStore('user', {
       const data = jwtDecode(getToken() as string) as any;
       return {
         role: data.authorities,
-        name: data.userName,
+        name: data.userName || data.username,
         mobile: data.mobile,
         roleId: data.roleId,
         accountId: data.id,
@@ -86,7 +86,7 @@ const useUserStore = defineStore('user', {
             roleId: 1
             userName: "超级管理员"
          */
-        console.log(data, 'state');
+        // console.log(data, 'state');
         this.$patch({
           role: data.authorities,
           name: data.userName || data.username,
