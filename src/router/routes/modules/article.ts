@@ -33,6 +33,17 @@ const ARTICLE: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
+    {
+      path: '/article/edit',
+      name: 'AddArticle',
+      component: () => import('@/views/article/add.vue'),
+      meta: {
+        locale: 'menu.article.edit',
+        requiresAuth: true,
+        hideInMenu: true,
+        roles: ['*'],
+      },
+    },
   ],
 };
 

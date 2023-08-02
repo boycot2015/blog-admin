@@ -189,6 +189,10 @@
     }
     scroll.value.y = val ? `calc(100vh - 405px)` : 'calc(100vh - 365px)';
   };
+  defineExpose({
+    reload: reset,
+    search,
+  });
 </script>
 
 <style scoped lang="less">

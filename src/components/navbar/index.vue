@@ -2,13 +2,13 @@
   <div class="navbar">
     <div class="left-side">
       <a-space>
-        <img alt="logo" src="@/assets/images/logo.png" />
-        <!-- <a-typography-title
+        <!-- <img alt="logo" src="@/assets/images/logo.png" /> -->
+        <a-typography-title
           :style="{ margin: 0, fontSize: '18px' }"
           :heading="5"
         >
           {{ $t('website.title') }}
-        </a-typography-title> -->
+        </a-typography-title>
         <icon-menu-fold
           v-if="!topMenu && appStore.device === 'mobile'"
           style="font-size: 22px; cursor: pointer"
@@ -198,13 +198,13 @@
   import { useAppStore, useUserStore } from '@/store';
   import { LOCALE_OPTIONS } from '@/locale';
   import useLocale from '@/hooks/locale';
-  import useUser from '@/hooks/user';
+  //   import useUser from '@/hooks/user';
   import Menu from '@/components/menu/index.vue';
-  import MessageBox from '../message-box/index.vue';
+  //   import MessageBox from '../message-box/index.vue';
 
   const appStore = useAppStore();
   const userStore = useUserStore();
-  const { logout } = useUser();
+  const { logoutCallBack } = userStore;
   const { changeLocale, currentLocale } = useLocale();
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
   const locales = [...LOCALE_OPTIONS];
@@ -238,18 +238,18 @@
   const setVisible = () => {
     appStore.updateSettings({ globalSettings: true });
   };
-  const refBtn = ref();
+  //   const refBtn = ref();
   const triggerBtn = ref();
-  const setPopoverVisible = () => {
-    const event = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    });
-    refBtn.value.dispatchEvent(event);
-  };
+  //   const setPopoverVisible = () => {
+  //     const event = new MouseEvent('click', {
+  //       view: window,
+  //       bubbles: true,
+  //       cancelable: true,
+  //     });
+  //     refBtn.value.dispatchEvent(event);
+  //   };
   const handleLogout = () => {
-    logout();
+    logoutCallBack();
   };
   const setDropDownVisible = () => {
     const event = new MouseEvent('click', {

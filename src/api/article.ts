@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { Pagination } from '@/types/global';
+import type { HttpResponse } from '@/api/interceptor';
 
 export interface ArticleRecord {
   articleAbstract: '传播环境决定企业营销行为，当报纸杂志等纸质媒介、电台电视等电波媒介成为过去式，互联网、移动互联网等数';
@@ -28,11 +29,33 @@ export interface DataResult extends Pagination {
   0: ArticleRecord[];
   1: Pagination;
 }
-interface paramsProps extends Pagination {
+interface paramsProps {
   title?: string;
+  id?: number | string | unknown | undefined;
+  content?: string;
+  category?: string;
+  tagIds?: number[];
 }
-export function queryArticleList(params: paramsProps) {
+export function queryArticleList(params: paramsProps & Pagination) {
   return axios.get<DataResult>('/article', { params }).then((res) => {
     return { data: { records: res.data[0], total: res.data[1] } };
+  });
+}
+export function queryArticle(params: paramsProps) {
+  return axios.get<any>('/article/getById', { params }).then((res) => {
+    return { data: res.data };
+  });
+}
+export function addArticle(params: paramsProps) {
+  return axios.post<HttpResponse>('/article/add', params);
+}
+export function editArticle(params: paramsProps) {
+  return axios.post<HttpResponse>('/article/update', params);
+}
+export function deleteArticle(params: paramsProps) {
+  return axios({
+    method: 'post',
+    url: '/article/delete',
+    params,
   });
 }

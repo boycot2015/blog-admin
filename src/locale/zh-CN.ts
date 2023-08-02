@@ -6,12 +6,13 @@ import localeWorkplace from '@/views/dashboard/workplace/locale/zh-CN';
 import localeSettings from './zh-CN/settings';
 
 export default {
-  'website.title': '云中鹤官网',
-  'menu.website': '云中鹤官网',
+  'website.title': '博客后台管理系统',
+  'menu.website': '博客后台管理系统',
   'menu.dashboard': '首页',
   'menu.article.list': '文章列表',
   'menu.article': '文章',
   'menu.article.add': '新增文章',
+  'menu.article.eidt': '编辑文章',
   'menu.atlas': '图册',
   'menu.atlas.list': '图册列表',
   'menu.atlas.add': '新增图册',

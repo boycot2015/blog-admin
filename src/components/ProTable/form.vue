@@ -61,7 +61,21 @@
               defaultValue: ['00:00:00', '23:59:59'],
             }"
           ></a-range-picker>
-          <slot v-if="item.slotName"></slot>
+          <Editor
+            v-if="item.valueType === 'rich'"
+            style="height: 100%; width: 100%"
+            :style="item.attrs && item.attrs.style"
+            :content="formData[item.field]"
+            :catch-data="(val: any) => {
+                formData[item.field] = val
+            }"
+          ></Editor>
+          <slot
+            v-if="item.slotName"
+            :name="item.slotName"
+            :form="formData"
+            :form-item="item"
+          ></slot>
         </a-form-item>
       </a-col>
       <a-col :span="props.layout == 'horizontal' ? 24 : 6">
@@ -72,6 +86,7 @@
               <icon-down v-if="!showMore" /> <icon-up v-else
             /></a-space>
           </a-button>
+          <slot name="actions"></slot>
           <a-button type="primary" @click="search">{{
             props.submitText || '搜索'
           }}</a-button>
@@ -83,7 +98,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { computed, ref } from 'vue';
   import type { FormInstance, FieldRule } from '@arco-design/web-vue/es/form';
   import type { FormItemProps } from './types';
 
@@ -94,12 +109,14 @@
     labelAlign?: 'left' | 'right';
     showMore?: boolean;
     rules?: FieldRule | FieldRule[];
+    defaultValues?: any;
     formItems: FormItemProps[];
   };
   const emits = defineEmits(['search', 'reset', 'showMore']);
   const props = defineProps<FormProp>();
   const formRef = ref<FormInstance>();
-  const formData = ref({}) as any;
+  const formData = computed(() => props.defaultValues || {}) as any;
+
   const showMore = ref(false);
   const onShowMore = () => {
     showMore.value = !showMore.value;
@@ -107,7 +124,7 @@
   };
   const search = () => {
     formRef.value?.validate((val) => {
-      if (val) {
+      if (!val) {
         emits('search', formData.value);
       }
     });

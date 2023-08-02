@@ -29,6 +29,7 @@ const atlas: AppRouteRecordRaw = {
       component: () => import('@/views/atlas/index.vue'),
       meta: {
         locale: 'menu.atlas.add',
+        hideInMenu: true,
         requiresAuth: true,
         roles: ['*'],
       },

@@ -1,5 +1,6 @@
 <template>
   <ProTable
+    ref="tableRef"
     v-model:selectedKeys="rowSelection.selectedRowKeys"
     row-key="id"
     check-all="全选所有结果"
@@ -29,18 +30,21 @@
 
 <script lang="tsx" setup>
   import { ref } from 'vue';
-  import { queryArticleList } from '@/api/article';
+  import { queryArticleList, deleteArticle } from '@/api/article';
   import type {
     TableColumnData,
+    TableData,
     TableRowSelection,
   } from '@arco-design/web-vue/es/table';
-  import ProTable from '@/components/ProTable/index.vue';
+  import router from '@/router';
+  import { Modal } from '@arco-design/web-vue';
 
   const rowSelection = ref<TableRowSelection>({
     selectedRowKeys: [],
     showCheckedAll: true,
   });
   const formData = ref({}) as any;
+  const tableRef = ref({}) as any;
   const formItems = ref([
     {
       field: 'title',
@@ -88,6 +92,17 @@
       valueType: 'time',
     },
   ]);
+  const onDelete = (record: TableData) => {
+    Modal.warning({
+      title: '温馨提示',
+      content: '确认删除？',
+      hideCancel: false,
+      onOk: () => {
+        deleteArticle({ id: record.id });
+        tableRef.value?.reload();
+      },
+    });
+  };
   const columns = ref<TableColumnData[]>([
     {
       dataIndex: 'id',
@@ -154,9 +169,24 @@
       width: 180,
       render: ({ record }) => (
         <a-space size={8} record={record}>
-          <a-link>查看</a-link>
-          <a-link>编辑</a-link>
-          <a-link>删除</a-link>
+          <a-link
+            onClick={() => {
+              router.push({
+                path: '/article/edit',
+                query: { id: record.id, isView: 'true' },
+              });
+            }}
+          >
+            查看
+          </a-link>
+          <a-link
+            onClick={() => {
+              router.push({ path: '/article/edit', query: { id: record.id } });
+            }}
+          >
+            编辑
+          </a-link>
+          <a-link onClick={() => onDelete(record)}>删除</a-link>
         </a-space>
       ),
     },

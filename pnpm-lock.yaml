@@ -64,6 +64,9 @@ dependencies:
   vue-router:
     specifier: ^4.0.14
     version: 4.1.6(vue@3.2.47)
+  wangeditor:
+    specifier: ^4.7.15
+    version: 4.7.15
 
 devDependencies:
   '@arco-plugins/vite-vue':
@@ -501,6 +504,21 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@babel/runtime-corejs3@7.22.6:
+    resolution: {integrity: sha512-M+37LLIRBTEVjktoJjbw4KVhupF0U/3PYUCbBwgAd9k17hoKhRu1n935QiG7Tuxv0LJOMrb2vuKEeYUlv0iyiw==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      core-js-pure: 3.32.0
+      regenerator-runtime: 0.13.11
+    dev: false
+
+  /@babel/runtime@7.22.6:
+    resolution: {integrity: sha512-wDb5pWm4WDdF6LFUde3Jl8WzPA+3ZbxYqkC6xAXuD3irdEHN1k0NfTRrJD8ZD378SJ61miMLCqIOXYhd8x+AJQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.13.11
+    dev: false
 
   /@babel/template@7.20.7:
     resolution: {integrity: sha512-8SegXApWe6VoNw0r9JHpSteLKTpTiLZ4rMlGIm9JQ18KiCtyQiAMEazujAHrUS5flrcqYZa75ukev3P6QmUwUw==}
@@ -2318,6 +2336,11 @@ packages:
     resolution: {integrity: sha512-XgZ0pFcakEUlbwQEVNg3+QAis1FyTL3Qel9FYy8pSkQqoG3PNoT0bOCQtOXcOkur21r2Eq2kI+IE+gsmAEVlYw==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /core-js-pure@3.32.0:
+    resolution: {integrity: sha512-qsev1H+dTNYpDUEURRuOXMvpdtAnNEvQWS/FMJ2Vb5AY8ZP4rAPQldkE27joykZPJTe0+IVgHZYh1P5Xu1/i1g==}
+    requiresBuild: true
+    dev: false
 
   /core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -6554,7 +6577,7 @@ packages:
     dependencies:
       htmlparser2: 3.10.1
       postcss: 7.0.39
-      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@8.4.21)
+      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@7.0.39)
     dev: true
 
   /postcss-html@1.5.0:
@@ -6575,7 +6598,7 @@ packages:
     dependencies:
       '@babel/core': 7.21.4
       postcss: 7.0.39
-      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@8.4.21)
+      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@7.0.39)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -6594,7 +6617,7 @@ packages:
       postcss-syntax: '>=0.36.0'
     dependencies:
       postcss: 7.0.39
-      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@8.4.21)
+      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@7.0.39)
       remark: 10.0.1
       unist-util-find-all-after: 1.0.5
     dev: true
@@ -6680,7 +6703,7 @@ packages:
       postcss: 8.4.21
     dev: true
 
-  /postcss-syntax@0.36.2(postcss-html@1.5.0)(postcss@8.4.21):
+  /postcss-syntax@0.36.2(postcss-html@1.5.0)(postcss@7.0.39):
     resolution: {integrity: sha512-nBRg/i7E3SOHWxF3PpF5WnJM/jQ1YpY9000OaVXlAQj6Zp/kIqJxEDWIZ67tAd7NLuk7zqN4yqe9nc0oNAOs1w==}
     peerDependencies:
       postcss: '>=5.0.0'
@@ -6701,7 +6724,7 @@ packages:
       postcss-scss:
         optional: true
     dependencies:
-      postcss: 8.4.21
+      postcss: 7.0.39
       postcss-html: 1.5.0
     dev: true
 
@@ -6927,6 +6950,10 @@ packages:
       indent-string: 4.0.0
       strip-indent: 3.0.0
     dev: true
+
+  /regenerator-runtime@0.13.11:
+    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
+    dev: false
 
   /regex-not@1.0.2:
     resolution: {integrity: sha512-J6SDjUgDxQj5NusnOtdFxDwN/+HWykR8GELwctJ7mdqhcyy1xEc4SRFHUXvxTp661YaVKAjfRLZ9cCqS6tn32A==}
@@ -7877,7 +7904,7 @@ packages:
       postcss-sass: 0.3.5
       postcss-scss: 2.1.1
       postcss-selector-parser: 3.1.2
-      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@8.4.21)
+      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@7.0.39)
       postcss-value-parser: 3.3.1
       resolve-from: 4.0.0
       signal-exit: 3.0.7
@@ -8164,7 +8191,6 @@ packages:
 
   /tslib@2.5.0:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
-    dev: true
 
   /tsutils@3.21.0(typescript@4.9.5):
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
@@ -8667,6 +8693,14 @@ packages:
       '@vue/runtime-dom': 3.2.47
       '@vue/server-renderer': 3.2.47(vue@3.2.47)
       '@vue/shared': 3.2.47
+
+  /wangeditor@4.7.15:
+    resolution: {integrity: sha512-aPTdREd8BxXVyJ5MI+LU83FQ7u1EPd341iXIorRNYSOvoimNoZ4nPg+yn3FGbB93/owEa6buLw8wdhYnMCJQLg==}
+    dependencies:
+      '@babel/runtime': 7.22.6
+      '@babel/runtime-corejs3': 7.22.6
+      tslib: 2.5.0
+    dev: false
 
   /webpack-sources@3.2.3:
     resolution: {integrity: sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==}

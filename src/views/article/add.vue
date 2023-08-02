@@ -7,11 +7,13 @@
   >
     <ProForm
       class="rule-form"
-      style="width: 600px"
+      style="width: 100%"
       submit-text="提交"
-      label-align="right"
+      label-align="left"
       layout="horizontal"
+      :default-values="formData"
       :form-items="formItems"
+      @search="onSubmit"
     >
     </ProForm>
   </a-card>
@@ -19,7 +21,8 @@
 
 <script lang="tsx" setup>
   import { ref } from 'vue';
-  import ProForm from '@/components/ProTable/form.vue';
+  import { addArticle, queryArticle } from '@/api/article';
+  import { useRouter, useRoute } from 'vue-router';
 
   const formData = ref({}) as any;
   const formItems = ref([
@@ -27,13 +30,19 @@
       field: 'title',
       label: '标题名称',
       span: 24,
+      labelColProps: {
+        span: 3,
+      },
       rules: [{ required: true, message: '标题不能为空' }],
       showColon: true,
       valueType: 'text',
     },
     {
-      field: 'articleType',
+      field: 'category',
       label: '文章分类',
+      labelColProps: {
+        span: 3,
+      },
       rules: [{ required: true, message: '文章分类不能为空' }],
       showColon: true,
       span: 24,
@@ -52,16 +61,38 @@
     {
       field: 'content',
       label: '内容',
+      labelColProps: {
+        span: 3,
+      },
       rules: [{ required: true, message: '内容不能为空' }],
       showColon: true,
       span: 24,
-      valueType: 'textarea',
+      attrs: {
+        style: {
+          width: '100%',
+          height: '500px',
+        },
+      },
+      valueType: 'rich',
     },
   ]);
-  formItems.value.map((el) => {
-    formData[el.field] = undefined;
-    return el;
-  });
+  const route = useRoute();
+  const fetchData = () => {
+    if (!route.query.id) return;
+    queryArticle({ id: route.query.id }).then((res: any) => {
+      formData.value.title = res.data.title;
+      formData.value.content = res.data.content;
+    });
+  };
+  fetchData();
+  const router = useRouter();
+  const onSubmit = (val: any) => {
+    addArticle({ ...val }).then((res: any) => {
+      if (res.success) {
+        router.push('/article');
+      }
+    });
+  };
 </script>
 
 <style scoped lang="less">
