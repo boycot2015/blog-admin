@@ -38,32 +38,32 @@
       showColon: true,
       valueType: 'text',
     },
-    {
-      field: 'categoryId',
-      label: '文章分类',
-      labelColProps: {
-        span: 3,
-      },
-      rules: [{ required: true, message: '文章分类不能为空' }],
-      showColon: true,
-      span: 24,
-      valueType: 'select',
-      request: '/category/get',
-      props: {
-        label: 'value',
-        value: 'id',
-      },
-      options: [
-        {
-          label: '公司动态',
-          value: 'COMPANY_NEWS',
-        },
-        {
-          label: '行业资讯',
-          value: 'OTHER_NEWS',
-        },
-      ],
-    },
+    // {
+    //   field: 'categoryId',
+    //   label: '文章分类',
+    //   labelColProps: {
+    //     span: 3,
+    //   },
+    //   rules: [{ required: true, message: '文章分类不能为空' }],
+    //   showColon: true,
+    //   span: 24,
+    //   valueType: 'select',
+    //   request: '/category/get',
+    //   props: {
+    //     label: 'value',
+    //     value: 'id',
+    //   },
+    //   options: [
+    //     {
+    //       label: '公司动态',
+    //       value: 'COMPANY_NEWS',
+    //     },
+    //     {
+    //       label: '行业资讯',
+    //       value: 'OTHER_NEWS',
+    //     },
+    //   ],
+    // },
     {
       field: 'content',
       label: '内容',
