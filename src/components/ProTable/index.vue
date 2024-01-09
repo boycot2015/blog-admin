@@ -62,7 +62,7 @@
               show-total
               show-jumper
               show-page-size
-              :page-size-options="[10, 20, 30, 50, 100]"
+              :page-size-options="[10, 20, 50, 100]"
               :total="pageData.total"
               v-bind="props.pagination"
               @change="pageChange"
@@ -78,7 +78,7 @@
 <script lang="ts" setup>
   import { ref, watch } from 'vue';
   import useLoading from '@/hooks/loading';
-  import type { FormInstance } from '@arco-design/web-vue/es/form';
+  // import type { FormInstance } from '@arco-design/web-vue/es/form';
   import type { PaginationProps } from '@arco-design/web-vue/es/pagination';
   import type { Pagination } from '@/types/global';
   import type {
@@ -102,7 +102,7 @@
     checkAll?: string | boolean;
     rowSelection?: TableRowSelection | undefined;
     expandable?: TableExpandable | undefined;
-    pagination?: boolean | PaginationProps;
+    pagination?: boolean | PaginationProps | any;
     pagePosition?: string | undefined;
     title?: string | undefined;
     request?: ((args: any) => Promise<any>) | undefined;
@@ -111,7 +111,7 @@
   };
   const props = defineProps<ProTableProps>();
   const emits = defineEmits(['update:selectedKeys']);
-  const formRef = ref<FormInstance>();
+  //   const formRef = ref<FormInstance>();
   const { loading, setLoading } = useLoading();
   const formData = ref({});
   const renderList = ref<any[]>();
@@ -168,10 +168,9 @@
   };
   const reset = () => {
     pageData.value.current = 1;
-    formRef.value?.resetFields();
-    formData.value = {};
     selectedKeys.value = [];
     checkAll.value = false;
+    formData.value = {};
     fetchData();
   };
   const pageSizeChange = (val: any) => {

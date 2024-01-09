@@ -3,12 +3,21 @@
     <a-form
       ref="formRef"
       :model="formData"
+      :style="{
+        margin: centered ? '0 auto' : '',
+        maxWidth: centered ? '800px' : '100%',
+      }"
       :label-align="props.labelAlign"
       :layout="props.layout || 'inline'"
     >
       <a-col
         v-for="(item, index) in props.formItems"
-        v-show="showMore || index < 3"
+        v-show="
+          showMore ||
+          index < 3 ||
+          item.span === 24 ||
+          props.formItems.length < 3
+        "
         :key="item.field"
         :span="item.span || 6"
         :xs="24"
@@ -27,6 +36,7 @@
           <a-input
             v-if="item.valueType === 'text'"
             v-model="formData[item.field]"
+            :disabled="readOnly"
             style="width: 100%"
             :placeholder="(item.attrs && item.attrs.placeholder) || '请输入'"
           ></a-input>
@@ -36,25 +46,37 @@
             style="width: 100%"
             show-word-limit
             :max-length="500"
+            :disabled="readOnly"
             :placeholder="(item.attrs && item.attrs.placeholder) || '请输入'"
           ></a-textarea>
           <a-select
-            v-if="item.valueType === 'select' && item.options"
+            v-if="item.valueType === 'select' && options[item.field]"
             v-model="formData[item.field]"
             style="width: 100%"
+            :disabled="readOnly"
             :placeholder="(item.attrs && item.attrs.placeholder) || '请选择'"
           >
             <a-option
-              v-for="option in item.options"
+              v-for="option in options[item.field]"
               :key="option.label"
               :label="option.label"
               :value="option.value || ''"
             ></a-option>
           </a-select>
+          <a-radio-group
+            v-if="item.valueType === 'radio' && options[item.field]"
+            v-model="formData[item.field]"
+            style="width: 100%"
+            :disabled="readOnly"
+            :options="(item.options as any)"
+            :placeholder="(item.attrs && item.attrs.placeholder) || '请选择'"
+          >
+          </a-radio-group>
           <a-range-picker
             v-if="item.valueType === 'time'"
             v-model="formData[item.field]"
             show-time
+            :disabled="readOnly"
             format="YYYY-MM-DD HH:mm:ss"
             style="width: 100%"
             :time-picker-props="{
@@ -63,6 +85,7 @@
           ></a-range-picker>
           <Editor
             v-if="item.valueType === 'rich'"
+            :disabled="readOnly"
             style="height: 100%; width: 100%"
             :style="item.attrs && item.attrs.style"
             :content="formData[item.field]"
@@ -78,9 +101,17 @@
           ></slot>
         </a-form-item>
       </a-col>
-      <a-col :span="props.layout == 'horizontal' ? 24 : 6">
+      <a-col
+        v-if="!readOnly"
+        :span="props.layout == 'horizontal' ? 22 : 6"
+        :style="{ textAlign: centered ? 'center' : 'right' }"
+      >
         <a-space :size="16">
-          <a-button v-if="props.showMore" type="outline" @click="onShowMore">
+          <a-button
+            v-if="props.showMore && props.formItems.length > 2"
+            type="outline"
+            @click="onShowMore"
+          >
             <a-space :size="5">
               <span>{{ !showMore ? '展开' : '收起' }}条件</span>
               <icon-down v-if="!showMore" /> <icon-up v-else
@@ -98,8 +129,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref } from 'vue';
+  import { ref, reactive, watch } from 'vue';
   import type { FormInstance, FieldRule } from '@arco-design/web-vue/es/form';
+  import axios from 'axios';
   import type { FormItemProps } from './types';
 
   export type FormProp = {
@@ -110,12 +142,57 @@
     showMore?: boolean;
     rules?: FieldRule | FieldRule[];
     defaultValues?: any;
+    readOnly?: boolean;
+    centered?: boolean;
     formItems: FormItemProps[];
   };
   const emits = defineEmits(['search', 'reset', 'showMore']);
   const props = defineProps<FormProp>();
   const formRef = ref<FormInstance>();
-  const formData = computed(() => props.defaultValues || {}) as any;
+  const options = reactive<any>({});
+  const formData = reactive({
+    ...(props.defaultValues || {}),
+  }) as any;
+  watch(props.defaultValues, (val) => {
+    Object.assign(formData, val);
+  });
+  props.formItems.map(async (el: any) => {
+    options[el.field] = el.options;
+    if (el.request) {
+      options[el.field] = [];
+      if (typeof el.request === 'string') {
+        el.method = el.method || 'get';
+        const params =
+          el.method.toLowerCase() === 'get'
+            ? { params: el.params }
+            : { data: el.params };
+        options[el.field] = await axios({
+          url: el.request,
+          params,
+          method: el.method || 'get',
+          headers: el.headers,
+        }).then((res) => {
+          let data: any = [];
+          if (el.resultKey) {
+            el.resultKey.split('.').some((key: string) => {
+              data = res.data[key];
+              if (data) return true;
+              return key;
+            });
+          } else {
+            data = res.data[0] as any;
+          }
+
+          return data.map((val: any) => ({
+            label: val[el.props?.label || 'label'],
+            value: val[el.props?.value || 'value'],
+          }));
+        });
+      } else if (el.request instanceof Function) {
+        options[el.field] = await el.request();
+      }
+    }
+  });
 
   const showMore = ref(false);
   const onShowMore = () => {
@@ -125,13 +202,27 @@
   const search = () => {
     formRef.value?.validate((val) => {
       if (!val) {
-        emits('search', formData.value);
+        const data = { ...formData };
+        props.formItems.map((item: any) => {
+          if (item.valueType === 'time' && formData[item.field]) {
+            // eslint-disable-next-line prefer-destructuring
+            data[
+              (item.fieldKeys && item.fieldKeys[0]) || `${item.field}Start`
+            ] = formData[item.field][0];
+            // eslint-disable-next-line prefer-destructuring
+            data[(item.fieldKeys && item.fieldKeys[1]) || `${item.field}End`] =
+              formData[item.field][1];
+            delete data[item.field];
+          }
+          return item;
+        });
+        emits('search', data);
       }
     });
   };
   const reset = () => {
     formRef.value?.resetFields();
-    emits('reset', formData.value);
+    emits('reset', formData);
   };
 </script>
 

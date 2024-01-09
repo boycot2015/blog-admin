@@ -201,7 +201,9 @@
   //   import useUser from '@/hooks/user';
   import Menu from '@/components/menu/index.vue';
   //   import MessageBox from '../message-box/index.vue';
+  import { useRouter } from 'vue-router';
 
+  const router = useRouter();
   const appStore = useAppStore();
   const userStore = useUserStore();
   const { logoutCallBack } = userStore;
@@ -248,8 +250,9 @@
   //     });
   //     refBtn.value.dispatchEvent(event);
   //   };
-  const handleLogout = () => {
-    logoutCallBack();
+  const handleLogout = async () => {
+    await logoutCallBack();
+    router.push('/login');
   };
   const setDropDownVisible = () => {
     const event = new MouseEvent('click', {

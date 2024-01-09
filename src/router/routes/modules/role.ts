@@ -8,6 +8,7 @@ const role: AppRouteRecordRaw = {
   component: DEFAULT_LAYOUT,
   meta: {
     locale: 'menu.role',
+    hideInMenu: true,
     requiresAuth: true,
     icon: 'icon-user',
     order: 1,
@@ -18,6 +19,7 @@ const role: AppRouteRecordRaw = {
       name: 'role',
       component: () => import('@/views/role/index.vue'),
       meta: {
+        hideInMenu: true,
         locale: 'menu.role.list',
         requiresAuth: true,
         roles: ['*'],

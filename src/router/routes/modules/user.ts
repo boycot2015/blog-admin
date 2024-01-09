@@ -26,9 +26,20 @@ const user: AppRouteRecordRaw = {
     {
       path: '/user/add',
       name: 'AddUser',
-      component: () => import('@/views/user/index.vue'),
+      component: () => import('@/views/user/add.vue'),
       meta: {
         locale: 'menu.user.add',
+        hideInMenu: true,
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
+    {
+      path: '/user/edit',
+      name: 'EditUser',
+      component: () => import('@/views/user/add.vue'),
+      meta: {
+        locale: 'menu.user.edit',
         hideInMenu: true,
         requiresAuth: true,
         roles: ['*'],

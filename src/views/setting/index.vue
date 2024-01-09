@@ -1,94 +1,112 @@
 <template>
-  <a-spin :loading="loading" style="width: 100%">
-    <a-card
-      class="general-card"
-      :header-style="{ paddingBottom: '0' }"
-      :body-style="{ padding: '17px 20px 21px 20px' }"
+  <a-card
+    style="border-width: 0 0 1px 0"
+    :body-style="{
+      padding: '16px 16px 8px',
+    }"
+  >
+    <ProForm
+      class="rule-form"
+      style="width: 100%"
+      submit-text="提交"
+      label-align="left"
+      layout="horizontal"
+      :read-only="!!$route.query.readOnly"
+      :default-values="formData"
+      :form-items="formItems"
+      @search="onSubmit"
     >
-      <template #title>
-        {{ $t('workplace.popularContent') }}
-      </template>
-      <template #extra>
-        <a-link>{{ $t('workplace.viewMore') }}</a-link>
-      </template>
-      <a-space direction="vertical" :size="10" fill>
-        <a-table
-          :data="renderList"
-          :pagination="false"
-          :bordered="false"
-          :scroll="{ x: '100%', y: 'auto' }"
-        >
-          <template #columns>
-            <a-table-column title="ID" data-index="id"></a-table-column>
-            <a-table-column title="文章标题" data-index="articleAbstract">
-              <template #cell="{ record }">
-                <a-typography-paragraph
-                  :ellipsis="{
-                    rows: 1,
-                  }"
-                >
-                  {{ record.title }}
-                </a-typography-paragraph>
-              </template>
-            </a-table-column>
-            <a-table-column title="文章分类" data-index="articleType">
-              <template #cell="{ record }">
-                {{
-                  record.articleType === 'COMPANY_NEWS'
-                    ? '公司动态'
-                    : '其他资讯'
-                }}
-              </template>
-            </a-table-column>
-            <a-table-column title="阅读量" data-index="clickNum">
-            </a-table-column>
-            <a-table-column title="发布时间" data-index="publishTime">
-            </a-table-column>
-            <a-table-column title="状态" data-index="status">
-              <template #cell="{ record }">
-                <a-switch v-model="record.status"></a-switch>
-              </template>
-            </a-table-column>
-            <a-table-column title="是否推荐" data-index="isRecommended">
-              <template #cell="{ record }">
-                <a-switch v-model="record.isRecommended"></a-switch>
-              </template>
-            </a-table-column>
-            <a-table-column title="操作" :width="140" data-index="action">
-              <template #cell="{ record }">
-                <a-link>查看{{ record.id }}</a-link>
-                <a-link>编辑</a-link>
-                <a-link>删除</a-link>
-              </template>
-            </a-table-column>
-          </template>
-        </a-table>
-      </a-space>
-    </a-card>
-  </a-spin>
+    </ProForm>
+  </a-card>
 </template>
 
-<script lang="ts" setup>
+<script lang="tsx" setup>
   import { ref } from 'vue';
-  import useLoading from '@/hooks/loading';
-  import { queryArticleList } from '@/api/article';
-  //   import type { TableData } from '@arco-design/web-vue/es/table/interface';
-  import type { ArticleRecord } from '@/api/article';
+  import { querySetting } from '@/api/setting';
+  import { useRouter, useRoute } from 'vue-router';
 
-  const { loading, setLoading } = useLoading();
-  const renderList = ref<ArticleRecord[]>();
-  const fetchData = async (contentType: string) => {
-    try {
-      setLoading(true);
-      const { data } = await queryArticleList({ type: contentType });
-      renderList.value = data.records;
-    } catch (err) {
-      // you can report use errorHandler or other
-    } finally {
-      setLoading(false);
-    }
+  const formData = ref({}) as any;
+  const formItems = ref([
+    {
+      field: 'title',
+      label: '标题名称',
+      span: 24,
+      labelColProps: {
+        span: 3,
+      },
+      rules: [{ required: true, message: '标题不能为空' }],
+      showColon: true,
+      valueType: 'text',
+    },
+    {
+      field: 'categoryId',
+      label: '文章分类',
+      labelColProps: {
+        span: 3,
+      },
+      rules: [{ required: true, message: '文章分类不能为空' }],
+      showColon: true,
+      span: 24,
+      valueType: 'select',
+      request: '/category/get',
+      props: {
+        label: 'value',
+        value: 'id',
+      },
+      options: [
+        {
+          label: '公司动态',
+          value: 'COMPANY_NEWS',
+        },
+        {
+          label: '行业资讯',
+          value: 'OTHER_NEWS',
+        },
+      ],
+    },
+    {
+      field: 'content',
+      label: '内容',
+      labelColProps: {
+        span: 3,
+      },
+      rules: [{ required: true, message: '内容不能为空' }],
+      showColon: true,
+      span: 24,
+      attrs: {
+        style: {
+          width: '100%',
+          height: '500px',
+        },
+      },
+      valueType: 'rich',
+    },
+  ]);
+  const route = useRoute();
+  const fetchData = () => {
+    querySetting({}).then((res: any) => {
+      formData.value.title = res.data.title;
+      formData.value.categoryId = res.data.category.id;
+      formData.value.content = res.data.content;
+    });
   };
-  fetchData('text');
+  fetchData();
+  const router = useRouter();
+  const onSubmit = (val: any) => {
+    // if (route.query.id) {
+    //   editArticle({ ...val, id: route.query.id }).then((res: any) => {
+    //     if (res.success) {
+    //       router.push('/article');
+    //     }
+    //   });
+    //   return;
+    // }
+    // addArticle({ ...val }).then((res: any) => {
+    //   if (res.success) {
+    //     router.push('/article');
+    //   }
+    // });
+  };
 </script>
 
 <style scoped lang="less">

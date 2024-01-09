@@ -48,7 +48,7 @@
   listenerRouteChange((route: RouteLocationNormalized) => {
     if (
       !route.meta.noAffix &&
-      !tagList.value.some((tag) => tag.fullPath === route.fullPath)
+      !tagList.value.some((tag) => tag.path === route.path)
     ) {
       tabBarStore.updateTabList(route);
     }

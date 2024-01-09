@@ -11,6 +11,7 @@
       submit-text="提交"
       label-align="left"
       layout="horizontal"
+      :read-only="!!$route.query.readOnly"
       :default-values="formData"
       :form-items="formItems"
       @search="onSubmit"
@@ -21,7 +22,7 @@
 
 <script lang="tsx" setup>
   import { ref } from 'vue';
-  import { addArticle, queryArticle } from '@/api/article';
+  import { addArticle, queryArticle, editArticle } from '@/api/article';
   import { useRouter, useRoute } from 'vue-router';
 
   const formData = ref({}) as any;
@@ -38,7 +39,7 @@
       valueType: 'text',
     },
     {
-      field: 'category',
+      field: 'categoryId',
       label: '文章分类',
       labelColProps: {
         span: 3,
@@ -47,6 +48,11 @@
       showColon: true,
       span: 24,
       valueType: 'select',
+      request: '/category/get',
+      props: {
+        label: 'value',
+        value: 'id',
+      },
       options: [
         {
           label: '公司动态',
@@ -81,12 +87,21 @@
     if (!route.query.id) return;
     queryArticle({ id: route.query.id }).then((res: any) => {
       formData.value.title = res.data.title;
+      formData.value.categoryId = res.data.category.id;
       formData.value.content = res.data.content;
     });
   };
   fetchData();
   const router = useRouter();
   const onSubmit = (val: any) => {
+    if (route.query.id) {
+      editArticle({ ...val, id: route.query.id }).then((res: any) => {
+        if (res.success) {
+          router.push('/article');
+        }
+      });
+      return;
+    }
     addArticle({ ...val }).then((res: any) => {
       if (res.success) {
         router.push('/article');

@@ -70,7 +70,23 @@ axios.interceptors.response.use(
     return res;
   },
   (error) => {
-    Message.error(error || 'Request Error');
+    const msg = error.response?.data?.message || 'Request Error';
+    if (msg === 'Unauthorized') {
+      Modal.error({
+        title: '温馨提示',
+        content: '登录失效，请重新登录',
+        okText: '重新登录',
+        maskClosable: false,
+        async onOk() {
+          const userStore = useUserStore();
+          await userStore.logoutCallBack();
+          window.location.reload();
+          hasModal = false;
+        },
+      });
+    } else {
+      Message.error(msg);
+    }
     return Promise.reject(error);
   }
 );

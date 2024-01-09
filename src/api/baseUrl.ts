@@ -1,7 +1,7 @@
 /* eslint-disable import/no-mutable-exports */
 /* eslint-disable default-case */
 /* eslint-disable no-nested-ternary */
-let baseUrl = 'http://192.168.3.109:8080';
+let baseUrl = 'http://www.blog-api.boycot.top/';
 let baseServeUrl = '';
 let baseWebUrl = '';
 // console.log(import.meta.env.MODE, 'import.meta.env.VITE_API_BASE_URL');
@@ -19,7 +19,7 @@ switch (env) {
     baseWebUrl = 'http://newweb.yunzhonghe.com';
     baseUrl = 'https://skycrane.dev.yunzhonghe.com';
     baseUrl = 'https://skycrane.show.yunzhonghe.com'; // aliyun预演环境url
-    baseUrl = 'http://blog.api.boycot.top'; // aliyun预演环境url
+    baseUrl = 'http://www.blog-api.boycot.top'; // aliyun预演环境url
     // baseUrl = 'http://doc.yunzhonghe.com/mock/422'; // mock url
     break;
   case 'test':

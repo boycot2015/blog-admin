@@ -14,6 +14,7 @@ import Breadcrumb from './breadcrumb/index.vue';
 import ProTable from './ProTable/index.vue';
 import ProForm from './ProTable/form.vue';
 import Editor from './Editor/index.vue';
+import Upload from './Upload/index.vue';
 
 // Manually introduce ECharts modules to reduce packing size
 
@@ -37,5 +38,6 @@ export default {
     Vue.component('ProTable', ProTable);
     Vue.component('ProForm', ProForm);
     Vue.component('Editor', Editor);
+    Vue.component('Upload', Upload);
   },
 };

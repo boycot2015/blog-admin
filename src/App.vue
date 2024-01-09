@@ -7,11 +7,13 @@
 
 <script lang="ts" setup>
   import { computed } from 'vue';
+  //   import { useAppStore } from '@/store';
   import enUS from '@arco-design/web-vue/es/locale/lang/en-us';
   import zhCN from '@arco-design/web-vue/es/locale/lang/zh-cn';
   import GlobalSetting from '@/components/global-setting/index.vue';
   import useLocale from '@/hooks/locale';
 
+  //   const appStore = useAppStore();
   const { currentLocale } = useLocale();
   const locale = computed(() => {
     switch (currentLocale.value) {
@@ -23,4 +25,10 @@
         return enUS;
     }
   });
+  //   window.addEventListener('DOMContentLoaded', () => {
+  //     window.localStorage.getItem('store');
+  //   });
+  //   window.addEventListener('beforeunload', () => {
+  //     window.localStorage.setItem('store', JSON.stringify(appStore));
+  //   });
 </script>

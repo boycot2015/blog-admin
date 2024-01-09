@@ -5,6 +5,7 @@ export interface AnyObject {
 export interface Options {
   value: string | number | Record<string, any> | undefined;
   label: string;
+  disabled?: boolean;
 }
 
 export interface NodeOptions extends Options {
@@ -26,6 +27,7 @@ export interface PostData {
 export interface Pagination {
   current: number;
   size?: number;
+  pageSize?: number;
   total: number;
 }
 

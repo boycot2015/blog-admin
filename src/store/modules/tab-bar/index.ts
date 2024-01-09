@@ -9,10 +9,11 @@ import { isString } from '@/utils/is';
 import { TabBarState, TagProps } from './types';
 
 const formatTag = (route: RouteLocationNormalized): TagProps => {
-  const { name, meta, fullPath, query } = route;
+  const { name, meta, fullPath, query, path } = route;
   return {
     title: meta.locale || '',
     name: String(name),
+    path,
     fullPath,
     query,
     ignoreCache: meta.ignoreCache,

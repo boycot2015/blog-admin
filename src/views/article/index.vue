@@ -7,7 +7,7 @@
     :request="queryArticleList"
     :form-items="formItems"
     :columns="columns"
-    :pagination="{ showTotal: true }"
+    :pagination="true"
     :row-selection="{
       ...rowSelection,
     }"
@@ -17,7 +17,7 @@
     </template>
     <template #extra>
       <a-space :size="16">
-        <a-button type="primary">
+        <a-button type="primary" @click="$router.push('/article/add')">
           <a-space :size="8"> <icon-plus></icon-plus>新增</a-space>
         </a-button>
         <a-button :disabled="!rowSelection.selectedRowKeys?.length"
@@ -30,7 +30,7 @@
 
 <script lang="tsx" setup>
   import { ref } from 'vue';
-  import { queryArticleList, deleteArticle } from '@/api/article';
+  import { queryArticleList, deleteArticle, changeStatus } from '@/api/article';
   import type {
     TableColumnData,
     TableData,
@@ -53,20 +53,25 @@
       valueType: 'text',
     },
     {
-      field: 'articleType',
+      field: 'category',
       label: '文章分类',
       showColon: true,
       valueType: 'select',
-      options: [
-        {
-          label: '公司动态',
-          value: 'COMPANY_NEWS',
-        },
-        {
-          label: '行业资讯',
-          value: 'OTHER_NEWS',
-        },
-      ],
+      request: '/category/get',
+      props: {
+        label: 'value',
+        value: 'id',
+      },
+      //   options: [
+      //     {
+      //       label: '公司动态',
+      //       value: 'COMPANY_NEWS',
+      //     },
+      //     {
+      //       label: '行业资讯',
+      //       value: 'OTHER_NEWS',
+      //     },
+      //   ],
     },
     {
       field: 'status',
@@ -76,11 +81,11 @@
       options: [
         {
           label: '已发布',
-          value: 1,
+          value: '1001',
         },
         {
           label: '未发布',
-          value: 0,
+          value: '1002',
         },
       ],
     },
@@ -108,28 +113,27 @@
       dataIndex: 'id',
       title: 'ID',
       fixed: 'left',
-      width: 160,
+      width: 120,
     },
     {
       dataIndex: 'title',
       title: '文章标题',
-      fixed: 'left',
       tooltip: true,
       ellipsis: true,
       width: 220,
     },
     {
-      dataIndex: 'articleType',
+      dataIndex: 'categoryName',
       title: '文章分类',
       width: 150,
       render: ({ record }) => {
-        return record.articleType === 'OTHER_NEWS' ? '行业资讯' : '公司动态';
+        return record.categoryName || record.category?.value;
       },
     },
     {
-      dataIndex: 'clickNum',
+      dataIndex: 'visitor',
       title: '阅读量',
-      width: 150,
+      width: 100,
       sortable: {
         sortDirections: ['descend', 'ascend'],
         sorter: false,
@@ -151,8 +155,37 @@
     {
       dataIndex: 'status',
       title: '状态',
-      width: 150,
-      render: ({ record }) => <a-switch v-model={record.status}></a-switch>,
+      width: 120,
+      render: ({ record }) => (
+        <a-switch
+          before-change={() => {
+            return new Promise((resolve, reject) => {
+              Modal.warning({
+                title: '温馨提示',
+                simple: true,
+                draggable: true,
+                content: `确认${record.status === 1002 ? '取消' : ''}发布？`,
+                hideCancel: false,
+                onOk: () => {
+                  return changeStatus({
+                    id: record.id,
+                    status: record.status,
+                  }).then((res: any) => {
+                    // eslint-disable-next-line no-unused-expressions
+                    res.success ? resolve(res) : reject(res);
+                  });
+                },
+                onCancel: () => reject(),
+              });
+            });
+          }}
+          v-model={record.status}
+          checked-value={1001}
+          unchecked-value={1002}
+          checked-text="已发布"
+          unchecked-text="未发布"
+        ></a-switch>
+      ),
     },
     // {
     //   dataIndex: 'isRecommended',
@@ -173,7 +206,7 @@
             onClick={() => {
               router.push({
                 path: '/article/edit',
-                query: { id: record.id, isView: 'true' },
+                query: { id: record.id, readOnly: 'true' },
               });
             }}
           >
