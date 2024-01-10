@@ -32,7 +32,31 @@
         <slot name="extra"></slot>
       </template>
       <a-space direction="vertical" :size="10" fill>
+        <a-list
+          v-if="listType === 'card'"
+          :bordered="false"
+          :loading="loading"
+          :data="renderList"
+          :grid-props="{
+            gutter: [15, 15],
+            xs: 24,
+            sm: 12,
+            md: 8,
+            lg: 6,
+            xl: 4,
+          }"
+          :style="{
+            marginTop: 10,
+            maxHeight: scroll.y,
+            overflow: 'auto',
+          }"
+        >
+          <template #item="{ item }">
+            <slot name="list-item" :item="item"></slot>
+          </template>
+        </a-list>
         <a-table
+          v-else
           v-model:selectedKeys="selectedKeys"
           :row-key="props.rowKey"
           :data="renderList"
@@ -49,7 +73,9 @@
               v-if="props.checkAll"
               v-model="checkAll"
               style="padding-left: 12px"
-              >{{ props.checkAll || '全选' }}</a-checkbox
+              >{{ props.checkAll || '全选' }}(已选{{
+                checkAll ? pageData.total : selectedKeys?.length || 0
+              }}项)</a-checkbox
             >
             <slot v-else name="checkAll"></slot>
           </a-col>
@@ -57,14 +83,13 @@
             <a-pagination
               v-if="props.pagination"
               v-model:current="pageData.current"
+              v-model:page-size="pageData.size"
               style="float: right"
-              :page-size="pageData.size"
               show-total
               show-jumper
               show-page-size
-              :page-size-options="[10, 20, 50, 100]"
+              :page-size-options="[10, 20, 30, 50, 100]"
               :total="pageData.total"
-              v-bind="props.pagination"
               @change="pageChange"
               @page-size-change="pageSizeChange"
             ></a-pagination>
@@ -105,6 +130,7 @@
     pagination?: boolean | PaginationProps | any;
     pagePosition?: string | undefined;
     title?: string | undefined;
+    listType?: string;
     request?: ((args: any) => Promise<any>) | undefined;
     scroll?: { x?: number | string; y?: number | string };
     selectedKeys?: BaseType[] | undefined;
@@ -118,9 +144,13 @@
   const selectedKeys = ref<BaseType[]>();
   const pageData = ref<Pagination & PaginationProps>({
     current: 1,
-    pageSize: 10,
+    defaultPagesize: props.listType === 'card' ? 30 : 10,
+    pageSize: props.listType === 'card' ? 30 : 10,
     showPageSize: true,
-    total: 100000,
+    total: 0,
+  });
+  watch(props, (val) => {
+    pageData.value.defaultPageSize = val.listType === 'card' ? 30 : 10;
   });
   watch(selectedKeys, () => {
     emits('update:selectedKeys', selectedKeys);
@@ -174,7 +204,7 @@
     fetchData();
   };
   const pageSizeChange = (val: any) => {
-    pageData.value.size = val;
+    pageData.value.pageSize = val;
     pageData.value.current = 1;
     fetchData();
   };

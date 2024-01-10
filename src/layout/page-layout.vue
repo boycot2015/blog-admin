@@ -20,6 +20,7 @@
   const tabBarStore = useTabBarStore();
 
   const cacheList = computed(() => tabBarStore.getCacheList);
+  console.log(cacheList, 'cacheList');
 </script>
 
 <style scoped lang="less"></style>

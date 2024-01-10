@@ -7,7 +7,7 @@ import localeSettings from './zh-CN/settings';
 
 export default {
   'website.title': '博客后台管理系统',
-  'menu.website': '博客后台管理系统',
+  'menu.website': '博客前台',
   'menu.dashboard': '首页',
   'menu.article.list': '文章列表',
   'menu.article': '文章',

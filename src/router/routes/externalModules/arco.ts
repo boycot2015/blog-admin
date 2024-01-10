@@ -1,8 +1,8 @@
 export default {
-  path: 'https://yunzhonghe.com',
-  name: 'Website',
+  path: 'http://www.boycot.top',
+  name: 'Blog',
   meta: {
-    hideInMenu: true,
+    hideInMenu: false,
     locale: 'menu.website',
     icon: 'icon-link',
     requiresAuth: true,

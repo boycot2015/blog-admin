@@ -4,6 +4,7 @@
 let baseUrl = 'http://www.blog-api.boycot.top/';
 let baseServeUrl = '';
 let baseWebUrl = '';
+let apiUrl = 'http://api.boycot.top/api';
 // console.log(import.meta.env.MODE, 'import.meta.env.VITE_API_BASE_URL');
 const env =
   import.meta.env.MODE === 'development'
@@ -21,6 +22,7 @@ switch (env) {
     baseUrl = 'https://skycrane.show.yunzhonghe.com'; // aliyun预演环境url
     baseUrl = 'http://www.blog-api.boycot.top'; // aliyun预演环境url
     // baseUrl = 'http://doc.yunzhonghe.com/mock/422'; // mock url
+    apiUrl = 'http://api.boycot.top/api'; // mock url
     break;
   case 'test':
     baseServeUrl = 'http://gateway.test.limofang.cn';
@@ -38,5 +40,5 @@ switch (env) {
     baseUrl = 'https://skycrane.pro.yunzhonghe.com'; // aliyun生产环境url
     break;
 }
-export { baseServeUrl, baseWebUrl };
+export { baseServeUrl, baseWebUrl, apiUrl };
 export default baseUrl;

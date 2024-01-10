@@ -6,6 +6,7 @@
       :style="{
         margin: centered ? '0 auto' : '',
         maxWidth: centered ? '800px' : '100%',
+        minWidth: centered ? '750px' : '100%',
       }"
       :label-align="props.labelAlign"
       :layout="props.layout || 'inline'"
@@ -153,8 +154,8 @@
   const formData = reactive({
     ...(props.defaultValues || {}),
   }) as any;
-  watch(props.defaultValues, (val) => {
-    Object.assign(formData, val);
+  watch(props, (val) => {
+    Object.assign(formData, val.defaultValues);
   });
   props.formItems.map(async (el: any) => {
     options[el.field] = el.options;

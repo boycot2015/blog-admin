@@ -91,8 +91,9 @@
       content: '确认删除？',
       hideCancel: false,
       onOk: () => {
-        deleteUser({ id: record.id }).then(() => {
+        deleteUser({ id: record.id }).then((res: any) => {
           tableRef.value?.reload();
+          Message[res.success ? 'success' : 'error'](res.data || res.message);
         });
       },
     });
@@ -150,9 +151,10 @@
             changeStatus({
               id: record.id,
               status: record.status,
-            }).then(
-              (res: any) =>
-                res.success && Message.success(res.message || '操作成功')
+            }).then((res: any) =>
+              Message[res.success ? 'success' : 'error'](
+                res.data || res.message
+              )
             )
           }
           disabled={userInfo.accountId === record.id || record.id === 1}

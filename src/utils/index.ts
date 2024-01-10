@@ -88,4 +88,21 @@ export const timeFilter = (value: string | any[]) => {
   }
   return '-';
 };
+export const downloadFile = (url: string, fileName?: string) => {
+  if (!url) return;
+  const a = document.createElement('a');
+  fetch(url) // 跨域时会报错
+    .then((res) => res.blob())
+    .then((blob) => {
+      // 将链接地址字符内容转变成blob地址
+      a.href = URL.createObjectURL(blob);
+      a.download = fileName || url.split('/')[url.split('/').length - 1]; // 下载文件的名字
+      a.download += '.png';
+      document.body.appendChild(a);
+      a.click();
+      // 在资源下载完成后 清除 占用的缓存资源
+      window.URL.revokeObjectURL(a.href);
+      document.body.removeChild(a);
+    });
+};
 export default null;

@@ -1,30 +1,58 @@
 <template>
   <ProTable
     ref="tableRef"
-    v-model:selectedKeys="rowSelection.selectedRowKeys"
     row-key="id"
-    check-all="全选所有结果"
+    list-type="card"
     :request="queryFileList"
     :form-items="formItems"
-    :columns="columns"
     :pagination="true"
     :show-more="false"
-    :row-selection="{
-      ...rowSelection,
-    }"
   >
     <template #title>
-      {{ $t('menu.article.list') }}
+      {{ $t('menu.atlas.list') }}
     </template>
-    <template #extra>
-      <a-space :size="16">
-        <a-button type="primary" @click="$router.push('/article/add')">
-          <a-space :size="8"> <icon-plus></icon-plus>新增</a-space>
-        </a-button>
-        <a-button :disabled="!rowSelection.selectedRowKeys?.length"
-          >导出</a-button
+    <template #list-item="{ item }">
+      <a-list-item class="list-item" action-layout="vertical">
+        <a-image
+          alt="avatar"
+          fit="cover"
+          width="100%"
+          height="160"
+          show-loader
+          :title="item.category"
+          :preview-props="{
+            src: item.realUrl,
+            defaultVisible: false,
+            closable: false,
+            maskClosable: true,
+            actionsLayout: [
+              'fullScreen',
+              'rotateRight',
+              'rotateLeft',
+              'zoomIn',
+              'zoomOut',
+              'originalSize',
+            ],
+          }"
+          :src="item.url"
         >
-      </a-space>
+          <template #extra>
+            <div class="actions">
+              <a-tooltip content="下载图片">
+                <span
+                  class="action"
+                  style="margin-right: 5px"
+                  @click="onDownLoad(item)"
+                  ><icon-download
+                /></span>
+              </a-tooltip>
+              <a-tooltip :content="item.tag">
+                <span class="action"><icon-info-circle /></span>
+              </a-tooltip>
+            </div>
+          </template>
+        </a-image>
+      </a-list-item>
     </template>
   </ProTable>
 </template>
@@ -32,23 +60,18 @@
 <script lang="tsx" setup>
   import { ref } from 'vue';
   import { queryFileList } from '@/api/file';
-  import type {
-    TableColumnData,
-    // TableData,
-    TableRowSelection,
-  } from '@arco-design/web-vue/es/table';
-  //   import router from '@/router';
+  import { downloadFile } from '@/utils';
   //   import { Modal } from '@arco-design/web-vue';
 
-  const rowSelection = ref<TableRowSelection>({
-    selectedRowKeys: [],
-    showCheckedAll: true,
-  });
+  //   const rowSelection = ref<TableRowSelection>({
+  //     selectedRowKeys: [],
+  //     showCheckedAll: true,
+  //   });
   const formData = ref({}) as any;
   const tableRef = ref({}) as any;
   const formItems = ref([
     {
-      field: 'name',
+      field: 'k',
       label: '文件名',
       width: 200,
       showColon: true,
@@ -62,75 +85,23 @@
       valueType: 'time',
     },
   ]);
-  const columns = ref<TableColumnData[]>([
-    {
-      dataIndex: 'id',
-      title: 'ID',
-      fixed: 'left',
-      width: 120,
-    },
-    {
-      dataIndex: 'avatar',
-      title: '图片',
-      width: 120,
-      render: ({ record }: any) => {
-        return <a-image height={40} src={record.url}></a-image>;
-      },
-    },
-    {
-      dataIndex: 'fileName',
-      title: '文件名',
-      tooltip: true,
-      ellipsis: true,
-      width: 220,
-    },
-    {
-      dataIndex: 'updateTime',
-      title: '上传时间',
-      render: ({ record }) =>
-        new Date(record.createTime).toLocaleString().replace(/\//g, '-'),
-      width: 180,
-      sortable: {
-        sortDirections: ['descend', 'ascend'],
-        sorter: false,
-        defaultSortOrder: '',
-      },
-    },
-    // {
-    //   dataIndex: 'operation',
-    //   title: '操作',
-    //   fixed: 'right',
-    //   width: 180,
-    //   render: ({ record }) => (
-    //     <a-space size={8} record={record}>
-    //       <a-link
-    //         onClick={() => {
-    //           router.push({
-    //             path: '/article/edit',
-    //             query: { id: record.id, readOnly: 'true' },
-    //           });
-    //         }}
-    //       >
-    //         查看
-    //       </a-link>
-    //       <a-link
-    //         onClick={() => {
-    //           router.push({ path: '/article/edit', query: { id: record.id } });
-    //         }}
-    //       >
-    //         编辑
-    //       </a-link>
-    //     </a-space>
-    //   ),
-    // },
-  ]);
+
   formItems.value.map((el: any) => {
     formData[el.field] = undefined;
     return el;
   });
+  const onDownLoad = ({ realUrl, tag }: any) => {
+    downloadFile(realUrl, tag);
+    //   console.log('download');
+  };
 </script>
 
 <style scoped lang="less">
+  .list-item {
+    padding: 0 !important;
+    box-shadow: 0 0 4px #eee;
+    border-radius: 5px;
+  }
   .general-card {
     min-height: 395px;
   }

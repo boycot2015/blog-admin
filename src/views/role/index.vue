@@ -4,7 +4,7 @@
     v-model:selectedKeys="rowSelection.selectedRowKeys"
     row-key="id"
     check-all="全选所有结果"
-    :request="list"
+    :request="queryUserList"
     :form-items="formItems"
     :columns="columns"
     :pagination="true"
@@ -30,7 +30,7 @@
 
 <script lang="tsx" setup>
   import { ref } from 'vue';
-  import { list, status } from '@/api/user';
+  import { queryUserList, changeStatus } from '@/api/user';
   import type {
     TableColumnData,
     // TableData,
@@ -146,7 +146,7 @@
       render: ({ record }) => (
         <a-switch
           onChange={() =>
-            status({
+            changeStatus({
               id: record.id,
               status: record.status,
             }).then(

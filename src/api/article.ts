@@ -38,6 +38,10 @@ interface ParamsProps {
   tagIds?: number[];
 }
 export function queryArticleList(params: ParamsProps & Pagination) {
+  if (params.size) {
+    params.pageSize = params.size;
+    delete params.size;
+  }
   return axios.get<DataResult>('/article', { params }).then((res) => {
     return { data: { records: res.data[0], total: res.data[1] } };
   });

@@ -1,43 +1,42 @@
 <template>
   <div class="banner">
-    <!-- <div class="banner-inner">
+    <div class="banner-inner">
       <a-carousel class="carousel" animation-name="fade">
-        <a-carousel-item v-for="item in carouselItem" :key="item.slogan">
-          <div :key="item.slogan" class="carousel-item">
-            <div class="carousel-title">{{ item.slogan }}</div>
-            <div class="carousel-sub-title">{{ item.subSlogan }}</div>
-            <img class="carousel-image" :src="item.image" />
+        <a-carousel-item v-for="item in settingData.banner" :key="item.url">
+          <div :key="item.url" class="carousel-item">
+            <!-- <div class="carousel-title">{{ item.slogan }}</div>
+            <div class="carousel-sub-title">{{ item.subSlogan }}</div> -->
+            <img class="carousel-image" :src="item.url" />
           </div>
         </a-carousel-item>
       </a-carousel>
-    </div> -->
+    </div>
     <!-- <a-image :src="bannerImage"></a-image> -->
   </div>
 </template>
 
 <script lang="ts" setup>
-  //   import { computed } from 'vue';
+  import { reactive } from 'vue';
   //   import bannerImage from '@/assets/images/login-banner.png';
+  import { querySetting } from '@/api/setting';
+
+  const settingData = reactive<any>({});
+  const fetchData = () => {
+    querySetting({}).then((res: any) => {
+      settingData.id = res.data.id;
+      settingData.notice = JSON.parse(res.data.notice).title;
+      settingData.noticeUrl = JSON.parse(res.data.notice).link;
+      settingData.banner = JSON.parse(res.data.banner);
+      //   settingData.value.gitHub = JSON.parse(res.data.siteConfig).gitHub;
+      //   settingData.value.email = JSON.parse(res.data.siteConfig).email;
+      //   settingData.value.color = JSON.parse(res.data.theme).color;
+      //   settingData.value.background = JSON.parse(res.data.theme).background;
+    });
+  };
+  fetchData();
   //   import { useI18n } from 'vue-i18n';
 
   //   const { t } = useI18n();
-  //   const carouselItem = computed(() => [
-  //     {
-  //       slogan: t('login.banner.slogan1'),
-  //       subSlogan: t('login.banner.subSlogan1'),
-  //       image: bannerImage,
-  //     },
-  //     {
-  //       slogan: t('login.banner.slogan2'),
-  //       subSlogan: t('login.banner.subSlogan2'),
-  //       image: bannerImage,
-  //     },
-  //     {
-  //       slogan: t('login.banner.slogan3'),
-  //       subSlogan: t('login.banner.subSlogan3'),
-  //       image: bannerImage,
-  //     },
-  //   ]);
 </script>
 
 <style lang="less" scoped>
@@ -78,7 +77,7 @@
     }
 
     &-image {
-      width: 320px;
+      width: 500px;
       margin-top: 30px;
     }
   }

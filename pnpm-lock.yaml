@@ -64,6 +64,9 @@ dependencies:
   vue-i18n:
     specifier: ^9.2.2
     version: 9.2.2(vue@3.2.47)
+  vue-pick-colors:
+    specifier: ^1.6.1
+    version: 1.6.1(@popperjs/core@2.11.8)(vue@3.2.47)
   vue-router:
     specifier: ^4.0.14
     version: 4.1.6(vue@3.2.47)
@@ -955,6 +958,10 @@ packages:
       tiny-glob: 0.2.9
       tslib: 2.5.0
     dev: true
+
+  /@popperjs/core@2.11.8:
+    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+    dev: false
 
   /@rollup/pluginutils@4.2.1:
     resolution: {integrity: sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==}
@@ -6595,7 +6602,7 @@ packages:
     dependencies:
       htmlparser2: 3.10.1
       postcss: 7.0.39
-      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@8.4.21)
+      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@7.0.39)
     dev: true
 
   /postcss-html@1.5.0:
@@ -6616,7 +6623,7 @@ packages:
     dependencies:
       '@babel/core': 7.21.4
       postcss: 7.0.39
-      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@8.4.21)
+      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@7.0.39)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -6635,7 +6642,7 @@ packages:
       postcss-syntax: '>=0.36.0'
     dependencies:
       postcss: 7.0.39
-      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@8.4.21)
+      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@7.0.39)
       remark: 10.0.1
       unist-util-find-all-after: 1.0.5
     dev: true
@@ -6721,7 +6728,7 @@ packages:
       postcss: 8.4.21
     dev: true
 
-  /postcss-syntax@0.36.2(postcss-html@1.5.0)(postcss@8.4.21):
+  /postcss-syntax@0.36.2(postcss-html@1.5.0)(postcss@7.0.39):
     resolution: {integrity: sha512-nBRg/i7E3SOHWxF3PpF5WnJM/jQ1YpY9000OaVXlAQj6Zp/kIqJxEDWIZ67tAd7NLuk7zqN4yqe9nc0oNAOs1w==}
     peerDependencies:
       postcss: '>=5.0.0'
@@ -6742,7 +6749,7 @@ packages:
       postcss-scss:
         optional: true
     dependencies:
-      postcss: 8.4.21
+      postcss: 7.0.39
       postcss-html: 1.5.0
     dev: true
 
@@ -7922,7 +7929,7 @@ packages:
       postcss-sass: 0.3.5
       postcss-scss: 2.1.1
       postcss-selector-parser: 3.1.2
-      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@8.4.21)
+      postcss-syntax: 0.36.2(postcss-html@1.5.0)(postcss@7.0.39)
       postcss-value-parser: 3.3.1
       resolve-from: 4.0.0
       signal-exit: 3.0.7
@@ -8688,6 +8695,16 @@ packages:
       '@intlify/shared': 9.2.2
       '@intlify/vue-devtools': 9.2.2
       '@vue/devtools-api': 6.5.0
+      vue: 3.2.47
+    dev: false
+
+  /vue-pick-colors@1.6.1(@popperjs/core@2.11.8)(vue@3.2.47):
+    resolution: {integrity: sha512-N8DpjQsl4gcrkHHaI43qvs07Z7WhB6TX9ysIf8vzD9cuqMXIQ9nylhTAqqVWwQuBC0pWT6TS65Rm8Sti18jz3A==}
+    peerDependencies:
+      '@popperjs/core': ^2.11.2
+      vue: ^3.2.26
+    dependencies:
+      '@popperjs/core': 2.11.8
       vue: 3.2.47
     dev: false
 

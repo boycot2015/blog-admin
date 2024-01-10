@@ -13,8 +13,8 @@ export interface HttpResponse<T = unknown> {
 }
 let hasModal = false;
 if (import.meta.env.VITE_API_BASE_URL) {
-  //   axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
-  axios.defaults.baseURL = baseUrl;
+  // axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
+  // axios.defaults.baseURL = baseUrl;
 }
 
 axios.interceptors.request.use(
@@ -23,6 +23,9 @@ axios.interceptors.request.use(
     // this example using the JWT token
     // Authorization is a custom headers key
     // please modify it according to the actual situation
+    if (!config.url?.includes('http')) {
+      config.url = baseUrl + config.url;
+    }
     const token = getToken();
     if (token) {
       if (!config.headers) {

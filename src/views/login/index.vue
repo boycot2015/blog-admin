@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="logo">
-      <img alt="logo" :src="logo" />
-      <!-- <div class="logo-text">云中鹤官网管理系统</div> -->
+      <!-- <img alt="logo" :src="logo" /> -->
+      <!-- <div class="logo-text">管理系统</div> -->
     </div>
     <LoginBanner />
     <div class="content">
@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
   //   import Footer from '@/components/footer/index.vue';
-  import logo from '@/assets/images/logo.png';
+  //   import logo from '@/assets/images/logo.png';
   import LoginBanner from './components/banner.vue';
   import LoginForm from './components/login-form.vue';
 </script>
@@ -29,7 +29,7 @@
     height: 100vh;
 
     .banner {
-      width: 550px;
+      width: 800px;
       background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
     }
 
@@ -72,7 +72,7 @@
   @media (max-width: @screen-lg) {
     .container {
       .banner {
-        width: 25%;
+        width: 50%;
       }
     }
   }

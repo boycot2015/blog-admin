@@ -29,7 +29,7 @@
 </template>
 
 <script lang="tsx" setup>
-  import { ref } from 'vue';
+  import { ref, watch, reactive } from 'vue';
   import { queryArticleList, deleteArticle, changeStatus } from '@/api/article';
   import type {
     TableColumnData,
@@ -37,13 +37,12 @@
     TableRowSelection,
   } from '@arco-design/web-vue/es/table';
   import router from '@/router';
-  import { Modal } from '@arco-design/web-vue';
+  import { Modal, Message } from '@arco-design/web-vue';
 
-  const rowSelection = ref<TableRowSelection>({
+  const rowSelection = reactive<TableRowSelection>({
     selectedRowKeys: [],
     showCheckedAll: true,
   });
-  const formData = ref({}) as any;
   const tableRef = ref({}) as any;
   const formItems = ref([
     {
@@ -103,8 +102,10 @@
       content: '确认删除？',
       hideCancel: false,
       onOk: () => {
-        deleteArticle({ id: record.id });
-        tableRef.value?.reload();
+        deleteArticle({ id: record.id }).then((res: any) => {
+          Message.success(res.data || res.message);
+          tableRef.value?.reload();
+        });
       },
     });
   };
@@ -113,14 +114,14 @@
       dataIndex: 'id',
       title: 'ID',
       fixed: 'left',
-      width: 120,
+      width: 100,
     },
     {
       dataIndex: 'title',
       title: '文章标题',
       tooltip: true,
       ellipsis: true,
-      width: 220,
+      width: 260,
     },
     {
       dataIndex: 'categoryName',
@@ -164,7 +165,7 @@
                 title: '温馨提示',
                 simple: true,
                 draggable: true,
-                content: `确认${record.status === 1002 ? '取消' : ''}发布？`,
+                content: `确认${record.status === 1001 ? '取消' : ''}发布？`,
                 hideCancel: false,
                 onOk: () => {
                   return changeStatus({
@@ -173,6 +174,9 @@
                   }).then((res: any) => {
                     // eslint-disable-next-line no-unused-expressions
                     res.success ? resolve(res) : reject(res);
+                    Message[res.success ? 'success' : 'error'](
+                      res.data || res.message
+                    );
                   });
                 },
                 onCancel: () => reject(),
@@ -224,9 +228,8 @@
       ),
     },
   ]);
-  formItems.value.map((el) => {
-    formData[el.field] = undefined;
-    return el;
+  watch(rowSelection, (val) => {
+    console.log(val, 'selectedKeys');
   });
 </script>
 

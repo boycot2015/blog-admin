@@ -1,5 +1,6 @@
 export default {
-  'login.form.title': 'Login to crane',
+  'login.form.title': 'Blog Admin',
+  'login.form.subTitle': 'blog management system',
   'login.form.userName.errMsg': 'Username cannot be empty',
   'login.form.password.errMsg': 'Password cannot be empty',
   'login.form.login.errMsg': 'Login error, refresh and try again',

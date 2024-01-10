@@ -15,7 +15,7 @@ const atlas: AppRouteRecordRaw = {
   children: [
     {
       path: '/atlas/index',
-      name: 'atlas',
+      name: 'Atlas',
       component: () => import('@/views/atlas/index.vue'),
       meta: {
         locale: 'menu.atlas.list',
@@ -23,17 +23,17 @@ const atlas: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
-    {
-      path: '/atlas/add',
-      name: 'AddAtlas',
-      component: () => import('@/views/atlas/index.vue'),
-      meta: {
-        locale: 'menu.atlas.add',
-        hideInMenu: true,
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
+    // {
+    //   path: '/atlas/add',
+    //   name: 'AddAtlas',
+    //   component: () => import('@/views/atlas/index.vue'),
+    //   meta: {
+    //     locale: 'menu.atlas.add',
+    //     hideInMenu: true,
+    //     requiresAuth: true,
+    //     roles: ['*'],
+    //   },
+    // },
   ],
 };
 

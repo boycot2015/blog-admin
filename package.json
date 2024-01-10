@@ -48,6 +48,7 @@
     "vue": "^3.2.40",
     "vue-echarts": "^6.2.3",
     "vue-i18n": "^9.2.2",
+    "vue-pick-colors": "^1.6.1",
     "vue-router": "^4.0.14",
     "wangeditor": "^4.7.15"
   },
