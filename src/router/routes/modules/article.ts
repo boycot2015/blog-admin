@@ -24,11 +24,23 @@ const ARTICLE: AppRouteRecordRaw = {
       },
     },
     {
+      path: '/article/category',
+      name: 'EditCategory',
+      component: () => import('@/views/article/category.vue'),
+      meta: {
+        locale: 'menu.article.category',
+        requiresAuth: true,
+        hideInMenu: false,
+        roles: ['*'],
+      },
+    },
+    {
       path: '/article/add',
       name: 'AddArticle',
       component: () => import('@/views/article/add.vue'),
       meta: {
         locale: 'menu.article.add',
+        hideInMenu: true,
         requiresAuth: true,
         roles: ['*'],
       },

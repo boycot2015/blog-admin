@@ -49,12 +49,18 @@
       field: 'title',
       label: '标题名称',
       showColon: true,
+      attrs: {
+        placeholder: '请输入标题名称 ',
+      },
       valueType: 'text',
     },
     {
       field: 'category',
       label: '文章分类',
       showColon: true,
+      attrs: {
+        placeholder: '请选择文章分类 ',
+      },
       valueType: 'select',
       request: '/category/get',
       props: {
@@ -79,12 +85,16 @@
       valueType: 'select',
       options: [
         {
+          label: '全部',
+          value: undefined,
+        },
+        {
           label: '已发布',
-          value: '1001',
+          value: 1001,
         },
         {
           label: '未发布',
-          value: '1002',
+          value: 1002,
         },
       ],
     },
@@ -128,7 +138,7 @@
       title: '文章分类',
       width: 150,
       render: ({ record }) => {
-        return record.categoryName || record.category?.value;
+        return record.category?.value || record.categoryName;
       },
     },
     {
@@ -170,7 +180,7 @@
                 onOk: () => {
                   return changeStatus({
                     id: record.id,
-                    status: record.status,
+                    status: record.status === 1001 ? 1002 : 1001,
                   }).then((res: any) => {
                     // eslint-disable-next-line no-unused-expressions
                     res.success ? resolve(res) : reject(res);

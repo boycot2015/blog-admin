@@ -52,11 +52,17 @@
       field: 'username',
       label: '用户名',
       showColon: true,
+      attrs: {
+        placeholder: '请输入用户名',
+      },
       valueType: 'text',
     },
     {
       field: 'email',
       label: '邮箱',
+      attrs: {
+        placeholder: '请输入邮箱',
+      },
       showColon: true,
       valueType: 'text',
     },

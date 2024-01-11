@@ -33,7 +33,7 @@ interface ParamsProps {
   title?: string;
   id?: number | string | unknown | undefined;
   content?: string;
-  status?: string;
+  status?: number | string;
   category?: string;
   tagIds?: number[];
 }
@@ -44,6 +44,11 @@ export function queryArticleList(params: ParamsProps & Pagination) {
   }
   return axios.get<DataResult>('/article', { params }).then((res) => {
     return { data: { records: res.data[0], total: res.data[1] } };
+  });
+}
+export function queryCategory(params: any) {
+  return axios.get<any>('/category/get', { params }).then((res) => {
+    return { data: res.data[0] };
   });
 }
 export function queryArticle(params: ParamsProps) {
@@ -57,6 +62,7 @@ export function addArticle(params: ParamsProps) {
 export function editArticle(params: ParamsProps) {
   return axios.post<HttpResponse>('/article/edit', params);
 }
+
 export function deleteArticle(params: ParamsProps) {
   return axios({
     method: 'post',

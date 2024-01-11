@@ -13,6 +13,7 @@ export default {
   'menu.article': '文章',
   'menu.article.add': '新增文章',
   'menu.article.edit': '编辑文章',
+  'menu.article.category': '分类管理',
   'menu.atlas': '图册',
   'menu.atlas.list': '图册列表',
   'menu.atlas.add': '新增图册',

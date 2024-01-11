@@ -73,6 +73,9 @@
     {
       field: 'k',
       label: '文件名',
+      attrs: {
+        placeholder: '请输入文件名',
+      },
       width: 200,
       showColon: true,
       valueType: 'text',
@@ -101,6 +104,7 @@
     padding: 0 !important;
     box-shadow: 0 0 4px #eee;
     border-radius: 5px;
+    cursor: pointer;
   }
   .general-card {
     min-height: 395px;

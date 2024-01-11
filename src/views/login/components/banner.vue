@@ -4,9 +4,9 @@
       <a-carousel class="carousel" animation-name="fade">
         <a-carousel-item v-for="item in settingData.banner" :key="item.url">
           <div :key="item.url" class="carousel-item">
-            <!-- <div class="carousel-title">{{ item.slogan }}</div>
-            <div class="carousel-sub-title">{{ item.subSlogan }}</div> -->
             <img class="carousel-image" :src="item.url" />
+            <div class="carousel-title">{{ item.title }}</div>
+            <!-- <div class="carousel-sub-title">{{ item.subSlogan }}</div> -->
           </div>
         </a-carousel-item>
       </a-carousel>
@@ -78,7 +78,7 @@
 
     &-image {
       width: 500px;
-      margin-top: 30px;
+      margin-bottom: 30px;
     }
   }
 </style>

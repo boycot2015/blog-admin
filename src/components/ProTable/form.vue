@@ -39,6 +39,7 @@
             v-model="formData[item.field]"
             :disabled="readOnly"
             style="width: 100%"
+            allow-clear
             :placeholder="(item.attrs && item.attrs.placeholder) || '请输入'"
           ></a-input>
           <a-textarea
@@ -55,6 +56,7 @@
             v-model="formData[item.field]"
             style="width: 100%"
             :disabled="readOnly"
+            allow-clear
             :placeholder="(item.attrs && item.attrs.placeholder) || '请选择'"
           >
             <a-option
@@ -154,9 +156,14 @@
   const formData = reactive({
     ...(props.defaultValues || {}),
   }) as any;
+  props.formItems.map((val: any) => {
+    formData[val.field] = val.valueType === 'time' ? [] : '';
+    return val;
+  });
   watch(props, (val) => {
     Object.assign(formData, val.defaultValues);
   });
+
   props.formItems.map(async (el: any) => {
     options[el.field] = el.options;
     if (el.request) {

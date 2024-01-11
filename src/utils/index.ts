@@ -105,4 +105,57 @@ export const downloadFile = (url: string, fileName?: string) => {
       document.body.removeChild(a);
     });
 };
+/**
+ * 数组转tree
+ * @param arr 数组
+ * @param props { pid: 'pid', children: 'children' }
+ * @returns arr[] tree
+ */
+export const convertArrayToTree = (
+  arr: any,
+  props = { pid: 'pid', id: 'id', children: 'children' }
+) => {
+  const map: any = {}; // 用于存放每个节点对应的索引位置
+  arr.forEach((item: any, index: number) => {
+    item[props.children] = []; // 初始化子节点列表
+    map[index] = item; // 记录当前节点在原数组中的位置
+  });
+
+  const result: any = []; // 最后返回的树形结果
+  arr.forEach((item: any, index: number) => {
+    if (map[index][props.pid]) {
+      // 判断该节点有没有父节点
+      const parentIndex = arr.findIndex(
+        (el: any) => el[props.id] === map[index][props.pid]
+      ); // 获取父节点在原数组中的位置
+      if (map[parentIndex] && map[parentIndex][props.children]) {
+        map[parentIndex][props.children].push(item); // 添加到父节点的子节点列表中
+      }
+    } else {
+      result.push(item); // 若无父节点则直接作为根节点
+    }
+  });
+
+  return result;
+};
+/**
+ *
+ * @param arr 树数据
+ * @param props { children: 'children' }
+ * @param match function 匹配表达式
+ * @returns 所有子集
+ */
+export const getAllChild = (
+  arr: any,
+  props = { children: 'children' },
+  match = (p?: any) => !!p
+) => {
+  return arr.reduce(
+    (prev: any, next: any) =>
+      match(next)
+        ? prev.concat(getAllChild(next[props.children] || [], props, match))
+        : [],
+    arr
+  );
+};
 export default null;

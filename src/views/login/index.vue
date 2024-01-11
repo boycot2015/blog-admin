@@ -29,7 +29,7 @@
     height: 100vh;
 
     .banner {
-      width: 800px;
+      width: 48%;
       background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
     }
 

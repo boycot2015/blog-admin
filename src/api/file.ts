@@ -30,8 +30,8 @@ export function queryFileList(params: ParamsProps & Pagination) {
       data: {
         records: (res.data.list || []).map((el: any) => ({
           ...el,
-          url: el.url.replace('&q=80&w=1080', '&q=80&w=120'),
-          realUrl: el.url,
+          url: el.url.replace('&q=80&w=1080', '&q=80&w=200'),
+          realUrl: el.url.replace('&q=80&w=1080', '&q=80&w=1200'),
         })),
         total: res.data.total_count,
       },

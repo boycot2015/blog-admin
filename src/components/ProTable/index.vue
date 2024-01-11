@@ -47,6 +47,7 @@
           }"
           :style="{
             marginTop: 10,
+            minHeight: scroll.y,
             maxHeight: scroll.y,
             overflow: 'auto',
           }"
@@ -65,6 +66,7 @@
           :columns="props.columns"
           :row-selection="props.rowSelection"
           :bordered="props.bordered || false"
+          :style="{ minHeight: scroll.y }"
           :scroll="{ ...scroll }"
         ></a-table>
         <a-row>
@@ -101,11 +103,12 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch } from 'vue';
+  import { ref, watch, reactive, computed } from 'vue';
   import useLoading from '@/hooks/loading';
   // import type { FormInstance } from '@arco-design/web-vue/es/form';
   import type { PaginationProps } from '@arco-design/web-vue/es/pagination';
   import type { Pagination } from '@/types/global';
+  import { useAppStore } from '@/store';
   import type {
     TableColumnData,
     TableData,
@@ -117,6 +120,10 @@
   import type { FormItemProps } from './types';
   import Form from './form.vue';
 
+  const appStore = useAppStore();
+  const footer = computed(() => appStore.footer);
+  const navbar = computed(() => appStore.navbar);
+  const tabBar = computed(() => appStore.tabBar);
   const checkAll = ref(false);
   type ProTableProps = {
     formItems?: FormItemProps[];
@@ -139,7 +146,7 @@
   const emits = defineEmits(['update:selectedKeys']);
   //   const formRef = ref<FormInstance>();
   const { loading, setLoading } = useLoading();
-  const formData = ref({});
+  const formData = ref<any>({});
   const renderList = ref<any[]>();
   const selectedKeys = ref<BaseType[]>();
   const pageData = ref<Pagination & PaginationProps>({
@@ -162,19 +169,39 @@
       : [];
     emits('update:selectedKeys', selectedKeys);
   });
-  const scroll = ref({
+  const scroll = reactive({
     x: '100%',
     y:
       (props.scroll &&
-        (props.scroll?.y !== 'auto' ? 'calc(100vh - 365px)' : 'auto')) ||
-      'calc(100vh - 365px)',
+        (props.scroll?.y !== 'auto'
+          ? `calc(100vh - ${
+              footer.value && navbar.value && tabBar.value ? 365 : 260
+            }px)`
+          : 'auto')) ||
+      `calc(100vh - ${footer.value ? 365 : 330}px)`,
+  });
+  watch(footer, () => {
+    scroll.y =
+      (props.scroll &&
+        (props.scroll?.y !== 'auto'
+          ? `calc(100vh - ${
+              footer.value && navbar.value && tabBar.value ? 365 : 260
+            }px)`
+          : 'auto')) ||
+      `calc(100vh - ${footer.value ? 365 : 330}px)`;
   });
   const fetchData = async () => {
     try {
       if (!props.request) return;
       setLoading(true);
       const { current, pageSize: size } = pageData.value;
-      const params = { current, size, ...formData.value };
+      let params: any = {};
+      Object.keys(formData.value).forEach((key: string) => {
+        if (formData.value[key] !== '' && formData.value[key] !== undefined) {
+          params[key] = formData.value[key];
+        }
+      });
+      params = { current, size, ...params };
       const { data } = await props.request(params);
 
       renderList.value = data.records;
@@ -193,7 +220,7 @@
   fetchData();
   const search = (params: any) => {
     pageData.value.current = 1;
-    formData.value = params;
+    Object.assign(formData.value, params);
     fetchData();
   };
   const reset = () => {
@@ -216,7 +243,7 @@
     if (props.scroll && props.scroll.y === 'auto') {
       return;
     }
-    scroll.value.y = val ? `calc(100vh - 405px)` : 'calc(100vh - 365px)';
+    scroll.y = val ? `calc(100vh - 405px)` : 'calc(100vh - 365px)';
   };
   defineExpose({
     reload: reset,
