@@ -9,7 +9,7 @@
       class="rule-form"
       style="width: 100%"
       submit-text="提交"
-      label-align="left"
+      label-align="right"
       layout="horizontal"
       :read-only="!!$route.query.readOnly"
       :default-values="formData"
@@ -53,16 +53,25 @@
         label: 'value',
         value: 'id',
       },
-      options: [
-        {
-          label: '公司动态',
-          value: 'COMPANY_NEWS',
-        },
-        {
-          label: '行业资讯',
-          value: 'OTHER_NEWS',
-        },
-      ],
+    },
+    {
+      field: 'tags',
+      label: '标签',
+      labelColProps: {
+        span: 3,
+      },
+      rules: [{ required: false, message: '标签不能为空' }],
+      showColon: true,
+      span: 24,
+      valueType: 'select',
+      request: '/tag/get',
+      attrs: {
+        multiple: true,
+      },
+      props: {
+        label: 'value',
+        value: 'id',
+      },
     },
     {
       field: 'content',
@@ -88,12 +97,14 @@
     queryArticle({ id: route.query.id }).then((res: any) => {
       formData.value.title = res.data.title;
       formData.value.categoryId = res.data.category.id;
+      formData.value.tags = res.data.tags.map((_: any) => _.id);
       formData.value.content = res.data.content;
     });
   };
   fetchData();
   const router = useRouter();
   const onSubmit = (val: any) => {
+    val.tags = val.tags.filter((el: any) => el);
     if (route.query.id) {
       editArticle({ ...val, id: route.query.id }).then((res: any) => {
         if (res.success) {

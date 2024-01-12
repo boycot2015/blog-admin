@@ -31,6 +31,7 @@ export interface DataResult extends Pagination {
 }
 interface ParamsProps {
   title?: string;
+  type?: string;
   id?: number | string | unknown | undefined;
   content?: string;
   status?: number | string;

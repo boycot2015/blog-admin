@@ -9,7 +9,7 @@
     :show-more="false"
   >
     <template #title>
-      {{ $t('menu.atlas.list') }}
+      {{ $t('menu.material.list') }}
     </template>
     <template #list-item="{ item }">
       <a-list-item class="list-item" action-layout="vertical">
@@ -61,12 +61,7 @@
   import { ref } from 'vue';
   import { queryFileList } from '@/api/file';
   import { downloadFile } from '@/utils';
-  //   import { Modal } from '@arco-design/web-vue';
 
-  //   const rowSelection = ref<TableRowSelection>({
-  //     selectedRowKeys: [],
-  //     showCheckedAll: true,
-  //   });
   const formData = ref({}) as any;
   const tableRef = ref({}) as any;
   const formItems = ref([
@@ -95,7 +90,6 @@
   });
   const onDownLoad = ({ realUrl, tag }: any) => {
     downloadFile(realUrl, tag);
-    //   console.log('download');
   };
 </script>
 

@@ -4,6 +4,8 @@ import type { NotificationReturn } from '@arco-design/web-vue/es/notification/in
 import type { RouteRecordNormalized } from 'vue-router';
 import defaultSettings from '@/config/settings.json';
 import { getMenuList } from '@/api/user';
+import { generate } from '@ant-design/colors';
+import { hexToRgb } from '@/utils';
 import { AppState } from './types';
 
 const useAppStore = defineStore('app', {
@@ -23,6 +25,15 @@ const useAppStore = defineStore('app', {
   actions: {
     // Update app settings
     updateSettings(partial: Partial<AppState>) {
+      if (partial.themeColor) {
+        const theme = generate(partial.themeColor);
+        theme.forEach((el, index) => {
+          document.body.style.setProperty(
+            `--arcoblue-${index + 1}`,
+            hexToRgb(el)
+          );
+        });
+      }
       // @ts-ignore-next-line
       this.$patch(partial);
     },

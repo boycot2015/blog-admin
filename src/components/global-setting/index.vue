@@ -23,11 +23,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { computed, onMounted } from 'vue';
   import { Message } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
   import { useClipboard } from '@vueuse/core';
   import { useAppStore } from '@/store';
+  import { generate } from '@ant-design/colors';
+  import { hexToRgb } from '@/utils';
   import Block from './block.vue';
 
   const emit = defineEmits(['cancel']);
@@ -37,6 +39,12 @@
   const { copy } = useClipboard();
   const visible = computed(() => appStore.globalSettings);
   const contentOpts = computed(() => [
+    {
+      name: 'settings.themeColor',
+      key: 'themeColor',
+      defaultVal: appStore.themeColor,
+      type: 'color-picker',
+    },
     { name: 'settings.navbar', key: 'navbar', defaultVal: appStore.navbar },
     {
       name: 'settings.menu',
@@ -82,6 +90,16 @@
   const setVisible = () => {
     appStore.updateSettings({ globalSettings: true });
   };
+  onMounted(() => {
+    // const themeColor = appStore.themeColor.replace('rgb(', '').replace(')', '');
+    // for (let index = 0; index < 6; index += 1) {
+    //   document.body.style.setProperty(`--arcoblue-${index + 1}`, themeColor);
+    // }
+    const theme = generate(appStore.themeColor);
+    theme.forEach((el, index) => {
+      document.body.style.setProperty(`--arcoblue-${index + 1}`, hexToRgb(el));
+    });
+  });
 </script>
 
 <style scoped lang="less">

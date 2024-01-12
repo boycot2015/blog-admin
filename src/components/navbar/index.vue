@@ -4,7 +4,7 @@
       <a-space>
         <!-- <img alt="logo" src="@/assets/images/logo.png" /> -->
         <a-typography-title
-          :style="{ margin: 0, fontSize: '18px' }"
+          :style="{ margin: 0, fontSize: '18px', minWidth: '160px' }"
           :heading="5"
         >
           {{ $t('website.title') }}

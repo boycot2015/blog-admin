@@ -2,7 +2,7 @@
   <a-space direction="vertical" :style="{ width: '100%' }">
     <a-upload
       :custom-request="customRequest"
-      :file-list="file ? [file] : []"
+      :file-list="file ? [file] : [] as any"
       :show-file-list="false"
       :disabled="disabled"
     >
@@ -54,7 +54,7 @@
   import baseUrl from '../../api/baseUrl';
 
   const token = getToken();
-  export type Props = {
+  interface Props {
     disabled?: boolean;
     url: string;
     file?: {
@@ -63,12 +63,12 @@
       status: number | string;
     };
     method?: string;
-  };
+  }
   const props = defineProps<Props>();
   const emits = defineEmits(['onSuccess']);
   //   const file = ref(props.file ? { ...props.file } : null);
   const file = computed(() => (props.file ? { ...props.file } : null));
-  const customRequest = (option) => {
+  const customRequest = (option: any) => {
     const { onProgress, onError, onSuccess, fileItem, name } = option;
     const xhr = new XMLHttpRequest();
     if (xhr.upload) {

@@ -38,6 +38,9 @@
   } from '@arco-design/web-vue/es/table';
   import router from '@/router';
   import { Modal, Message } from '@arco-design/web-vue';
+  import { useAppStore } from '@/store';
+
+  const colors: any = reactive(useAppStore().colors as any);
 
   const rowSelection = reactive<TableRowSelection>({
     selectedRowKeys: [],
@@ -67,16 +70,21 @@
         label: 'value',
         value: 'id',
       },
-      //   options: [
-      //     {
-      //       label: '公司动态',
-      //       value: 'COMPANY_NEWS',
-      //     },
-      //     {
-      //       label: '行业资讯',
-      //       value: 'OTHER_NEWS',
-      //     },
-      //   ],
+    },
+    {
+      field: 'tag',
+      label: '标签',
+      showColon: true,
+      attrs: {
+        placeholder: '请选择标签 ',
+        // multiple: true,
+      },
+      valueType: 'select',
+      request: '/tag/get',
+      props: {
+        label: 'value',
+        value: 'id',
+      },
     },
     {
       field: 'status',
@@ -139,6 +147,27 @@
       width: 150,
       render: ({ record }) => {
         return record.category?.value || record.categoryName;
+      },
+    },
+    {
+      dataIndex: 'tagName',
+      title: '标签',
+      width: 220,
+      render: ({ record }) => {
+        return record.tags ? (
+          <div>
+            {record.tags.map((el: any) => (
+              <a-tag
+                color={colors[Math.floor(Math.random() * colors.length)]}
+                style={{ margin: '0 5px 5px 0' }}
+              >
+                {el.value}
+              </a-tag>
+            ))}
+          </div>
+        ) : (
+          record.tagName
+        );
       },
     },
     {

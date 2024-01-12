@@ -45,13 +45,13 @@
           label="主题色："
           :wrapper-col-props="{ span: 4 }"
           :label-col-props="{ span: 6 }"
-          ><pick-colors v-model:value="formData.color"
+          ><pick-colors v-model:value="formData.color" format="rgb"
         /></a-form-item>
         <a-form-item
           label="背景色："
           :wrapper-col-props="{ span: 4 }"
           :label-col-props="{ span: 6 }"
-          ><pick-colors v-model:value="formData.background"
+          ><pick-colors v-model:value="formData.background" format="rgb"
         /></a-form-item>
       </template>
     </ProForm>

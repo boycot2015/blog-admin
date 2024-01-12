@@ -169,26 +169,37 @@
       : [];
     emits('update:selectedKeys', selectedKeys);
   });
+  const getHeight = () => {
+    const obj: any = {
+      365: footer.value && navbar.value && tabBar.value,
+      335: footer.value && navbar.value && !tabBar.value,
+      325: !footer.value && navbar.value && tabBar.value,
+      305: footer.value && !navbar.value && tabBar.value,
+      295: !footer.value && navbar.value && !tabBar.value,
+      275: footer.value && !navbar.value && !tabBar.value,
+      265: !footer.value && !navbar.value && tabBar.value,
+      235: !footer.value && !navbar.value && !tabBar.value,
+    };
+    let str = `calc(100vh - ${365}px)`;
+    Object.keys(obj).some((key: string) => {
+      if (obj[key]) {
+        str = `calc(100vh - ${key}px)`;
+        return true;
+      }
+      return false;
+    });
+    return str;
+  };
   const scroll = reactive({
     x: '100%',
     y:
-      (props.scroll &&
-        (props.scroll?.y !== 'auto'
-          ? `calc(100vh - ${
-              footer.value && navbar.value && tabBar.value ? 365 : 260
-            }px)`
-          : 'auto')) ||
-      `calc(100vh - ${footer.value ? 365 : 330}px)`,
+      (props.scroll && (props.scroll?.y !== 'auto' ? getHeight() : 'auto')) ||
+      getHeight(),
   });
-  watch(footer, () => {
+  watch([footer, navbar, tabBar], () => {
     scroll.y =
-      (props.scroll &&
-        (props.scroll?.y !== 'auto'
-          ? `calc(100vh - ${
-              footer.value && navbar.value && tabBar.value ? 365 : 260
-            }px)`
-          : 'auto')) ||
-      `calc(100vh - ${footer.value ? 365 : 330}px)`;
+      (props.scroll && (props.scroll?.y !== 'auto' ? getHeight() : 'auto')) ||
+      getHeight();
   });
   const fetchData = async () => {
     try {
@@ -199,6 +210,9 @@
       Object.keys(formData.value).forEach((key: string) => {
         if (formData.value[key] !== '' && formData.value[key] !== undefined) {
           params[key] = formData.value[key];
+        }
+        if (typeof formData.value[key] === 'object') {
+          params[key] = params[key].filter((el: any) => el).toString();
         }
       });
       params = { current, size, ...params };

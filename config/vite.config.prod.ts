@@ -19,8 +19,19 @@ export default mergeConfig(
         output: {
           manualChunks: {
             arco: ['@arco-design/web-vue'],
+            wangeditor: ['wangeditor'],
+            colors: ['@ant-design/colors', 'vue-pick-colors'],
             chart: ['echarts', 'vue-echarts'],
-            vue: ['vue', 'vue-router', 'pinia', '@vueuse/core', 'vue-i18n'],
+            lodash: ['lodash'],
+            axios: ['axios'],
+            vue: [
+              'vue',
+              'vue-router',
+              'pinia',
+              'pinia-plugin-persist',
+              '@vueuse/core',
+              'vue-i18n',
+            ],
           },
         },
       },

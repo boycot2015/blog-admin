@@ -1,5 +1,6 @@
 import axios from 'axios';
 // import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import type { HttpResponse } from '@/api/interceptor';
 
 export type ContentData = {
   currentTime: number;
@@ -49,7 +50,15 @@ export interface ContentDataRecord {
 }
 
 export function queryContentData() {
-  return axios.get<ContentData>('/datas');
+  return axios.get<ContentData>('/datas').then((res) => {
+    return axios.get<HttpResponse>('/category/get').then((cate: any) => {
+      return axios.get<HttpResponse>('/tag/get').then((tag: any) => {
+        return {
+          data: { ...res.data, category: cate.data[1], tag: tag.data[1] },
+        };
+      });
+    });
+  });
 }
 
 export interface PopularRecord {

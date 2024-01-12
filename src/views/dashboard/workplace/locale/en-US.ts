@@ -10,6 +10,8 @@ export default {
   'workplace.articleNum': 'articleNum',
   'workplace.visitorNum': 'visitorNum',
   'workplace.newDay': 'Daily Additional Comments',
+  'workplace.tag': 'Tag Num',
+  'workplace.category': 'Category Num',
   'workplace.newFromYesterday': 'New From Yesterday',
   'workplace.minute': 'Min',
   'workplace.docs': 'Documents',

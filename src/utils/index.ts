@@ -39,22 +39,22 @@ export const encryptByDES = (message: any, key: any) => {
   return encrypted.ciphertext.toString();
 };
 // DES解密
-export const decryptByDES = (ciphertext: any, key: any) => {
-  //   console.log(CryptoJS);
-  const keyHex = CryptoJS.enc.Utf8.parse(key);
-  // direct decrypt ciphertext
-  const decrypted = CryptoJS.DES.decrypt(
-    {
-      ciphertext: CryptoJS.enc.Hex.parse(ciphertext),
-    },
-    keyHex,
-    {
-      mode: CryptoJS.mode.ECB,
-      padding: CryptoJS.pad.Pkcs7,
-    }
-  );
-  return decrypted.toString(CryptoJS.enc.Utf8);
-};
+// export const decryptByDES = (ciphertext: any, key: any) => {
+//   //   console.log(CryptoJS);
+//   const keyHex = CryptoJS.enc.Utf8.parse(key);
+//   // direct decrypt ciphertext
+//   const decrypted = CryptoJS.DES.decrypt(
+//     {
+//       ciphertext: CryptoJS.enc.Hex.parse(ciphertext),
+//     },
+//     keyHex,
+//     {
+//       mode: CryptoJS.mode.ECB,
+//       padding: CryptoJS.pad.Pkcs7,
+//     }
+//   );
+//   return decrypted.toString(CryptoJS.enc.Utf8);
+// };
 
 // AES加密解密
 /**
@@ -157,5 +157,16 @@ export const getAllChild = (
         : [],
     arr
   );
+};
+export const hexToRgb = (hex: string, showRgb?: boolean) => {
+  // 去除#号
+  const color = hex.replace('#', '');
+  // 分割成红、绿、蓝三部分的十六进制字符串
+  const red = parseInt(color.substring(0, 2), 16);
+  const green = parseInt(color.substring(2, 4), 16);
+  const blue = parseInt(color.substring(4, 6), 16);
+  return showRgb
+    ? `rgb(${red}, ${green}, ${blue})`
+    : `${red}, ${green}, ${blue}`;
 };
 export default null;

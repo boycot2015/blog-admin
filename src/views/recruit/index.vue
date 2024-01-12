@@ -80,7 +80,10 @@
   const fetchData = async (contentType: string) => {
     try {
       setLoading(true);
-      const { data } = await queryArticleList({ type: contentType });
+      const { data } = (await queryArticleList({
+        type: contentType,
+        total: 0,
+      })) as any;
       renderList.value = data.records;
     } catch (err) {
       // you can report use errorHandler or other

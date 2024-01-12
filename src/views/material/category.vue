@@ -29,7 +29,7 @@
         <a-input
           v-model="formData.title"
           style="width: 400px"
-          placeholder="请选择分类"
+          placeholder="请选择或输入分类"
         ></a-input>
         <a-button
           type="primary"
@@ -98,8 +98,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { reactive, ref } from 'vue';
   import { convertArrayToTree, getAllChild } from '@/utils';
+  import { useAppStore } from '@/store';
   import {
     queryCategory,
     addCategory,
@@ -126,21 +127,7 @@
     id: '',
     title: '',
   });
-  const custom = [
-    '#f53f3f',
-    '#7816ff',
-    '#00b42a',
-    '#165dff',
-    '#ff7d00',
-    '#eb0aa4',
-    '#7bc616',
-    '#86909c',
-    '#b71de8',
-    '#0fc6c2',
-    '#ffb400',
-    '#168cff',
-    '#ff5722',
-  ];
+  const colors: any = reactive(useAppStore().colors as any);
   const fetchData = (params?: any) => {
     queryCategory({}).then((res: any) => {
       data.value = res.data.map((el: any) => ({
@@ -148,7 +135,7 @@
         pid: el.parentId,
         id: el.id,
         count: el.articleNum,
-        color: custom[Math.floor(Math.random() * custom.length)],
+        color: colors[Math.floor(Math.random() * colors.length)],
         key: el.id,
       }));
       treeData.value = convertArrayToTree([...data.value], {
@@ -168,7 +155,6 @@
         delete obj.children;
         return obj;
       });
-      //   console.log(treeData.value, 'data.value');
       if (params)
         Message[params.success ? 'success' : 'error'](
           params.data || params.message
@@ -241,28 +227,10 @@
       value: `new category${children.length + 1}`,
       parentId: nodeData.id,
     }).then((res) => fetchData(res));
-    // children.push({
-    //   title: 'new category',
-    //   key: `${nodeData.key}-${children.length + 1}`,
-    // });
-    // nodeData.children = children;
-    // treeData.value = [...treeData.value];
   };
   const onClose = (item: treeProp) => {
     if (item.id === formData.value.id) formData.value = { id: '' };
     deleteCategory({ id: item.id }).then((res: any) => fetchData(res));
-    // Modal.open({
-    //   simple: true,
-    //   titleAlign: 'center',
-    //   alignCenter: true,
-    //   title: '温馨提示',
-    //   content: '确认删除？',
-    //   onOk: () => {
-    //     deleteCategory({ id: item.id }).then((res: any) => {
-    //       Message[res.success ? 'success' : 'error'](res.data || res.message);
-    //     });
-    //   },
-    // });
   };
   fetchData();
 </script>

@@ -2,11 +2,14 @@
   <a-config-provider :locale="locale">
     <router-view />
     <global-setting />
+    <a-back-top :target-container="bodyEl" :style="{ position: 'fixed' }">
+      <a-button type="primary" shape="circle"><icon-up /></a-button
+    ></a-back-top>
   </a-config-provider>
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { computed, ref } from 'vue';
   //   import { useAppStore } from '@/store';
   import enUS from '@arco-design/web-vue/es/locale/lang/en-us';
   import zhCN from '@arco-design/web-vue/es/locale/lang/zh-cn';
@@ -15,6 +18,7 @@
 
   //   const appStore = useAppStore();
   const { currentLocale } = useLocale();
+  const bodyEl = ref();
   const locale = computed(() => {
     switch (currentLocale.value) {
       case 'zh-CN':

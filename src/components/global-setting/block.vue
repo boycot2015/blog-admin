@@ -55,6 +55,7 @@
         menuCollapse: false,
       });
     }
+
     appStore.updateSettings({ [key]: value });
   };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <a-grid v-loading="loading" :cols="24" :row-gap="16" class="panel">
+  <a-grid :cols="24" :row-gap="16" class="panel">
     <a-grid-item
       v-for="item in statisticList"
       :key="item.prop"
@@ -32,7 +32,7 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import useLoading from '@/hooks/loading';
+  //   import useLoading from '@/hooks/loading';
   import { queryContentData } from '@/api/dashboard';
   import { useI18n } from 'vue-i18n';
   import { isValidKey } from '@/utils/is';
@@ -41,7 +41,7 @@
 
   const { t } = useI18n();
 
-  const { loading, setLoading } = useLoading();
+  //   const { loading, setLoading } = useLoading();
   const statisticList = ref<ContentDataRecord[]>([
     {
       title: t('workplace.totalNum'),
@@ -62,7 +62,21 @@
       value: 0,
       prop: 'visitorData',
       imgUrl:
-        '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/77d74c9a245adeae1ec7fb5d4539738d.svg~tplv-49unhts6dw-image.image',
+        '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/288b89194e657603ff40db39e8072640.svg~tplv-49unhts6dw-image.image',
+    },
+    {
+      title: t('workplace.category'),
+      value: 0,
+      prop: 'category',
+      imgUrl:
+        '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/288b89194e657603ff40db39e8072640.svg~tplv-49unhts6dw-image.image',
+    },
+    {
+      title: t('workplace.tag'),
+      value: 0,
+      prop: 'tag',
+      imgUrl:
+        '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/288b89194e657603ff40db39e8072640.svg~tplv-49unhts6dw-image.image',
     },
     {
       title: t('workplace.newFromYesterday'),
@@ -74,7 +88,7 @@
   ]);
   const fetchData = async () => {
     try {
-      setLoading(true);
+      //   setLoading(true);
       const { data } = (await queryContentData()) as any;
       statisticList.value.map((el: ContentDataRecord) => {
         // eslint-disable-next-line no-restricted-syntax
@@ -88,7 +102,7 @@
     } catch (err) {
       // you can report use errorHandler or other
     } finally {
-      setLoading(false);
+      //   setLoading(false);
     }
   };
   fetchData();
