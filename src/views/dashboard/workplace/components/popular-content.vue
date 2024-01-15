@@ -28,31 +28,30 @@
       dataIndex: 'id',
       title: 'ID',
       fixed: 'left',
-      width: 160,
+      width: 100,
     },
     {
       dataIndex: 'title',
       title: '文章标题',
-      fixed: 'left',
       tooltip: true,
       ellipsis: true,
-      width: 220,
+      width: 260,
     },
     {
-      dataIndex: 'articleType',
+      dataIndex: 'categoryName',
       title: '文章分类',
       width: 150,
       render: ({ record }) => {
-        return record.articleType === 'OTHER_NEWS' ? '行业资讯' : '公司动态';
+        return record.category?.value || record.categoryName;
       },
     },
     {
-      dataIndex: 'visitorNum',
+      dataIndex: 'visitor',
       title: '阅读量',
-      width: 150,
+      width: 100,
       //   sortable: {
       //     sortDirections: ['descend', 'ascend'],
-      //     sorter: false,
+      //     sorter: true,
       //     defaultSortOrder: '',
       //   },
     },
@@ -62,11 +61,11 @@
       width: 180,
       render: ({ record }) =>
         new Date(record.createTime).toLocaleString().replace(/\//g, '-'),
-      sortable: {
-        sortDirections: ['descend', 'ascend'],
-        sorter: false,
-        defaultSortOrder: '',
-      },
+      //   sortable: {
+      //     sortDirections: ['descend', 'ascend'],
+      //     sorter: false,
+      //     defaultSortOrder: '',
+      //   },
     },
   ]);
 </script>
