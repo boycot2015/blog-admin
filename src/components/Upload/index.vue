@@ -51,7 +51,7 @@
   import { IconEdit, IconPlus } from '@arco-design/web-vue/es/icon';
   import { computed } from 'vue';
   import { getToken } from '../../utils/auth';
-  import baseUrl from '../../api/baseUrl';
+  import { apiUrl } from '../../api/baseUrl';
 
   const token = getToken();
   interface Props {
@@ -65,7 +65,7 @@
     method?: string;
   }
   const props = defineProps<Props>();
-  const emits = defineEmits(['onSuccess']);
+  const emits = defineEmits(['change']);
   //   const file = ref(props.file ? { ...props.file } : null);
   const file = computed(() => (props.file ? { ...props.file } : null));
   const customRequest = (option: any) => {
@@ -88,13 +88,14 @@
       if (xhr.status < 200 || xhr.status >= 300) {
         return onError(xhr.responseText);
       }
-      emits('onSuccess', xhr.response.data);
-      return onSuccess(xhr.response.data);
+      emits('change', JSON.parse(xhr.response).data);
+      if (file.value) file.value.url = JSON.parse(xhr.response).data;
+      return onSuccess(xhr.response);
     };
 
     const formData = new FormData();
     formData.append(name || 'file', fileItem.file);
-    xhr.open(props.method || 'post', baseUrl + props.url, true);
+    xhr.open(props.method || 'post', apiUrl + (props.url || '/upload'), true);
     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
 
     xhr.send(formData);

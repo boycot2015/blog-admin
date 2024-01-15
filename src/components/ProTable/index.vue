@@ -7,7 +7,7 @@
         padding: '16px 16px 8px',
       }"
     >
-      <slot name="tabs"></slot>
+      <slot name="tabs" :form="formData"></slot>
       <Form
         v-bind="{
           ...props,
@@ -16,10 +16,18 @@
         :form-items="props.formItems"
         @search="search"
         @reset="reset"
-        @show-more="showMore"
-      ></Form>
+        @show-more="(val) => (isMore = val)"
+      >
+        <template
+          v-for="item in props.formItems.filter((el) => el.slotName)"
+          :key="item.prop"
+        >
+          <slot :name="item.slotName" :form="formData" :item="item"></slot>
+        </template>
+      </Form>
     </a-card>
     <a-card
+      ref="tableCardRef"
       class="general-card"
       :header-style="{ paddingBottom: '0' }"
       :body-style="{ padding: '17px 20px 21px 20px' }"
@@ -103,7 +111,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch, reactive, computed } from 'vue';
+  import { ref, watch, reactive, computed, onMounted, nextTick } from 'vue';
   import useLoading from '@/hooks/loading';
   // import type { FormInstance } from '@arco-design/web-vue/es/form';
   import type { PaginationProps } from '@arco-design/web-vue/es/pagination';
@@ -139,14 +147,15 @@
     title?: string | undefined;
     listType?: string;
     request?: ((args: any) => Promise<any>) | undefined;
-    scroll?: { x?: number | string; y?: number | string };
+    scroll?: { x?: number | string; y?: number | string | bigint | any };
     selectedKeys?: BaseType[] | undefined;
   };
   const props = defineProps<ProTableProps>();
   const emits = defineEmits(['update:selectedKeys']);
-  //   const formRef = ref<FormInstance>();
+  const tableCardRef = ref<any>();
   const { loading, setLoading } = useLoading();
   const formData = ref<any>({});
+  const isMore = ref<boolean>(false);
   const renderList = ref<any[]>();
   const selectedKeys = ref<BaseType[]>();
   const pageData = ref<Pagination & PaginationProps>({
@@ -169,37 +178,40 @@
       : [];
     emits('update:selectedKeys', selectedKeys);
   });
-  const getHeight = () => {
-    const obj: any = {
-      365: footer.value && navbar.value && tabBar.value,
-      335: footer.value && navbar.value && !tabBar.value,
-      325: !footer.value && navbar.value && tabBar.value,
-      305: footer.value && !navbar.value && tabBar.value,
-      295: !footer.value && navbar.value && !tabBar.value,
-      275: footer.value && !navbar.value && !tabBar.value,
-      265: !footer.value && !navbar.value && tabBar.value,
-      235: !footer.value && !navbar.value && !tabBar.value,
-    };
-    let str = `calc(100vh - ${365}px)`;
-    Object.keys(obj).some((key: string) => {
-      if (obj[key]) {
-        str = `calc(100vh - ${key}px)`;
-        return true;
-      }
-      return false;
-    });
-    return str;
+  const getOffsetTop = (el: any) => {
+    let { offsetTop } = el;
+    if (el.offsetParent) {
+      offsetTop += getOffsetTop(el.offsetParent);
+    }
+    return offsetTop;
+  };
+  const getHeight = (isNavBar?: boolean) => {
+    const offsetTop = getOffsetTop(tableCardRef.value?.$el);
+    return `calc(100vh - ${
+      offsetTop +
+      (footer.value ? 192 : 152) +
+      // eslint-disable-next-line no-nested-ternary
+      (isNavBar ? (navbar.value ? 60 : -60) : 0)
+    }px)`;
   };
   const scroll = reactive({
     x: '100%',
-    y:
-      (props.scroll && (props.scroll?.y !== 'auto' ? getHeight() : 'auto')) ||
-      getHeight(),
+    y: props.scroll?.y,
   });
-  watch([footer, navbar, tabBar], () => {
-    scroll.y =
-      (props.scroll && (props.scroll?.y !== 'auto' ? getHeight() : 'auto')) ||
-      getHeight();
+  watch([footer, tabBar, isMore], () => {
+    nextTick(() => {
+      scroll.y =
+        (props.scroll && (props.scroll?.y !== 'auto' ? getHeight() : 'auto')) ||
+        getHeight();
+    });
+  });
+  watch([navbar], () => {
+    nextTick(() => {
+      scroll.y =
+        (props.scroll &&
+          (props.scroll?.y !== 'auto' ? getHeight(true) : 'auto')) ||
+        getHeight(true);
+    });
   });
   const fetchData = async () => {
     try {
@@ -232,6 +244,13 @@
     }
   };
   fetchData();
+  onMounted(() => {
+    nextTick(() => {
+      scroll.y =
+        (props.scroll && (props.scroll?.y !== 'auto' ? getHeight() : 'auto')) ||
+        getHeight();
+    });
+  });
   const search = (params: any) => {
     pageData.value.current = 1;
     Object.assign(formData.value, params);
@@ -252,12 +271,6 @@
   const pageChange = (val: any) => {
     pageData.value.current = val || 1;
     fetchData();
-  };
-  const showMore = (val: boolean) => {
-    if (props.scroll && props.scroll.y === 'auto') {
-      return;
-    }
-    scroll.y = val ? `calc(100vh - 405px)` : 'calc(100vh - 365px)';
   };
   defineExpose({
     reload: reset,

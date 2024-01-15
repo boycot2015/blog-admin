@@ -19,10 +19,10 @@
     >
       <template #upload>
         <Upload
-          url="/file/upload"
+          url="/upload"
           :disabled="!!$route.query.readOnly"
-          :file="{ url: formData.avatar }"
-          @on-change="(file:any) => (formData.avatar = file)"
+          :file="{ url: formData.avatar || '' }"
+          @change="(file:any) => (formData.avatar = file)"
         ></Upload>
       </template>
     </ProForm>

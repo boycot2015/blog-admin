@@ -101,7 +101,7 @@
             v-if="item.slotName"
             :name="item.slotName"
             :form="formData"
-            :form-item="item"
+            :item="item"
           ></slot>
         </a-form-item>
       </a-col>
