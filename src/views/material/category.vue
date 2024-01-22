@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ display: 'flex', minWidth: '1200px' }">
+  <a-spin :style="{ display: 'flex', minWidth: '1200px' }" :loading="loading">
     <a-card :style="{ flex: 1 }">
       <a-space wrap>
         <a-tag
@@ -94,7 +94,7 @@
         </template>
       </a-tree>
     </a-card>
-  </div>
+  </a-spin>
 </template>
 
 <script lang="ts" setup>
@@ -108,6 +108,7 @@
     deleteCategory,
   } from '@/api/category';
   import { Message } from '@arco-design/web-vue';
+  import useLoading from '@/hooks/loading';
 
   type treeProp = {
     title?: string;
@@ -118,6 +119,7 @@
     closable?: boolean;
     children?: treeProp[];
   };
+  const { loading, setLoading } = useLoading();
   const treeData = ref<treeProp[]>([]);
   const data = ref<treeProp[]>([]);
   const parents = ref<treeProp[]>([]);
@@ -129,6 +131,8 @@
   });
   const colors: any = reactive(useAppStore().colors as any);
   const fetchData = (params?: any) => {
+    setLoading(true);
+
     queryCategory({}).then((res: any) => {
       data.value = res.data.map((el: any) => ({
         title: el.value,
@@ -162,6 +166,7 @@
       else {
         expandedKeys.value = treeData.value.map((el) => el.id).slice(0, 2);
       }
+      setLoading(false);
     });
   };
   const getParents = (item: treeProp, arr: treeProp[]) => {

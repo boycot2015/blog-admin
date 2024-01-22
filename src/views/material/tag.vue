@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ display: 'flex' }">
+  <a-spin :style="{ display: 'flex' }" :loading="loading">
     <a-card :style="{ flex: 1 }">
       <a-space wrap>
         <a-tag
@@ -45,7 +45,7 @@
         >
       </a-space>
     </a-card>
-  </div>
+  </a-spin>
 </template>
 
 <script lang="ts" setup>
@@ -53,6 +53,7 @@
   import { queryTag, addTag, editTag, deleteTag } from '@/api/tag';
   import { Message } from '@arco-design/web-vue';
   import { useAppStore } from '@/store';
+  import useLoading from '@/hooks/loading';
 
   type Props = {
     title?: string;
@@ -60,6 +61,7 @@
     color?: string;
     count?: string | number;
   };
+  const { loading, setLoading } = useLoading();
   const data = ref<Props[]>([]);
   const formData = ref<Props>({
     id: '',
@@ -67,6 +69,7 @@
   });
   const colors: any = reactive(useAppStore().colors as any);
   const fetchData = (params?: any) => {
+    setLoading(true);
     queryTag({}).then((res: any) => {
       data.value = res.data.map((el: any) => ({
         title: el.value,
@@ -81,6 +84,7 @@
         Message[params.success ? 'success' : 'error'](
           params.data || params.message
         );
+      setLoading(false);
     });
   };
   const onTagChecked = (item: Props) => {

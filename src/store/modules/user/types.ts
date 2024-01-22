@@ -11,11 +11,12 @@ export interface UserState {
   introduction?: string;
   personalWebsite?: string;
   jobName?: string;
+  administrator?: boolean;
   organizationName?: string;
   locationName?: string;
   phone?: string;
   registrationDate?: string;
-  accountId?: string;
+  accountId?: string | number;
   certification?: number;
   role?: RoleType;
   roleId?: number;

@@ -5,27 +5,29 @@
       padding: '16px 16px 8px',
     }"
   >
-    <ProForm
-      class="rule-form"
-      style="width: 100%"
-      submit-text="提交"
-      label-align="right"
-      layout="horizontal"
-      centered
-      :read-only="!!$route.query.readOnly"
-      :default-values="formData"
-      :form-items="formItems"
-      @search="onSubmit"
-    >
-      <template #upload>
-        <Upload
-          url="/upload"
-          :disabled="!!$route.query.readOnly"
-          :file="{ url: formData.avatar || '' }"
-          @change="(file:any) => (formData.avatar = file)"
-        ></Upload>
-      </template>
-    </ProForm>
+    <a-spin :loading="loading" style="width: 100%">
+      <ProForm
+        class="rule-form"
+        style="width: 100%"
+        submit-text="提交"
+        label-align="right"
+        layout="horizontal"
+        centered
+        :read-only="!!$route.query.readOnly"
+        :default-values="formData"
+        :form-items="formItems"
+        @search="onSubmit"
+      >
+        <template #upload>
+          <Upload
+            url="/upload"
+            :disabled="!!$route.query.readOnly"
+            :file="{ url: formData.avatar || '' }"
+            @change="(file:any) => (formData.avatar = file)"
+          ></Upload>
+        </template>
+      </ProForm>
+    </a-spin>
   </a-card>
 </template>
 
@@ -33,7 +35,10 @@
   import { ref } from 'vue';
   import { addUser, queryUser, editUser } from '@/api/user';
   import { useRouter, useRoute } from 'vue-router';
+  import useLoading from '@/hooks/loading';
+  import { aesEncrypt } from '@/utils';
 
+  const { loading, setLoading } = useLoading();
   const formData = ref({
     status: 1001,
   }) as any;
@@ -119,19 +124,25 @@
   const route = useRoute();
   const fetchData = () => {
     if (!route.query.id) return;
+    setLoading(true);
     queryUser({ id: route.query.id }).then((res: any) => {
       formData.value.avatar = res.data.avatar;
       formData.value.id = res.data.id;
       formData.value.username = res.data.username;
       formData.value.email = res.data.email;
       formData.value.status = res.data.status || 1001;
+      setLoading(false);
     });
   };
   fetchData();
   const router = useRouter();
   const onSubmit = (val: any) => {
     if (route.query.id) {
-      editUser({ ...val, id: route.query.id }).then((res: any) => {
+      editUser({
+        ...val,
+        id: route.query.id,
+        password: aesEncrypt(val.password),
+      }).then((res: any) => {
         if (res.success) {
           router.push('/user');
         }

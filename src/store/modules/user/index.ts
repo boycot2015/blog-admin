@@ -15,11 +15,14 @@ const useUserStore = defineStore('user', {
   state: (): UserState => {
     if (getToken()) {
       const data = jwtDecode(getToken() as string) as any;
+
       return {
         role: data.authorities,
         name: data.userName || data.username,
         mobile: data.mobile,
         roleId: data.roleId,
+        avatar: data.avatar,
+        administrator: data.administrator,
         accountId: data.id,
       };
     }
@@ -34,6 +37,7 @@ const useUserStore = defineStore('user', {
       introduction: undefined,
       personalWebsite: undefined,
       jobName: undefined,
+      administrator: false,
       organizationName: undefined,
       locationName: undefined,
       phone: undefined,
@@ -92,6 +96,8 @@ const useUserStore = defineStore('user', {
           name: data.userName || data.username,
           mobile: data.mobile,
           roleId: data.roleId,
+          avatar: data.avatar,
+          administrator: data.administrator,
           accountId: data.id,
         });
         setToken(res.data);

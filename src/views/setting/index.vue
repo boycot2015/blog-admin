@@ -5,56 +5,61 @@
       padding: '16px 16px 8px',
     }"
   >
-    <ProForm
-      class="rule-form"
-      style="width: 100%"
-      submit-text="提交"
-      label-align="right"
-      layout="horizontal"
-      centered
-      :read-only="!!$route.query.readOnly"
-      :default-values="formData"
-      :form-items="formItems"
-      @search="onSubmit"
-    >
-      <template #banner>
-        <div class="banner" style="width: 100%">
-          <div class="banner-inner">
-            <a-carousel
-              class="carousel"
-              animation-name="slide"
-              style="width: 100%; height: 230px"
-            >
-              <a-carousel-item v-for="item in formData.banner" :key="item.url">
-                <div :key="item.url" class="carousel-item">
-                  <!-- <div class="carousel-title">{{ item.slogan }}</div>
+    <a-spin :loading="loading" style="width: 100%">
+      <ProForm
+        class="rule-form"
+        style="width: 100%"
+        submit-text="提交"
+        label-align="right"
+        layout="horizontal"
+        centered
+        :read-only="!!$route.query.readOnly"
+        :default-values="formData"
+        :form-items="formItems"
+        @search="onSubmit"
+      >
+        <template #banner>
+          <div class="banner" style="width: 100%">
+            <div class="banner-inner">
+              <a-carousel
+                class="carousel"
+                animation-name="slide"
+                style="width: 100%; height: 230px"
+              >
+                <a-carousel-item
+                  v-for="item in formData.banner"
+                  :key="item.url"
+                >
+                  <div :key="item.url" class="carousel-item">
+                    <!-- <div class="carousel-title">{{ item.slogan }}</div>
             <div class="carousel-sub-title">{{ item.subSlogan }}</div> -->
-                  <img
-                    class="carousel-image"
-                    style="height: auto; width: 100%"
-                    :src="item.url"
-                  />
-                </div>
-              </a-carousel-item>
-            </a-carousel>
+                    <img
+                      class="carousel-image"
+                      style="height: auto; width: 100%"
+                      :src="item.url"
+                    />
+                  </div>
+                </a-carousel-item>
+              </a-carousel>
+            </div>
           </div>
-        </div>
-      </template>
-      <template #colorPicker>
-        <a-form-item
-          label="主题色："
-          :wrapper-col-props="{ span: 4 }"
-          :label-col-props="{ span: 6 }"
-          ><pick-colors v-model:value="formData.color" format="rgb"
-        /></a-form-item>
-        <a-form-item
-          label="背景色："
-          :wrapper-col-props="{ span: 4 }"
-          :label-col-props="{ span: 6 }"
-          ><pick-colors v-model:value="formData.background" format="rgb"
-        /></a-form-item>
-      </template>
-    </ProForm>
+        </template>
+        <template #colorPicker>
+          <a-form-item
+            label="主题色："
+            :wrapper-col-props="{ span: 4 }"
+            :label-col-props="{ span: 6 }"
+            ><pick-colors v-model:value="formData.color" format="rgb"
+          /></a-form-item>
+          <a-form-item
+            label="背景色："
+            :wrapper-col-props="{ span: 4 }"
+            :label-col-props="{ span: 6 }"
+            ><pick-colors v-model:value="formData.background" format="rgb"
+          /></a-form-item>
+        </template>
+      </ProForm>
+    </a-spin>
   </a-card>
 </template>
 
@@ -64,7 +69,9 @@
   //   import { useRouter, useRoute } from 'vue-router';
   import { Message } from '@arco-design/web-vue';
   import PickColors from 'vue-pick-colors';
+  import useLoading from '@/hooks/loading';
 
+  const { loading, setLoading } = useLoading();
   const formData = ref({}) as any;
   const formItems = ref([
     {
@@ -173,6 +180,7 @@
   ]);
   //   const route = useRoute();
   const fetchData = () => {
+    setLoading(true);
     querySetting({}).then((res: any) => {
       formData.value.id = res.data.id;
       formData.value.notice = JSON.parse(res.data.notice).title;
@@ -182,6 +190,7 @@
       formData.value.email = JSON.parse(res.data.siteConfig).email;
       formData.value.color = JSON.parse(res.data.theme).color;
       formData.value.background = JSON.parse(res.data.theme).background;
+      setLoading(false);
     });
   };
   fetchData();

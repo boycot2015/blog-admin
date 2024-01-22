@@ -45,6 +45,7 @@
     showCheckedAll: true,
   });
   const userInfo = useUserStore();
+
   const formData = ref({}) as any;
   const tableRef = ref({}) as any;
   const formItems = ref([
@@ -189,16 +190,20 @@
           >
             查看
           </a-link>
-          <a-link
-            onClick={() => {
-              router.push({ path: '/user/edit', query: { id: record.id } });
-            }}
-          >
-            编辑
-          </a-link>
-          {userInfo.accountId !== record.id && record.id !== 1 && (
-            <a-link onClick={() => onDelete(record)}>删除</a-link>
+          {(record.id !== 1 || userInfo.accountId === 1) && (
+            <a-link
+              onClick={() => {
+                router.push({ path: '/user/edit', query: { id: record.id } });
+              }}
+            >
+              编辑
+            </a-link>
           )}
+          {userInfo.accountId !== record.id &&
+            record.id !== 1 &&
+            userInfo.administrator && (
+              <a-link onClick={() => onDelete(record)}>删除</a-link>
+            )}
         </a-space>
       ),
     },

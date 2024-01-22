@@ -143,14 +143,15 @@
       </li>
       <li>
         <a-dropdown trigger="click">
-          <a-avatar
-            v-if="avatar"
-            :size="32"
-            :style="{ marginRight: '8px', cursor: 'pointer' }"
-          >
-            <img alt="avatar" :src="avatar" />
-          </a-avatar>
-          <span v-else alt="avatar">{{ userName }}</span>
+          <div style="cursor: pointer">
+            <a-avatar v-if="avatar" :size="32">
+              <img alt="avatar" :src="avatar" />
+            </a-avatar>
+            <span alt="avatar" :style="{ margin: '0 8px' }">{{
+              userName
+            }}</span>
+            <icon-down></icon-down>
+          </div>
           <template #content>
             <!-- <a-doption>
               <a-space @click="switchRoles">
@@ -213,7 +214,6 @@
   const avatar = computed(() => {
     return userStore.avatar;
   });
-  //   console.log(userStore, 'userStore');
 
   const userName = computed(() => {
     return userStore.name || userStore.userName;

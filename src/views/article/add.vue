@@ -5,18 +5,20 @@
       padding: '16px 16px 8px',
     }"
   >
-    <ProForm
-      class="rule-form"
-      style="width: 100%"
-      submit-text="提交"
-      label-align="right"
-      layout="horizontal"
-      :read-only="!!$route.query.readOnly"
-      :default-values="formData"
-      :form-items="formItems"
-      @search="onSubmit"
-    >
-    </ProForm>
+    <a-spin :loading="loading" style="width: 100%">
+      <ProForm
+        class="rule-form"
+        style="width: 100%"
+        submit-text="提交"
+        label-align="right"
+        layout="horizontal"
+        :read-only="!!$route.query.readOnly"
+        :default-values="formData"
+        :form-items="formItems"
+        @search="onSubmit"
+      >
+      </ProForm>
+    </a-spin>
   </a-card>
 </template>
 
@@ -24,7 +26,9 @@
   import { ref } from 'vue';
   import { addArticle, queryArticle, editArticle } from '@/api/article';
   import { useRouter, useRoute } from 'vue-router';
+  import useLoading from '@/hooks/loading';
 
+  const { loading, setLoading } = useLoading();
   const formData = ref({}) as any;
   const formItems = ref([
     {
@@ -94,11 +98,13 @@
   const route = useRoute();
   const fetchData = () => {
     if (!route.query.id) return;
+    setLoading(true);
     queryArticle({ id: route.query.id }).then((res: any) => {
       formData.value.title = res.data.title;
       formData.value.categoryId = res.data.category.id;
       formData.value.tags = res.data.tags.map((_: any) => _.id);
       formData.value.content = res.data.content;
+      setLoading(false);
     });
   };
   fetchData();
