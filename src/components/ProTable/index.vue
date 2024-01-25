@@ -93,7 +93,7 @@
             <a-pagination
               v-if="props.pagination"
               v-model:current="pageData.current"
-              v-model:page-size="pageData.size"
+              v-model:page-size="pageData.pageSize"
               style="float: right"
               show-total
               show-jumper
@@ -160,13 +160,12 @@
   const selectedKeys = ref<BaseType[]>();
   const pageData = ref<Pagination & PaginationProps>({
     current: 1,
-    defaultPagesize: props.listType === 'card' ? 30 : 10,
     pageSize: props.listType === 'card' ? 30 : 10,
     showPageSize: true,
     total: 0,
   });
   watch(props, (val) => {
-    pageData.value.defaultPageSize = val.listType === 'card' ? 30 : 10;
+    pageData.value.pageSize = val.listType === 'card' ? 30 : 10;
   });
   watch(selectedKeys, () => {
     emits('update:selectedKeys', selectedKeys);
@@ -284,20 +283,21 @@
   //   }
   :deep(.arco-form) {
     .arco-form-item {
-      padding: 0 5px;
+      padding-left: 5px;
+      background-color: var(--color-fill-2);
       border: 1px solid var(--color-neutral-3);
     }
   }
   :deep(.arco-picker),
   :deep(.arco-select-view-single),
   :deep(.arco-input-wrapper) {
-    background-color: #fff;
+    // background-color: #fff;
     border: none;
   }
   .arco-picker,
   .arco-select-view-single,
   .arco-input-wrapper {
-    background-color: #fff;
+    // background-color: #fff;
     border: 1px solid var(--color-neutral-3);
     &:hover {
       background-color: #fff;

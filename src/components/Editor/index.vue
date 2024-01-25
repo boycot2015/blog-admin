@@ -98,6 +98,13 @@
   .w-e-text {
     overflow-y: auto;
   }
+  .wangEditors {
+    :deep(.w-e-toolbar),
+    :deep(.w-e-text-container),
+    :deep(.w-e-menu-panel) {
+      background-color: var(--color-fill-2) !important;
+    }
+  }
   :deep(.w-e-text-container) {
     height: 85% !important;
     min-height: 85% !important;

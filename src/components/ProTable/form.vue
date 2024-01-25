@@ -157,13 +157,13 @@
   const formData = reactive({
     ...(props.defaultValues || {}),
   }) as any;
-  props.formItems.map((val: any) => {
-    formData[val.field] = val.valueType === 'time' ? [] : '';
-    return val;
-  });
-  watch(props, (val) => {
-    Object.assign(formData, val.defaultValues);
-  });
+//   props.formItems.map((val: any) => {
+//     formData[val.field] = val.valueType === 'time' ? [] : '';
+//     return val;
+//   });
+//   watch(props, (val) => {
+//     Object.assign(formData, val.defaultValues);
+//   });
 
   props.formItems.map(async (el: any) => {
     options[el.field] = el.options;

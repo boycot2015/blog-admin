@@ -143,14 +143,14 @@
       </li>
       <li>
         <a-dropdown trigger="click">
-          <div style="cursor: pointer">
+          <div style="cursor: pointer;display: flex;align-items: center;">
             <a-avatar v-if="avatar" :size="32">
               <img alt="avatar" :src="avatar" />
             </a-avatar>
-            <span alt="avatar" :style="{ margin: '0 8px' }">{{
-              userName
-            }}</span>
-            <icon-down></icon-down>
+            <a-typography-paragraph :style="{ margin: '0 0 0 8px' }">
+                {{ userName }}
+                <icon-down></icon-down>
+            </a-typography-paragraph>
           </div>
           <template #content>
             <!-- <a-doption>

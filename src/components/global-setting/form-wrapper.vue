@@ -10,6 +10,7 @@
     v-else-if="type === 'color-picker'"
     :value="(defaultValue as string)"
     format="hex"
+    :style="{ cursor: 'pointer' }"
     @change="handleChange"
   />
   <a-switch
