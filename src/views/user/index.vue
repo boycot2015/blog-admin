@@ -29,7 +29,7 @@
 </template>
 
 <script lang="tsx" setup>
-  import { ref } from 'vue';
+  import { ref, onActivated } from 'vue';
   import { queryUserList, changeStatus, deleteUser } from '@/api/user';
   import type {
     TableColumnData,
@@ -212,6 +212,15 @@
     formData[el.field] = undefined;
     return el;
   });
+  onActivated(() => {
+    tableRef.value.refresh();
+  });
+</script>
+
+<script lang="tsx">
+  export default {
+    name: 'User',
+  };
 </script>
 
 <style scoped lang="less">

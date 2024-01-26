@@ -127,6 +127,12 @@
   };
 </script>
 
+<script lang="tsx">
+  export default {
+    name: 'AddArticle', // If you want the include property of keep-alive to take effect, you must name the component
+  };
+</script>
+
 <style scoped lang="less">
   .general-card {
     min-height: 395px;

@@ -135,6 +135,12 @@
   };
 </script>
 
+<script lang="tsx">
+  export default {
+    name: 'Material',
+  };
+</script>
+
 <style scoped lang="less">
   .list-item {
     padding: 0 !important;

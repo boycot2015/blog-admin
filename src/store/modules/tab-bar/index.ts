@@ -16,7 +16,7 @@ const formatTag = (route: RouteLocationNormalized): TagProps => {
     path,
     fullPath,
     query,
-    ignoreCache: meta.ignoreCache,
+    keepAlive: meta.keepAlive,
   };
 };
 
@@ -24,7 +24,7 @@ const BAN_LIST = [REDIRECT_ROUTE_NAME];
 
 const useAppStore = defineStore('tabBar', {
   state: (): TabBarState => ({
-    cacheTabList: new Set([DEFAULT_ROUTE_NAME]),
+    cacheTabList: new Set(window.localStorage.getItem('tabList') ? JSON.parse((window.localStorage.getItem('tabList') as string) || '[]').filter((el:TagProps) => el.keepAlive).map((el:TagProps) => el.name) : [DEFAULT_ROUTE_NAME]),
     tagList: window.localStorage.getItem('tabList')
       ? JSON.parse((window.localStorage.getItem('tabList') as string) || '[]')
       : [DEFAULT_ROUTE],
@@ -45,7 +45,7 @@ const useAppStore = defineStore('tabBar', {
     updateTabList(route: RouteLocationNormalized) {
       if (BAN_LIST.includes(route.name as string)) return;
       this.tagList.push(formatTag(route));
-      if (!route.meta.ignoreCache) {
+      if (route.meta.keepAlive) {
         this.cacheTabList.add(route.name as string);
       }
     },
@@ -62,9 +62,9 @@ const useAppStore = defineStore('tabBar', {
     freshTabList(tags: TagProps[]) {
       this.tagList = tags;
       this.cacheTabList.clear();
-      // 要先判断ignoreCache
+      // 要先判断keepAlive
       this.tagList
-        .filter((el) => !el.ignoreCache)
+        .filter((el) => el.keepAlive)
         .map((el) => el.name)
         .forEach((x) => this.cacheTabList.add(x));
     },

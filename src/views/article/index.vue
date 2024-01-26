@@ -29,7 +29,7 @@
 </template>
 
 <script lang="tsx" setup>
-  import { ref, watch, reactive } from 'vue';
+  import { ref, watch, reactive, onActivated } from 'vue';
   import { queryArticleList, deleteArticle, changeStatus } from '@/api/article';
   import type {
     TableColumnData,
@@ -267,6 +267,9 @@
       ),
     },
   ]);
+  onActivated(() => {
+    tableRef.value.refresh();
+  });
   watch(rowSelection, (val) => {
     console.log(val, 'selectedKeys');
   });
@@ -274,9 +277,10 @@
 
 <script lang="tsx">
   export default {
-    name: 'Artice', // If you want the include property of keep-alive to take effect, you must name the component
+    name: 'ArticleList', // If you want the include property of keep-alive to take effect, you must name the component
   };
 </script>
+
 <style scoped lang="less">
   .general-card {
     min-height: 395px;

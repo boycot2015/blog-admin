@@ -272,15 +272,19 @@
     fetchData();
   };
   defineExpose({
-    reload: reset,
     search,
+    reload: reset,
+    refresh: fetchData,
   });
 </script>
 
+<script lang="ts">
+  export default {
+    name: 'ProTable',
+  };
+</script>
+
 <style scoped lang="less">
-  //   .general-card {
-  //     min-height: 395px;
-  //   }
   :deep(.arco-form) {
     .arco-form-item {
       padding-left: 5px;

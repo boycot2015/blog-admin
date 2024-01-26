@@ -30,6 +30,7 @@ export type FormItemProps = {
   attrs?: any;
   span?: number;
   slotName?: strting;
+  hidden?: boolean;
   options?: Options[];
 };
 

@@ -37,7 +37,10 @@
   import { useRouter, useRoute } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import { aesEncrypt } from '@/utils';
+  import { useUserStore } from '@/store';
 
+  const userInfo = useUserStore();
+  const route = useRoute();
   const { loading, setLoading } = useLoading();
   const formData = ref({
     status: 1001,
@@ -78,7 +81,7 @@
       labelColProps: {
         span: 3,
       },
-      rules: [{ required: true, message: '密码不能为空' }],
+      rules: [{ required: !route.query.id, message: '密码不能为空' }],
       showColon: true,
       valueType: 'text',
     },
@@ -102,6 +105,9 @@
       labelColProps: {
         span: 3,
       },
+      hidden:
+        userInfo.accountId === Number(route.query.id) ||
+        Number(route.query.id) === 1,
       attrs: {
         placeholder: '请选择用户状态',
       },
@@ -121,7 +127,6 @@
       ],
     },
   ]);
-  const route = useRoute();
   const fetchData = () => {
     if (!route.query.id) return;
     setLoading(true);
@@ -141,7 +146,7 @@
       editUser({
         ...val,
         id: route.query.id,
-        password: aesEncrypt(val.password),
+        password: val.password ? aesEncrypt(val.password) : undefined,
       }).then((res: any) => {
         if (res.success) {
           router.push('/user');
@@ -154,6 +159,12 @@
         router.push('/user');
       }
     });
+  };
+</script>
+
+<script lang="tsx">
+  export default {
+    name: 'AddUser',
   };
 </script>
 

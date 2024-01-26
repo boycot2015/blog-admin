@@ -3,7 +3,7 @@ import { AppRouteRecordRaw } from '../types';
 
 const ARTICLE: AppRouteRecordRaw = {
   path: '/article',
-  name: 'Article',
+  name: 'ArticleManage',
   redirect: '/article/index',
   component: DEFAULT_LAYOUT,
   meta: {
@@ -15,10 +15,11 @@ const ARTICLE: AppRouteRecordRaw = {
   children: [
     {
       path: '/article/index',
-      name: 'Article',
+      name: 'ArticleList',
       component: () => import('@/views/article/index.vue'),
       meta: {
         locale: 'menu.article.list',
+        keepAlive: true,
         requiresAuth: true,
         roles: ['*'],
       },
@@ -30,6 +31,7 @@ const ARTICLE: AppRouteRecordRaw = {
       meta: {
         locale: 'menu.article.add',
         hideInMenu: true,
+        keepAlive: true,
         requiresAuth: true,
         roles: ['*'],
       },

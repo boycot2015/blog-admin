@@ -14,10 +14,11 @@
       <a-col
         v-for="(item, index) in props.formItems"
         v-show="
-          showMore ||
-          index < 3 ||
-          item.span === 24 ||
-          props.formItems.length < 3
+          !item.hidden &&
+          (showMore ||
+            index < 3 ||
+            item.span === 24 ||
+            props.formItems.length < 3)
         "
         :key="item.field"
         :span="item.span || 6"
@@ -37,7 +38,7 @@
           <a-input
             v-if="item.valueType === 'text'"
             v-model="formData[item.field]"
-            :disabled="readOnly"
+            :disabled="readOnly || item.attrs?.disabled"
             style="width: 100%"
             allow-clear
             :placeholder="(item.attrs && item.attrs.placeholder) || '请输入'"
@@ -48,14 +49,14 @@
             style="width: 100%"
             show-word-limit
             :max-length="500"
-            :disabled="readOnly"
+            :disabled="readOnly || item.attrs?.disabled"
             :placeholder="(item.attrs && item.attrs.placeholder) || '请输入'"
           ></a-textarea>
           <a-select
             v-if="item.valueType === 'select' && options[item.field]"
             v-model="formData[item.field]"
             style="width: 100%"
-            :disabled="readOnly"
+            :disabled="readOnly || item.attrs?.disabled"
             allow-clear
             :placeholder="(item.attrs && item.attrs.placeholder) || '请选择'"
             :multiple="(item.attrs && item.attrs.multiple) || false"
@@ -71,7 +72,7 @@
             v-if="item.valueType === 'radio' && options[item.field]"
             v-model="formData[item.field]"
             style="width: 100%"
-            :disabled="readOnly"
+            :disabled="readOnly || item.attrs?.disabled"
             :options="(item.options as any)"
             :placeholder="(item.attrs && item.attrs.placeholder) || '请选择'"
           >
@@ -80,7 +81,7 @@
             v-if="item.valueType === 'time'"
             v-model="formData[item.field]"
             show-time
-            :disabled="readOnly"
+            :disabled="readOnly || item.attrs?.disabled"
             format="YYYY-MM-DD HH:mm:ss"
             style="width: 100%"
             :time-picker-props="{
@@ -89,7 +90,7 @@
           ></a-range-picker>
           <Editor
             v-if="item.valueType === 'rich'"
-            :disabled="readOnly"
+            :disabled="readOnly || item.attrs?.disabled"
             style="height: 100%; width: 100%"
             :style="item.attrs && item.attrs.style"
             :content="formData[item.field]"
@@ -232,6 +233,12 @@
   const reset = () => {
     formRef.value?.resetFields();
     emits('reset', formData);
+  };
+</script>
+
+<script lang="ts">
+  export default {
+    name: 'ProForm',
   };
 </script>
 

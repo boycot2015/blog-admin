@@ -3,7 +3,7 @@ import { AppRouteRecordRaw } from '../types';
 
 const atlas: AppRouteRecordRaw = {
   path: '/material',
-  name: 'material',
+  name: 'Material',
   redirect: '/material/index',
   component: DEFAULT_LAYOUT,
   meta: {
@@ -15,11 +15,12 @@ const atlas: AppRouteRecordRaw = {
   children: [
     {
       path: '/material/index',
-      name: 'material',
+      name: 'Material',
       component: () => import('@/views/material/index.vue'),
       meta: {
         locale: 'menu.material.list',
         requiresAuth: true,
+        keepAlive: true,
         roles: ['*'],
       },
     },
@@ -31,6 +32,7 @@ const atlas: AppRouteRecordRaw = {
         locale: 'menu.material.category',
         requiresAuth: true,
         hideInMenu: false,
+        keepAlive: true,
         roles: ['*'],
       },
     },
@@ -41,6 +43,7 @@ const atlas: AppRouteRecordRaw = {
       meta: {
         locale: 'menu.material.tag',
         requiresAuth: true,
+        keepAlive: true,
         hideInMenu: false,
         roles: ['*'],
       },

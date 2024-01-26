@@ -22,6 +22,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: 'menu.dashboard.workplace',
         requiresAuth: true,
+        keepAlive: true,
         roles: ['*'],
       },
     },

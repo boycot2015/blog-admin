@@ -106,4 +106,10 @@
   fetchData();
 </script>
 
+<script lang="ts">
+  export default {
+    name: 'Tag',
+  };
+</script>
+
 <style lang="less" scoped></style>

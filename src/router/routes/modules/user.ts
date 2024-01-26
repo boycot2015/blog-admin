@@ -15,11 +15,12 @@ const user: AppRouteRecordRaw = {
   children: [
     {
       path: '/user/index',
-      name: 'user',
+      name: 'User',
       component: () => import('@/views/user/index.vue'),
       meta: {
         locale: 'menu.user.list',
         requiresAuth: true,
+        keepAlive: true,
         roles: ['*'],
       },
     },
@@ -30,6 +31,7 @@ const user: AppRouteRecordRaw = {
       meta: {
         locale: 'menu.user.add',
         hideInMenu: true,
+        keepAlive: true,
         requiresAuth: true,
         roles: ['*'],
       },

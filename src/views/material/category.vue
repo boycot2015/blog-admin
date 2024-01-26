@@ -240,4 +240,10 @@
   fetchData();
 </script>
 
+<script lang="ts">
+  export default {
+    name: 'Category',
+  };
+</script>
+
 <style lang="less" scoped></style>
