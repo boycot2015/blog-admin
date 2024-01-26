@@ -1,10 +1,15 @@
 <script lang="tsx">
-  import { defineComponent, ref, h, compile, computed } from 'vue';
+  import { defineComponent, ref, h, compile, computed, watch } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import { useRoute, useRouter, RouteRecordRaw } from 'vue-router';
+  import {
+    useRoute,
+    useRouter,
+    RouteRecordRaw,
+    RouteLocationNormalized,
+  } from 'vue-router';
   import type { RouteMeta } from 'vue-router';
   import { useAppStore } from '@/store';
-  import { listenerRouteChange } from '@/utils/route-listener';
+  // import { listenerRouteChange } from '@/utils/route-listener'; // 隐藏tabBar后有bug,无法激活菜单， 暂时替换为watch监听
   import { openWindow, regexUrl } from '@/utils';
   import useMenuTree from './use-menu-tree';
 
@@ -69,7 +74,7 @@
         });
         return result;
       };
-      listenerRouteChange((newRoute) => {
+      watch(route, (newRoute: RouteLocationNormalized) => {
         const { requiresAuth, activeMenu, hideInMenu } = newRoute.meta;
         if (requiresAuth && (!hideInMenu || activeMenu)) {
           const menuOpenKeys = findMenuOpenKeys(
@@ -83,7 +88,7 @@
             activeMenu || menuOpenKeys[menuOpenKeys.length - 1],
           ];
         }
-      }, true);
+      });
       const setCollapse = (val: boolean) => {
         if (appStore.device === 'desktop')
           appStore.updateSettings({ menuCollapse: val });

@@ -91,10 +91,6 @@
     appStore.updateSettings({ globalSettings: true });
   };
   onMounted(() => {
-    // const themeColor = appStore.themeColor.replace('rgb(', '').replace(')', '');
-    // for (let index = 0; index < 6; index += 1) {
-    //   document.body.style.setProperty(`--arcoblue-${index + 1}`, themeColor);
-    // }
     const theme = generate(appStore.themeColor);
     theme.forEach((el, index) => {
       document.body.style.setProperty(`--arcoblue-${index + 1}`, hexToRgb(el));
