@@ -16,26 +16,26 @@ const role: AppRouteRecordRaw = {
   children: [
     {
       path: '/role/index',
-      name: 'role',
+      name: 'Role',
       component: () => import('@/views/role/index.vue'),
       meta: {
-        hideInMenu: true,
+        hideInMenu: false,
         locale: 'menu.role.list',
         requiresAuth: true,
         roles: ['*'],
       },
     },
-    {
-      path: '/role/add',
-      name: 'AddRole',
-      component: () => import('@/views/role/index.vue'),
-      meta: {
-        locale: 'menu.role.add',
-        hideInMenu: true,
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
+    // {
+    //   path: '/role/add',
+    //   name: 'AddRole',
+    //   component: () => import('@/views/role/ADD.vue'),
+    //   meta: {
+    //     locale: 'menu.role.add',
+    //     hideInMenu: true,
+    //     requiresAuth: true,
+    //     roles: ['*'],
+    //   },
+    // },
   ],
 };
 

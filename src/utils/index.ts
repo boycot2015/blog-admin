@@ -123,7 +123,7 @@ export const convertArrayToTree = (
 
   const result: any = []; // 最后返回的树形结果
   arr.forEach((item: any, index: number) => {
-    if (map[index][props.pid]) {
+    if (map[index][props.pid] !== null) {
       // 判断该节点有没有父节点
       const parentIndex = arr.findIndex(
         (el: any) => el[props.id] === map[index][props.pid]
