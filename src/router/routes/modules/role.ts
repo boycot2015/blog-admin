@@ -11,7 +11,8 @@ const role: AppRouteRecordRaw = {
     hideInMenu: true,
     requiresAuth: true,
     icon: 'icon-user',
-    order: 1,
+    order: 4,
+    roles: ['F002'],
   },
   children: [
     {
@@ -22,7 +23,7 @@ const role: AppRouteRecordRaw = {
         hideInMenu: false,
         locale: 'menu.role.list',
         requiresAuth: true,
-        roles: ['*'],
+        roles: ['F002'],
       },
     },
     // {

@@ -76,7 +76,29 @@
           :bordered="props.bordered || false"
           :style="{ minHeight: scroll.y }"
           :scroll="{ ...scroll }"
-        ></a-table>
+        >
+          <template #columns>
+            <template v-for="column in props.columns" :key="column.dataIndex">
+              <a-table-column
+                v-if="
+                  column.render &&
+                  (column.permission === undefined || column?.permission())
+                "
+                v-bind="column"
+              >
+                <template #cell="{ record }">
+                  <JsxComponent v-bind="{ ...column, record }"></JsxComponent>
+                </template>
+              </a-table-column>
+              <a-table-column
+                v-else-if="
+                  column.permission === undefined || column?.permission()
+                "
+                v-bind="column"
+              ></a-table-column>
+            </template>
+          </template>
+        </a-table>
         <a-row>
           <a-col :span="12">
             <a-checkbox
@@ -118,14 +140,13 @@
   import type { Pagination } from '@/types/global';
   import { useAppStore } from '@/store';
   import type {
-    TableColumnData,
     TableData,
     TableBorder,
     TableRowSelection,
     TableExpandable,
   } from '@arco-design/web-vue/es/table/interface';
   import { BaseType } from '@arco-design/web-vue/es/_utils/types';
-  import type { FormItemProps } from './types';
+  import type { FormItemProps, ColumnData } from './types';
   import Form from './form.vue';
 
   const appStore = useAppStore();
@@ -133,9 +154,12 @@
   const navbar = computed(() => appStore.navbar);
   const tabBar = computed(() => appStore.tabBar);
   const checkAll = ref(false);
+  const JsxComponent = (props: any) => {
+    return props.render(props);
+  };
   type ProTableProps = {
     formItems?: FormItemProps[];
-    columns?: TableColumnData[] | undefined;
+    columns?: ColumnData[] | undefined;
     data?: TableData[] | undefined;
     bordered?: boolean | TableBorder | undefined;
     rowKey?: string | undefined;
@@ -294,14 +318,13 @@
   }
   :deep(.arco-picker),
   :deep(.arco-select-view-single),
+  :deep(.arco-select-view-multiple),
   :deep(.arco-input-wrapper) {
-    // background-color: #fff;
     border: none;
   }
   .arco-picker,
   .arco-select-view-single,
   .arco-input-wrapper {
-    // background-color: #fff;
     border: 1px solid var(--color-neutral-3);
     &:hover {
       background-color: #fff;

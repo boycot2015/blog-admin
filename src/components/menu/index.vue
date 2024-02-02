@@ -30,29 +30,6 @@
           appStore.updateSettings({ menuCollapse: value });
         },
       });
-
-      const topMenu = computed(() => appStore.topMenu);
-      const openKeys = ref<string[]>([]);
-      const selectedKey = ref<string[]>([]);
-
-      const goto = (item: RouteRecordRaw) => {
-        // Open external link
-        if (regexUrl.test(item.path)) {
-          openWindow(item.path);
-          selectedKey.value = [item.name as string];
-          return;
-        }
-        // Eliminate external link side effects
-        const { hideInMenu, activeMenu } = item.meta as RouteMeta;
-        if (route.name === item.name && !hideInMenu && !activeMenu) {
-          selectedKey.value = [item.name as string];
-          return;
-        }
-        // Trigger router change
-        router.push({
-          name: item.name,
-        });
-      };
       const findMenuOpenKeys = (target: string) => {
         const result: string[] = [];
         let isFind = false;
@@ -73,6 +50,30 @@
           backtrack(el, [el.name as string]);
         });
         return result;
+      };
+      const topMenu = computed(() => appStore.topMenu);
+      const openKeys = ref<string[]>([
+        ...findMenuOpenKeys(route.name as string),
+      ]);
+      const selectedKey = ref<string[]>([route.name as string]);
+
+      const goto = (item: RouteRecordRaw) => {
+        // Open external link
+        if (regexUrl.test(item.path)) {
+          openWindow(item.path);
+          selectedKey.value = [item.name as string];
+          return;
+        }
+        // Eliminate external link side effects
+        const { hideInMenu, activeMenu } = item.meta as RouteMeta;
+        if (route.name === item.name && !hideInMenu && !activeMenu) {
+          selectedKey.value = [item.name as string];
+          return;
+        }
+        // Trigger router change
+        router.push({
+          name: item.name,
+        });
       };
       watch(route, (newRoute: RouteLocationNormalized) => {
         const { requiresAuth, activeMenu, hideInMenu } = newRoute.meta;

@@ -12,6 +12,7 @@ const setting: AppRouteRecordRaw = {
     requiresAuth: true,
     icon: 'icon-settings',
     order: 7,
+    roles: ['F005'],
   },
   children: [
     {
@@ -21,7 +22,7 @@ const setting: AppRouteRecordRaw = {
       meta: {
         locale: 'menu.setting',
         requiresAuth: true,
-        roles: ['*'],
+        roles: ['F005'],
       },
     },
   ],

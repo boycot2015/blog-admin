@@ -130,6 +130,8 @@ export const convertArrayToTree = (
       ); // 获取父节点在原数组中的位置
       if (map[parentIndex] && map[parentIndex][props.children]) {
         map[parentIndex][props.children].push(item); // 添加到父节点的子节点列表中
+      } else {
+          result.push(item) // 若无父节点则直接作为根节点
       }
     } else {
       result.push(item); // 若无父节点则直接作为根节点

@@ -1,4 +1,4 @@
-export type RoleType = [];
+export type RoleType = string[];
 export interface UserState {
   name?: string;
   userName?: string;
@@ -18,6 +18,6 @@ export interface UserState {
   registrationDate?: string;
   accountId?: string | number;
   certification?: number;
-  role?: RoleType;
-  roleId?: number;
+  roles?: RoleType;
+  roleIds?: number[];
 }

@@ -60,6 +60,7 @@
             allow-clear
             :placeholder="(item.attrs && item.attrs.placeholder) || '请选择'"
             :multiple="(item.attrs && item.attrs.multiple) || false"
+            v-bind="item.attrs"
           >
             <a-option
               v-for="option in options[item.field]"

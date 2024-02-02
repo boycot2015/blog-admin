@@ -10,7 +10,7 @@
       {{ $t('workplace.popularContent') }}
     </template>
     <template #extra>
-      <a-link @click="$router.push('/article')">{{
+      <a-link v-permission="['F001']" @click="$router.push('/article')">{{
         $t('workplace.viewMore')
       }}</a-link>
     </template>

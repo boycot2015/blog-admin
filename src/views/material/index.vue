@@ -81,16 +81,16 @@
 
   const tableRef = ref({}) as any;
   const formItems = ref([
-    // {
-    //   field: 'name',
-    //   label: '文件名',
-    //   attrs: {
-    //     placeholder: '请输入文件名',
-    //   },
-    //   width: 200,
-    //   showColon: true,
-    //   valueType: 'text',
-    // },
+    {
+      field: 'name',
+      label: '文件名',
+      attrs: {
+        placeholder: '请输入文件名',
+      },
+      width: 200,
+      showColon: true,
+      valueType: 'text',
+    },
     // {
     //   field: 'sourceFrom',
     //   label: '来源',
@@ -117,7 +117,7 @@
     //   slotName: 'tabs',
     // },
     {
-      field: 'updateTime',
+      field: 'createTime',
       label: '上传时间',
       showColon: true,
       span: 12,

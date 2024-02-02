@@ -11,23 +11,23 @@ import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
 import useAppStore from '../app';
 
-const useUserStore = defineStore('user', {
+const useUserStore: any = defineStore('user', {
   state: (): UserState => {
     if (getToken()) {
       const data = jwtDecode(getToken() as string) as any;
 
       return {
-        role: data.authorities,
+        roles: data.permissions,
         name: data.userName || data.username,
         mobile: data.mobile,
-        roleId: data.roleId,
+        roleIds: data.roleIds,
         avatar: data.avatar,
         administrator: data.administrator,
         accountId: data.id,
       };
     }
     return {
-      roleId: undefined,
+      roleIds: undefined,
       name: undefined,
       avatar: undefined,
       job: undefined,
@@ -44,7 +44,7 @@ const useUserStore = defineStore('user', {
       registrationDate: undefined,
       accountId: undefined,
       certification: undefined,
-      role: [],
+      roles: [],
     };
   },
 
@@ -58,7 +58,7 @@ const useUserStore = defineStore('user', {
     switchRoles() {
       return new Promise((resolve) => {
         // this.role = this.role === 'user' ? 'admin' : 'user';
-        resolve(this.role);
+        resolve(this.roles);
       });
     },
     // Set user's information
@@ -90,12 +90,12 @@ const useUserStore = defineStore('user', {
             roleId: 1
             userName: "超级管理员"
          */
-        // console.log(data, 'state');
+        console.log(data, 'state');
         this.$patch({
-          role: data.authorities,
+          roles: data.permissions,
           name: data.userName || data.username,
           mobile: data.mobile,
-          roleId: data.roleId,
+          roleIds: data.roles.map((el: any) => el.id),
           avatar: data.avatar,
           administrator: data.administrator,
           accountId: data.id,

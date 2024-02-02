@@ -21,7 +21,7 @@ const atlas: AppRouteRecordRaw = {
         locale: 'menu.material.list',
         requiresAuth: true,
         keepAlive: true,
-        roles: ['*'],
+        roles: ['F0040'],
       },
     },
     {
@@ -33,7 +33,7 @@ const atlas: AppRouteRecordRaw = {
         requiresAuth: true,
         hideInMenu: false,
         keepAlive: true,
-        roles: ['*'],
+        roles: ['F0041'],
       },
     },
     {
@@ -45,7 +45,7 @@ const atlas: AppRouteRecordRaw = {
         requiresAuth: true,
         keepAlive: true,
         hideInMenu: false,
-        roles: ['*'],
+        roles: ['F0042'],
       },
     },
   ],

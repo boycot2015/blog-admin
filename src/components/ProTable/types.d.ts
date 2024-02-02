@@ -3,7 +3,7 @@ import type {
   FormItemEventHandler,
   FieldRule,
 } from '@arco-design/web-vue/es/form';
-
+import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
 export type FormItemProps = {
   tooltip?: string;
   showColon?: boolean;
@@ -45,3 +45,23 @@ export type CustomTableProps = Partial<
     scroll: { x: number | string; y: number | string };
   }
 >;
+export interface ColumnData extends TableColumnData {
+  permission?: () => boolean;
+}
+export type ProTableProps = {
+  formItems?: FormItemProps[];
+  columns?: ColumnData[] | undefined;
+  data?: TableData[] | undefined;
+  bordered?: boolean | TableBorder | undefined;
+  rowKey?: string | undefined;
+  checkAll?: string | boolean;
+  rowSelection?: TableRowSelection | undefined;
+  expandable?: TableExpandable | undefined;
+  pagination?: boolean | PaginationProps | any;
+  pagePosition?: string | undefined;
+  title?: string | undefined;
+  listType?: string;
+  request?: ((args: any) => Promise<any>) | undefined;
+  scroll?: { x?: number | string; y?: number | string | bigint | any };
+  selectedKeys?: BaseType[] | undefined;
+};

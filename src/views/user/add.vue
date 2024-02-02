@@ -126,6 +126,29 @@
         },
       ],
     },
+    {
+      field: 'roles',
+      label: '角色',
+      labelColProps: {
+        span: 3,
+      },
+      hidden:
+        userInfo.accountId === Number(route.query.id) ||
+        Number(route.query.id) === 1,
+      attrs: {
+        multiple: true,
+        placeholder: '请选择角色',
+      },
+      rules: [{ required: true, message: '角色不能为空' }],
+      showColon: true,
+      span: 24,
+      valueType: 'select',
+      request: '/role/get',
+      props: {
+        label: 'name',
+        value: 'id',
+      },
+    },
   ]);
   const fetchData = () => {
     if (!route.query.id) return;
@@ -136,6 +159,7 @@
       formData.value.username = res.data.username;
       formData.value.email = res.data.email;
       formData.value.status = res.data.status || 1001;
+      formData.value.roles = res.data.roles?.map((el: any) => el.id) || [];
       setLoading(false);
     });
   };

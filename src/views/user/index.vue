@@ -1,49 +1,39 @@
 <template>
   <ProTable
     ref="tableRef"
-    v-model:selectedKeys="rowSelection.selectedRowKeys"
     row-key="id"
-    check-all="全选所有结果"
     :request="queryUserList"
     :form-items="formItems"
     :columns="columns"
     :pagination="true"
-    :row-selection="{
-      ...rowSelection,
-    }"
   >
     <template #title>
-      {{ $t('menu.article.list') }}
+      {{ $t('menu.user.list') }}
     </template>
     <template #extra>
       <a-space :size="16">
-        <a-button type="primary" @click="$router.push('/user/add')">
+        <a-button
+          v-permission="['F0030']"
+          type="primary"
+          @click="$router.push('/user/add')"
+        >
           <a-space :size="8"> <icon-plus></icon-plus>新增</a-space>
         </a-button>
-        <a-button :disabled="!rowSelection.selectedRowKeys?.length"
-          >导出</a-button
-        >
       </a-space>
     </template>
   </ProTable>
 </template>
 
 <script lang="tsx" setup>
-  import { ref, onActivated } from 'vue';
+  import { ref, reactive, onActivated } from 'vue';
   import { queryUserList, changeStatus, deleteUser } from '@/api/user';
-  import type {
-    TableColumnData,
-    // TableData,
-    TableRowSelection,
-  } from '@arco-design/web-vue/es/table';
+  import type { ColumnData } from '@/components/ProTable/types';
   import router from '@/router';
-  import { useUserStore } from '@/store';
+  import { useUserStore, useAppStore } from '@/store';
   import { Message, Modal } from '@arco-design/web-vue';
+  import { checkPermission } from '@/directive/permission';
 
-  const rowSelection = ref<TableRowSelection>({
-    selectedRowKeys: [],
-    showCheckedAll: true,
-  });
+  const colors: any = reactive(useAppStore().colors as any);
   const userInfo = useUserStore();
 
   const formData = ref({}) as any;
@@ -57,6 +47,26 @@
         placeholder: '请输入用户名',
       },
       valueType: 'text',
+    },
+    {
+      field: 'roleIds',
+      label: '角色',
+      labelColProps: {
+        span: 3,
+      },
+      attrs: {
+        'multiple': true,
+        'max-tag-count': 2,
+        'placeholder': '请选择或搜索角色',
+      },
+      showColon: true,
+      span: 6,
+      valueType: 'select',
+      request: '/role/get',
+      props: {
+        label: 'name',
+        value: 'id',
+      },
     },
     {
       field: 'email',
@@ -74,6 +84,10 @@
       valueType: 'select',
       options: [
         {
+          label: '全部',
+          value: undefined,
+        },
+        {
           label: '启用',
           value: '1001',
         },
@@ -84,7 +98,7 @@
       ],
     },
     {
-      field: 'publishTime',
+      field: 'createTime',
       label: '创建时间',
       showColon: true,
       span: 12,
@@ -105,7 +119,7 @@
       },
     });
   };
-  const columns = ref<TableColumnData[]>([
+  const columns = ref<ColumnData[]>([
     {
       dataIndex: 'id',
       title: 'ID',
@@ -127,18 +141,58 @@
       width: 200,
     },
     {
+      dataIndex: 'roles',
+      title: '角色',
+      width: 200,
+      render: ({ record }) => {
+        return record.roles?.map((el: any) => (
+          <a-tag
+            color={colors[Math.floor(Math.random() * colors.length)]}
+            style={{ marginRight: '10px' }}
+          >
+            {el.name}
+          </a-tag>
+        ));
+      },
+    },
+    {
+      dataIndex: 'status',
+      title: '状态',
+      width: 120,
+      render: ({ record }) => {
+        if (checkPermission({ value: ['F0032'] })) {
+          return (
+            <a-switch
+              onChange={() =>
+                changeStatus({
+                  id: record.id,
+                  status: record.status,
+                }).then((res: any) =>
+                  Message[res.success ? 'success' : 'error'](
+                    res.data || res.message
+                  )
+                )
+              }
+              disabled={userInfo.accountId === record.id || record.id === 1}
+              v-model={record.status}
+              checked-value={1001}
+              unchecked-value={1002}
+              checked-text="启用"
+              unchecked-text="禁用"
+            ></a-switch>
+          );
+        }
+        return record.status === 1001 ? '启用' : '禁用';
+      },
+    },
+    {
       dataIndex: 'email',
       title: '邮箱',
       width: 200,
-      //   sortable: {
-      //     sortDirections: ['descend', 'ascend'],
-      //     sorter: false,
-      //     defaultSortOrder: '',
-      //   },
     },
     {
       dataIndex: 'updateTime',
-      title: '发布时间',
+      title: '创建时间',
       render: ({ record }) =>
         new Date(record.createTime).toLocaleString().replace(/\//g, '-'),
       width: 180,
@@ -149,59 +203,39 @@
       },
     },
     {
-      dataIndex: 'status',
-      title: '状态',
-      width: 120,
-      render: ({ record }) => (
-        <a-switch
-          onChange={() =>
-            changeStatus({
-              id: record.id,
-              status: record.status,
-            }).then((res: any) =>
-              Message[res.success ? 'success' : 'error'](
-                res.data || res.message
-              )
-            )
-          }
-          disabled={userInfo.accountId === record.id || record.id === 1}
-          v-model={record.status}
-          checked-value={1001}
-          unchecked-value={1002}
-          checked-text="启用"
-          unchecked-text="禁用"
-        ></a-switch>
-      ),
-    },
-    {
       dataIndex: 'operation',
       title: '操作',
       fixed: 'right',
       width: 180,
+      permission: (): boolean => checkPermission({ value: ['F0031', 'F0032'] }),
       render: ({ record }) => (
         <a-space size={8} record={record}>
-          <a-link
-            onClick={() => {
-              router.push({
-                path: '/user/edit',
-                query: { id: record.id, readOnly: 'true' },
-              });
-            }}
-          >
-            查看
-          </a-link>
-          {(record.id !== 1 || userInfo.accountId === 1) && (
+          {checkPermission({ value: ['F0032'] }) && (
             <a-link
               onClick={() => {
-                router.push({ path: '/user/edit', query: { id: record.id } });
+                router.push({
+                  path: '/user/edit',
+                  query: { id: record.id, readOnly: 'true' },
+                });
               }}
             >
-              编辑
+              查看
             </a-link>
           )}
+          {(record.id !== 1 || userInfo.accountId === 1) &&
+            checkPermission({ value: ['F0031'] }) && (
+              <a-link
+                onClick={() => {
+                  router.push({ path: '/user/edit', query: { id: record.id } });
+                }}
+              >
+                编辑
+              </a-link>
+            )}
           {userInfo.accountId !== record.id &&
             record.id !== 1 &&
-            userInfo.administrator && (
+            userInfo.administrator &&
+            checkPermission({ value: ['F0032'] }) && (
               <a-link onClick={() => onDelete(record)}>删除</a-link>
             )}
         </a-space>

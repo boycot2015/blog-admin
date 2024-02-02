@@ -11,6 +11,7 @@ const ARTICLE: AppRouteRecordRaw = {
     requiresAuth: true,
     icon: 'icon-edit',
     order: 1,
+    roles: ['F001'],
   },
   children: [
     {
@@ -21,7 +22,7 @@ const ARTICLE: AppRouteRecordRaw = {
         locale: 'menu.article.list',
         keepAlive: true,
         requiresAuth: true,
-        roles: ['*'],
+        roles: ['F001'],
       },
     },
     {
@@ -33,7 +34,7 @@ const ARTICLE: AppRouteRecordRaw = {
         hideInMenu: true,
         keepAlive: true,
         requiresAuth: true,
-        roles: ['*'],
+        roles: ['F0010'],
       },
     },
     {
@@ -44,7 +45,7 @@ const ARTICLE: AppRouteRecordRaw = {
         locale: 'menu.article.edit',
         requiresAuth: true,
         hideInMenu: true,
-        roles: ['*'],
+        roles: ['F0011'],
       },
     },
   ],

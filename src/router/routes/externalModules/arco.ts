@@ -1,9 +1,9 @@
 export default {
-  path: 'http://www.boycot.top',
-  name: 'Blog',
+  path: 'https://arco.design/vue',
+  name: 'arco.design',
   meta: {
     hideInMenu: false,
-    locale: 'menu.website',
+    locale: 'navbar.docs',
     icon: 'icon-link',
     requiresAuth: true,
     order: 8,

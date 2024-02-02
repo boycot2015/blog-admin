@@ -73,7 +73,7 @@
         show-line
         :data="treeData"
         draggable
-        @select="(selectedKeys, { selected, selectedNodes }:any) => onTagChecked(selectedNodes[0], selected)"
+        @select="(selectedKeys: any, { selected, selectedNodes }:any) => onTagChecked(selectedNodes[0], selected)"
         @drop="(data:any) => dropData(data)"
       >
         <template #extra="nodeData">

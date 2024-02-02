@@ -196,7 +196,7 @@
   import { computed, ref, inject } from 'vue';
   //   import { Message } from '@arco-design/web-vue';
   import { useDark, useToggle, useFullscreen } from '@vueuse/core';
-  import { useAppStore, useUserStore } from '@/store';
+  import { useAppStore, useUserStore, useTabBarStore } from '@/store';
   import { LOCALE_OPTIONS } from '@/locale';
   import useLocale from '@/hooks/locale';
   //   import useUser from '@/hooks/user';
@@ -207,6 +207,7 @@
   const router = useRouter();
   const appStore = useAppStore();
   const userStore = useUserStore();
+  const tabBarStore = useTabBarStore();
   const { logoutCallBack } = userStore;
   const { changeLocale, currentLocale } = useLocale();
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
@@ -252,6 +253,7 @@
   //   };
   const handleLogout = async () => {
     await logoutCallBack();
+    await tabBarStore.resetTabList();
     router.push('/login');
   };
   const setDropDownVisible = () => {

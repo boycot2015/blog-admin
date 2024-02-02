@@ -11,6 +11,7 @@ const user: AppRouteRecordRaw = {
     requiresAuth: true,
     icon: 'icon-user-group',
     order: 1,
+    roles: ['F003'],
   },
   children: [
     {
@@ -21,7 +22,7 @@ const user: AppRouteRecordRaw = {
         locale: 'menu.user.list',
         requiresAuth: true,
         keepAlive: true,
-        roles: ['*'],
+        roles: ['F003'],
       },
     },
     {
@@ -33,7 +34,7 @@ const user: AppRouteRecordRaw = {
         hideInMenu: true,
         keepAlive: true,
         requiresAuth: true,
-        roles: ['*'],
+        roles: ['F0030'],
       },
     },
     {
@@ -44,7 +45,7 @@ const user: AppRouteRecordRaw = {
         locale: 'menu.user.edit',
         hideInMenu: true,
         requiresAuth: true,
-        roles: ['*'],
+        roles: ['F0031'],
       },
     },
   ],

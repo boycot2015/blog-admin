@@ -16,11 +16,17 @@
       {{ $t('menu.article.list') }}
     </template>
     <template #extra>
-      <a-space :size="16">
-        <a-button type="primary" @click="$router.push('/article/add')">
+      <a-space v-permission="['F0010', 'F0013']" :size="16">
+        <a-button
+          v-permission="['F0010']"
+          type="primary"
+          @click="$router.push('/article/add')"
+        >
           <a-space :size="8"> <icon-plus></icon-plus>新增</a-space>
         </a-button>
-        <a-button :disabled="!rowSelection.selectedRowKeys?.length"
+        <a-button
+          v-permission="['F0013']"
+          :disabled="!rowSelection.selectedRowKeys?.length"
           >导出</a-button
         >
       </a-space>
@@ -32,13 +38,14 @@
   import { ref, watch, reactive, onActivated } from 'vue';
   import { queryArticleList, deleteArticle, changeStatus } from '@/api/article';
   import type {
-    TableColumnData,
     TableData,
     TableRowSelection,
   } from '@arco-design/web-vue/es/table';
+  import type { ColumnData } from '@/components/ProTable/types';
   import router from '@/router';
   import { Modal, Message } from '@arco-design/web-vue';
   import { useAppStore } from '@/store';
+  import { checkPermission } from '@/directive/permission';
 
   const colors: any = reactive(useAppStore().colors as any);
 
@@ -62,7 +69,8 @@
       label: '文章分类',
       showColon: true,
       attrs: {
-        placeholder: '请选择文章分类 ',
+        'allow-search': true,
+        'placeholder': '请选择或搜索文章分类 ',
       },
       valueType: 'select',
       request: '/category/get',
@@ -76,8 +84,9 @@
       label: '标签',
       showColon: true,
       attrs: {
-        placeholder: '请选择标签 ',
-        // multiple: true,
+        'max-tag-count': 2,
+        'placeholder': '请选择或搜索标签 ',
+        'multiple': true,
       },
       valueType: 'select',
       request: '/tag/get',
@@ -127,7 +136,7 @@
       },
     });
   };
-  const columns = ref<TableColumnData[]>([
+  const columns = ref<ColumnData[]>([
     {
       dataIndex: 'id',
       title: 'ID',
@@ -181,10 +190,22 @@
       },
     },
     {
+      dataIndex: 'createTime',
+      title: '创建时间',
+      render: ({ record }) =>
+        new Date(record.createTime).toLocaleString().replace(/\//g, '-'),
+      width: 180,
+      sortable: {
+        sortDirections: ['descend', 'ascend'],
+        sorter: false,
+        defaultSortOrder: '',
+      },
+    },
+    {
       dataIndex: 'updateTime',
       title: '发布时间',
       render: ({ record }) =>
-        new Date(record.createTime).toLocaleString().replace(/\//g, '-'),
+        new Date(record.updateTime).toLocaleString().replace(/\//g, '-'),
       width: 180,
       sortable: {
         sortDirections: ['descend', 'ascend'],
@@ -196,39 +217,43 @@
       dataIndex: 'status',
       title: '状态',
       width: 120,
-      render: ({ record }) => (
-        <a-switch
-          before-change={() => {
-            return new Promise((resolve, reject) => {
-              Modal.warning({
-                title: '温馨提示',
-                simple: true,
-                draggable: true,
-                content: `确认${record.status === 1001 ? '取消' : ''}发布？`,
-                hideCancel: false,
-                onOk: () => {
-                  return changeStatus({
-                    id: record.id,
-                    status: record.status === 1001 ? 1002 : 1001,
-                  }).then((res: any) => {
-                    // eslint-disable-next-line no-unused-expressions
-                    res.success ? resolve(res) : reject(res);
-                    Message[res.success ? 'success' : 'error'](
-                      res.data || res.message
-                    );
-                  });
-                },
-                onCancel: () => reject(),
+      render: ({ record }) =>
+        checkPermission({ value: ['F0011'] }) ? (
+          <a-switch
+            before-change={() => {
+              return new Promise((resolve, reject) => {
+                Modal.warning({
+                  title: '温馨提示',
+                  simple: true,
+                  draggable: true,
+                  content: `确认${record.status === 1001 ? '取消' : ''}发布？`,
+                  hideCancel: false,
+                  onOk: () => {
+                    return changeStatus({
+                      id: record.id,
+                      status: record.status === 1001 ? 1002 : 1001,
+                    }).then((res: any) => {
+                      // eslint-disable-next-line no-unused-expressions
+                      res.success ? resolve(res) : reject(res);
+                      Message[res.success ? 'success' : 'error'](
+                        res.data || res.message
+                      );
+                      tableRef.value.refresh();
+                    });
+                  },
+                  onCancel: () => reject(),
+                });
               });
-            });
-          }}
-          v-model={record.status}
-          checked-value={1001}
-          unchecked-value={1002}
-          checked-text="已发布"
-          unchecked-text="未发布"
-        ></a-switch>
-      ),
+            }}
+            v-model={record.status}
+            checked-value={1001}
+            unchecked-value={1002}
+            checked-text="已发布"
+            unchecked-text="未发布"
+          ></a-switch>
+        ) : (
+          <span>{record.status === 1001 ? '已发布' : '未发布'}</span>
+        ),
     },
     // {
     //   dataIndex: 'isRecommended',
@@ -243,28 +268,35 @@
       title: '操作',
       fixed: 'right',
       width: 180,
-      render: ({ record }) => (
-        <a-space size={8} record={record}>
-          <a-link
-            onClick={() => {
-              router.push({
-                path: '/article/edit',
-                query: { id: record.id, readOnly: 'true' },
-              });
-            }}
-          >
-            查看
-          </a-link>
-          <a-link
-            onClick={() => {
-              router.push({ path: '/article/edit', query: { id: record.id } });
-            }}
-          >
-            编辑
-          </a-link>
-          <a-link onClick={() => onDelete(record)}>删除</a-link>
-        </a-space>
-      ),
+      permission: (): boolean => checkPermission({ value: ['F0011', 'F0012'] }),
+      render: ({ record }) =>
+        checkPermission({ value: ['F0011', 'F0012'] }) ? (
+          <a-space size={8} record={record}>
+            <a-link
+              onClick={() => {
+                router.push({
+                  path: '/article/edit',
+                  query: { id: record.id, readOnly: 'true' },
+                });
+              }}
+            >
+              查看
+            </a-link>
+            <a-link
+              onClick={() => {
+                router.push({
+                  path: '/article/edit',
+                  query: { id: record.id },
+                });
+              }}
+            >
+              编辑
+            </a-link>
+            {checkPermission({ value: ['F0012'] }) && (
+              <a-link onClick={() => onDelete(record)}>删除</a-link>
+            )}
+          </a-space>
+        ) : null,
     },
   ]);
   onActivated(() => {

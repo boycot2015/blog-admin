@@ -2,23 +2,18 @@
   <div class="role-list">
     <ProTable
       ref="tableRef"
-      v-model:selectedKeys="rowSelection.selectedRowKeys"
       row-key="id"
-      check-all="全选所有结果"
       :request="queryRoleList"
       :form-items="formItems"
       :columns="columns"
       :pagination="true"
-      :row-selection="{
-        ...rowSelection,
-      }"
     >
       <template #title>
-        {{ $t('menu.article.list') }}
+        {{ $t('menu.role.list') }}
       </template>
       <template #extra>
         <a-space :size="16">
-          <a-button type="primary" @click="onAdd">
+          <a-button v-permission="['F0020']" type="primary" @click="onAdd">
             <a-space :size="8"> <icon-plus></icon-plus>新增</a-space>
           </a-button>
         </a-space>
@@ -27,7 +22,10 @@
     <a-modal
       v-model:visible="visible"
       :title="
-        formData.permissions ? '配置权限' : `${!formData.id ? '新增' : '编辑'}角色`"
+        formData.permissions
+          ? '配置权限'
+          : `${!formData.id ? '新增' : '编辑'}角色`
+      "
       @cancel="onModalClose"
       @before-ok="handleBeforeOk"
     >
@@ -42,20 +40,25 @@
             }"
           >
             <a-tree
+              ref="treeRef"
               v-model:checked-keys="checkedKeys"
-              :only-check-leaf="true"
+              v-model:selected-keys="checkedKeys"
               :checkable="true"
-              :allow-search="true"
-              :allow-clear="true"
+              :multiple="true"
               :tree-checkable="true"
-              :tree-check-strictly="treeCheckStrictly"
+              :check-strictly="true"
               :data="treeData"
               :field-names="{
-                key: 'id',
+                key: 'code',
                 title: 'name',
               }"
               placeholder="请选择权限"
               style="width: 100%"
+              @check="onChecked"
+              @select="
+                (selectedKeys: any, { selected, node }: any) =>
+                  onChecked(selectedKeys, { checked: selected, node })
+              "
             ></a-tree>
           </a-form-item>
         </template>
@@ -86,24 +89,23 @@
     deleteRole,
     getMenuList,
   } from '@/api/role';
-  import type {
-    TableColumnData,
-    TableRowSelection,
-  } from '@arco-design/web-vue/es/table';
+  import type { ColumnData } from '@/components/ProTable/types';
   import { Message, Modal } from '@arco-design/web-vue';
   import { convertArrayToTree } from '@/utils';
+  import { useUserStore, useTabBarStore } from '@/store';
+  import router from '@/router';
+  import { checkPermission } from '@/directive/permission';
 
-  const rowSelection = ref<TableRowSelection>({
-    selectedRowKeys: [],
-    showCheckedAll: true,
-  });
+  const tabBarStore = useTabBarStore();
+  const userInfo = useUserStore();
+  const treeRef = ref();
   const visible = ref(false);
   const roleFormRef = ref();
   const formData = ref({}) as any;
   const tableRef = ref({}) as any;
   const treeData = ref({}) as any;
-  const checkedKeys = ref([]);
-  const treeCheckStrictly = ref(false);
+  const sourceData = ref({}) as any;
+  const checkedKeys = ref<string[]>([]);
   const onDelete = (record: any) => {
     Modal.warning({
       title: '温馨提示',
@@ -127,6 +129,9 @@
       label: '角色名称',
       showColon: true,
       valueType: 'text',
+      attrs: {
+        placeholder: '请输入角色名称',
+      },
     },
     {
       field: 'createTime',
@@ -136,7 +141,7 @@
       valueType: 'time',
     },
   ]);
-  const columns = ref<TableColumnData[]>([
+  const columns = ref<ColumnData[]>([
     {
       dataIndex: 'name',
       title: '角色名称',
@@ -168,40 +173,54 @@
       title: '操作',
       fixed: 'right',
       width: 180,
+      permission: (): boolean =>
+        checkPermission({ value: ['F0021', 'F0022', 'F0023'] }),
       render: ({ record }) => (
         <a-space size={8} record={record}>
-          <a-link
-            onClick={() => {
-              console.log('配置权限');
-              getRoleById({ id: record.id }).then((result) => {
-                getMenuList().then((res) => {
-                  const data = convertArrayToTree([
-                    {
-                      id: 0,
-                      pid: null,
-                      name: '所有权限',
-                    },
-                    ...res.data,
-                  ]);
-                  treeData.value = data;
-                  Object.assign(formData.value, result.data);
-                  console.log(data, result.data, 'data');
-                  visible.value = true;
+          {checkPermission({ value: ['F0023'] }) && (
+            <a-link
+              onClick={() => {
+                getRoleById({ id: record.id }).then((result: any) => {
+                  getMenuList().then((res) => {
+                    sourceData.value = res.data;
+                    const data = convertArrayToTree(
+                      [
+                        {
+                          code: '0',
+                          pcode: null,
+                          name: '所有权限',
+                        },
+                        ...res.data,
+                      ],
+                      { id: 'code', pid: 'pCode', children: 'children' }
+                    );
+                    treeData.value = data;
+                    checkedKeys.value = result.data?.permissions?.map(
+                      (el: any) => el.code
+                    );
+                    if (res.data.length === result.data.permissions.length) {
+                      checkedKeys.value.unshift('0');
+                    }
+                    Object.assign(formData.value, result.data);
+                    visible.value = true;
+                  });
                 });
-              });
-            }}
-          >
-            配置权限
-          </a-link>
-          <a-link
-            onClick={() => {
-              Object.assign(formData.value, record);
-              visible.value = true;
-            }}
-          >
-            编辑
-          </a-link>
-          {record.id !== 1 ? (
+              }}
+            >
+              配置权限
+            </a-link>
+          )}
+          {checkPermission({ value: ['F0021'] }) && (
+            <a-link
+              onClick={() => {
+                Object.assign(formData.value, record);
+                visible.value = true;
+              }}
+            >
+              编辑
+            </a-link>
+          )}
+          {checkPermission({ value: ['F0022'] }) && record.id !== 1 ? (
             <a-link onClick={() => onDelete(record)}>删除</a-link>
           ) : null}
         </a-space>
@@ -219,7 +238,7 @@
           id: formData.value.id,
           name: formData.value.name,
           desc: formData.value.desc,
-          permissions: [] as any
+          permissions: [] as any,
         };
         if (!data.id) {
           addRole(data).then((res: any) => {
@@ -231,15 +250,20 @@
           });
           return;
         }
-        // console.log(formData.permissions, 'formData.permissions');
-        
         if (checkedKeys.value && checkedKeys.value.length) {
-          data.permissions = checkedKeys.value
+          data.permissions = Array.from(new Set(checkedKeys.value));
         }
-        editRole(data).then((res: any) => {
-          tableRef.value?.reload();
-          Message[res.success ? 'success' : 'error'](res.data || res.message);
+        editRole(data).then(async (res: any) => {
           visible.value = false;
+          if (userInfo.roleIds?.includes(data.id) && res.success) {
+            Message.warning('权限已发生变化，请重新登录！');
+            await userInfo.logoutCallBack();
+            await tabBarStore.resetTabList();
+            router.push('/login');
+          } else {
+            tableRef.value?.reload();
+            Message[res.success ? 'success' : 'error'](res.data || res.message);
+          }
           done();
           onModalClose();
         });
@@ -250,11 +274,45 @@
     visible.value = false;
     roleFormRef.value.clearValidate();
     formData.value = {};
-    checkedKeys.value = []
+    checkedKeys.value = [];
   };
-  const filterTreeNode = (searchValue: string, nodeData: any) => {
-    return nodeData.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
-  }
+  const onChecked = (checkKeys: any, { checked, node }: any) => {
+    const checkeTravel = (nodes: any, checked: boolean) => {
+      if (nodes) {
+        const keys = nodes.map((el: any) => el.code);
+        if (checked) checkedKeys.value = [...checkedKeys.value, ...keys];
+        else
+          checkedKeys.value = checkedKeys.value.filter(
+            (el: any) => !keys.includes(el)
+          );
+        nodes.map((el: any) => {
+          if (el && el.children && el.children.length) {
+            checkeTravel(el.children, checked);
+          }
+          return el;
+        });
+      }
+    };
+    if (node && node.children && node.children.length) {
+      checkeTravel(node.children, checked);
+    }
+    if (node && node.pCode !== '0' && checked) {
+      checkedKeys.value = [...checkedKeys.value, node.pCode];
+    }
+    if (node && node.code === '0') {
+      treeRef.value.checkAll(checked);
+      treeRef.value.selectAll(checked);
+    }
+    if (checkKeys.length === sourceData.value.length) {
+      if (checked) {
+        treeRef.value.checkAll(checked);
+        treeRef.value.selectAll(checked);
+      } else
+        checkedKeys.value = checkedKeys.value.filter((el: any) => el !== '0');
+    }
+    checkedKeys.value = Array.from(new Set(checkedKeys.value));
+    console.log(checkedKeys.value, 'checkedKeys.value');
+  };
 </script>
 
 <script lang="tsx">
