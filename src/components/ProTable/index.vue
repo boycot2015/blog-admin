@@ -84,7 +84,7 @@
                   column.render &&
                   (column.permission === undefined || column?.permission())
                 "
-                v-bind="column"
+                v-bind="(column as any)"
               >
                 <template #cell="{ record }">
                   <JsxComponent v-bind="{ ...column, record }"></JsxComponent>
@@ -94,7 +94,7 @@
                 v-else-if="
                   column.permission === undefined || column?.permission()
                 "
-                v-bind="column"
+                v-bind="(column as any)"
               ></a-table-column>
             </template>
           </template>
