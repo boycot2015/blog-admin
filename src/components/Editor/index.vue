@@ -97,6 +97,9 @@
     }
     .w-e-text {
         overflow-y: auto;
+        code {
+            background: none !important;
+        }
     }
     .wangEditors {
         :deep(.w-e-toolbar),
