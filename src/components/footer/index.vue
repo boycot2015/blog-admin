@@ -1,20 +1,20 @@
 <template>
-  <a-layout-footer class="footer">{{ t('website.title') }}</a-layout-footer>
+    <a-layout-footer class="footer">{{ t('website.title') }}</a-layout-footer>
 </template>
 
 <script lang="ts" setup>
-  import { useI18n } from 'vue-i18n';
+    import { useI18n } from 'vue-i18n';
 
-  const { t } = useI18n();
+    const { t } = useI18n();
 </script>
 
 <style lang="less" scoped>
-  .footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    color: var(--color-text-2);
-    text-align: center;
-  }
+    .footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        color: var(--color-text-2);
+        text-align: center;
+    }
 </style>
