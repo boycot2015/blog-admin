@@ -29,7 +29,7 @@
                 <a-input
                     v-model="formData.title"
                     style="width: 400px"
-                    maxLength="50"
+                    :max-length="50"
                     show-word-limit
                     placeholder="请选择或输入分类"
                 ></a-input>
