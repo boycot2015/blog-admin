@@ -63,6 +63,7 @@
             span: 24,
             attrs: {
                 placeholder: '请输入用户名',
+                maxLength: 30,
             },
             labelColProps: {
                 span: 3,
@@ -77,6 +78,7 @@
             span: 24,
             attrs: {
                 placeholder: '请输入密码',
+                maxLength: 30,
             },
             labelColProps: {
                 span: 3,
@@ -94,6 +96,7 @@
             },
             attrs: {
                 placeholder: '请输入电子邮箱',
+                maxLength: 30,
             },
             rules: [{ required: false, message: '邮箱不能为空' }],
             showColon: true,

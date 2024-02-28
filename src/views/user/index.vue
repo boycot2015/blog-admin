@@ -152,7 +152,7 @@
                         color={
                             colors[Math.floor(Math.random() * colors.length)]
                         }
-                        style={{ marginRight: '10px' }}
+                        style={{ marginRight: '5px', marginBottom: '5px' }}
                     >
                         {el.name}
                     </a-tag>

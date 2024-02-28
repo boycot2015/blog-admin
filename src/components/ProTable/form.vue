@@ -41,6 +41,8 @@
                         :disabled="readOnly || item.attrs?.disabled"
                         style="width: 100%"
                         allow-clear
+                        show-word-limit
+                        :max-length="item.attrs && item.attrs.maxLength"
                         :placeholder="
                             (item.attrs && item.attrs.placeholder) || '请输入'
                         "
@@ -50,7 +52,10 @@
                         v-model="formData[item.field]"
                         style="width: 100%"
                         show-word-limit
-                        :max-length="500"
+                        allow-clear
+                        :max-length="
+                            (item.attrs && item.attrs.maxLength) || 500
+                        "
                         :disabled="readOnly || item.attrs?.disabled"
                         :placeholder="
                             (item.attrs && item.attrs.placeholder) || '请输入'

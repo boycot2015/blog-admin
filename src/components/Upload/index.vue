@@ -1,19 +1,20 @@
 <template>
-    <a-space direction="vertical" :style="{ width: '100%' }">
-        <a-upload
-            :custom-request="customRequest"
-            :file-list="file ? [file] : [] as any"
-            :show-file-list="false"
-            :disabled="disabled"
-        >
-            <template #upload-button>
-                <div
-                    :class="`arco-upload-list-item${
-                        file && file.status === 'error'
-                            ? ' arco-upload-list-item-error'
-                            : ''
-                    }`"
-                >
+    <a-upload
+        :custom-request="customRequest"
+        :file-list="file ? [file] : [] as any"
+        :show-file-list="false"
+        :disabled="disabled"
+    >
+        <template #upload-button>
+            <div
+                style="margin: 0"
+                :class="`arco-upload-list-item${
+                    file && file.status === 'error'
+                        ? ' arco-upload-list-item-error'
+                        : ''
+                }`"
+            >
+                <slot name="button">
                     <div
                         v-if="file && file.url"
                         class="arco-upload-list-picture custom-upload-avatar"
@@ -46,10 +47,10 @@
                             >
                         </div>
                     </div>
-                </div>
-            </template>
-        </a-upload>
-    </a-space>
+                </slot>
+            </div>
+        </template>
+    </a-upload>
 </template>
 
 <script lang="ts" setup>

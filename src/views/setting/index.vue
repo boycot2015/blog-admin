@@ -22,25 +22,77 @@
                     <div class="banner" style="width: 100%">
                         <div class="banner-inner">
                             <a-carousel
+                                v-model:current="current"
                                 class="carousel"
                                 animation-name="slide"
                                 style="width: 100%; height: 230px"
                             >
                                 <a-carousel-item
-                                    v-for="item in formData.banner"
+                                    v-for="(item, index) in formData.banner"
                                     :key="item.url"
                                 >
-                                    <div :key="item.url" class="carousel-item">
-                                        <!-- <div class="carousel-title">{{ item.slogan }}</div>
-            <div class="carousel-sub-title">{{ item.subSlogan }}</div> -->
+                                    <div
+                                        :key="item.url"
+                                        class="carousel-item"
+                                        @click="
+                                            () => {
+                                                visible = true;
+                                                currentBanner = {
+                                                    ...item,
+                                                    index,
+                                                };
+                                            }
+                                        "
+                                    >
                                         <img
                                             class="carousel-image"
-                                            style="height: auto; width: 100%"
+                                            style="
+                                                height: auto;
+                                                width: 100%;
+                                                cursor: pointer;
+                                            "
                                             :src="item.url"
                                         />
                                     </div>
                                 </a-carousel-item>
                             </a-carousel>
+                        </div>
+                        <div
+                            v-if="formData && formData.banner"
+                            class="tr"
+                            style="margin-top: 5px"
+                        >
+                            <a-button
+                                v-if="formData.banner.length < 10"
+                                type="primary"
+                                size="small"
+                                @click="
+                                    () => {
+                                        visible = true;
+                                        currentBanner = {};
+                                    }
+                                "
+                                >+新增</a-button
+                            >
+                            <a-popconfirm
+                                v-if="formData.banner.length > 3"
+                                content="确定删除?"
+                                @ok="
+                                    () => {
+                                        formData.banner = formData.banner.filter((el: any) => el.index !== current - 1);
+                                        current = 1
+                                        currentBanner = {};
+                                    }
+                                "
+                            >
+                                <a-button
+                                    style="margin-left: 5px"
+                                    type="primary"
+                                    status="danger"
+                                    size="small"
+                                    >删除</a-button
+                                >
+                            </a-popconfirm>
                         </div>
                     </div>
                 </template>
@@ -63,6 +115,56 @@
                     /></a-form-item>
                 </template>
             </ProForm>
+            <a-modal
+                v-model:visible="visible"
+                title="配置轮播图"
+                @cancel="onModalClose"
+                @before-ok="handleBeforeOk"
+            >
+                <a-form ref="formRef" :model="currentBanner">
+                    <a-form-item
+                        field="url"
+                        label="轮播图"
+                        :rules="[{ required: true, message: '轮播图不能为空' }]"
+                    >
+                        <Upload
+                            url="/upload"
+                            :file="{ url: currentBanner.url || '' }"
+                            @change="(file:any) => (currentBanner.url = file)"
+                        >
+                            <template #button>
+                                <img
+                                    v-if="currentBanner.url"
+                                    class="carousel-image"
+                                    style="height: auto; width: 100%"
+                                    :src="currentBanner.url"
+                                />
+                                <a-button v-else>+上传图片</a-button>
+                            </template>
+                        </Upload>
+                    </a-form-item>
+                    <a-form-item
+                        field="title"
+                        label="名称"
+                        :rules="[{ required: true, message: '名称不能为空' }]"
+                    >
+                        <a-input
+                            v-model="currentBanner.title"
+                            :max-length="30"
+                            show-word-limit
+                            placeholder="请输入名称"
+                        />
+                    </a-form-item>
+                    <a-form-item field="link" label="链接">
+                        <a-input
+                            v-model="currentBanner.link"
+                            :max-length="30"
+                            show-word-limit
+                            placeholder="请输入链接"
+                        />
+                    </a-form-item>
+                </a-form>
+            </a-modal>
         </a-spin>
     </a-card>
 </template>
@@ -75,8 +177,12 @@
     import PickColors from 'vue-pick-colors';
     import useLoading from '@/hooks/loading';
 
+    const visible = ref(false);
     const { loading, setLoading } = useLoading();
     const formData = ref({}) as any;
+    const current = ref(1);
+    const currentBanner = ref({ index: 1 }) as any;
+    const formRef = ref();
     const formItems = ref([
         {
             slotName: 'banner',
@@ -192,6 +298,12 @@
             formData.value.notice = JSON.parse(res.data.notice).title;
             formData.value.noticeUrl = JSON.parse(res.data.notice).link;
             formData.value.banner = JSON.parse(res.data.banner);
+            formData.value.banner = formData.value.banner.map(
+                (el: any, index: number) => ({
+                    ...el,
+                    index,
+                })
+            );
             formData.value.gitHub = JSON.parse(res.data.siteConfig).gitHub;
             formData.value.email = JSON.parse(res.data.siteConfig).email;
             formData.value.color = JSON.parse(res.data.theme).color;
@@ -229,6 +341,30 @@
         //     router.push('/article');
         //   }
         // });
+    };
+    const onModalClose = () => {
+        visible.value = false;
+        currentBanner.value = {};
+    };
+    const handleBeforeOk = (done: any) => {
+        return !formRef.value.validate((errors: any) => {
+            if (!errors) {
+                const index = formData.value.banner.findIndex(
+                    (el: any) => el.index === current.value - 1
+                );
+                if (index > -1) {
+                    formData.value.banner.splice(
+                        current.value - 1,
+                        1,
+                        currentBanner.value
+                    );
+                } else {
+                    formData.value.banner.push(currentBanner.value);
+                }
+                done();
+                onModalClose();
+            }
+        });
     };
 </script>
 

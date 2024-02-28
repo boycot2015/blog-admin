@@ -76,12 +76,17 @@
                     >
                         <a-input
                             v-model="formData.name"
+                            max-length="30"
+                            show-word-limit
                             placeholder="请输入名称"
                         />
                     </a-form-item>
                     <a-form-item field="desc" label="说明">
-                        <a-input
+                        <a-textarea
                             v-model="formData.desc"
+                            max-length="100"
+                            show-word-limit
+                            :auto-size="{ minRows: 4 }"
                             placeholder="请输入说明"
                         />
                     </a-form-item>
@@ -188,7 +193,7 @@
             dataIndex: 'operation',
             title: '操作',
             fixed: 'right',
-            width: 180,
+            width: 200,
             permission: (): boolean =>
                 checkPermission({ value: ['F0021', 'F0022', 'F0023'] }),
             render: ({ record }) => (

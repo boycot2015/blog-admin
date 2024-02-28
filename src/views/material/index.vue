@@ -24,6 +24,15 @@
         <template #title>
             {{ $t('menu.material.list') }}
         </template>
+        <template #extra>
+            <a-space :size="16">
+                <Upload url="/upload" @change="() => tableRef.reload()">
+                    <template #button>
+                        <a-button type="primary" size="small">+上传</a-button>
+                    </template>
+                </Upload>
+            </a-space>
+        </template>
         <template #list-item="{ item }">
             <a-list-item class="list-item" action-layout="vertical">
                 <a-image
@@ -33,7 +42,7 @@
                     height="160"
                     show-loader
                     :title="
-                        (item.title || item.name || item.category).slice(1, 15)
+                        (item.title || item.name || item.category).slice(0, 10)
                     "
                     :preview-props="{
                         src: item.realUrl,

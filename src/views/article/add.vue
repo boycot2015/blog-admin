@@ -39,6 +39,9 @@
                 span: 3,
             },
             rules: [{ required: true, message: '标题不能为空' }],
+            attrs: {
+                maxLength: 200,
+            },
             showColon: true,
             valueType: 'text',
         },
@@ -53,6 +56,9 @@
             span: 24,
             valueType: 'select',
             request: '/category/get',
+            attrs: {
+                'allow-search': true,
+            },
             props: {
                 label: 'value',
                 value: 'id',
