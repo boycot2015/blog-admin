@@ -107,9 +107,10 @@
         setLoading(true);
         queryArticle({ id: route.query.id }).then((res: any) => {
             formData.value.title = res.data.title;
-            formData.value.categoryId = res.data.category.id;
+            formData.value.categoryId =
+                res.data.category?.id || res.data.categoryId;
             formData.value.tags = res.data.tags.map((_: any) => _.id);
-            formData.value.content = res.data.content;
+            formData.value.content = res.data.content || '';
             setLoading(false);
         });
     };

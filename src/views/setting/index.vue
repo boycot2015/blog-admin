@@ -24,7 +24,8 @@
                             <a-carousel
                                 v-model:current="current"
                                 class="carousel"
-                                animation-name="slide"
+                                auto-play
+                                indicator-type="line"
                                 style="width: 100%; height: 230px"
                             >
                                 <a-carousel-item
@@ -79,7 +80,7 @@
                                 content="确定删除?"
                                 @ok="
                                     () => {
-                                        formData.banner = formData.banner.filter((el: any) => el.index !== current - 1);
+                                        formData.banner = formData.banner.filter((el: any) => el.index !== current - 1).map((el: any, index: number) => ({ ...el, index }));
                                         current = 1
                                         currentBanner = {};
                                     }
@@ -206,6 +207,10 @@
             rules: [{ required: true, message: '公告名称不能为空' }],
             showColon: true,
             valueType: 'text',
+            attrs: {
+                showWordLimit: true,
+                maxLength: 50,
+            },
         },
         {
             field: 'noticeUrl',
@@ -217,33 +222,11 @@
             rules: [{ required: true, message: '公告链接不能为空' }],
             showColon: true,
             valueType: 'text',
+            attrs: {
+                showWordLimit: true,
+                maxLength: 150,
+            },
         },
-        // {
-        //   field: 'categoryId',
-        //   label: '文章分类',
-        //   labelColProps: {
-        //     span: 3,
-        //   },
-        //   rules: [{ required: true, message: '文章分类不能为空' }],
-        //   showColon: true,
-        //   span: 24,
-        //   valueType: 'select',
-        //   request: '/category/get',
-        //   props: {
-        //     label: 'value',
-        //     value: 'id',
-        //   },
-        //   options: [
-        //     {
-        //       label: '公司动态',
-        //       value: 'COMPANY_NEWS',
-        //     },
-        //     {
-        //       label: '行业资讯',
-        //       value: 'OTHER_NEWS',
-        //     },
-        //   ],
-        // },
         {
             field: 'gitHub',
             label: 'gitHub',
@@ -254,10 +237,8 @@
             showColon: true,
             span: 24,
             attrs: {
-                style: {
-                    width: '100%',
-                    height: '500px',
-                },
+                showWordLimit: true,
+                maxLength: 50,
             },
             valueType: 'text',
         },
@@ -271,10 +252,8 @@
             showColon: true,
             span: 24,
             attrs: {
-                style: {
-                    width: '100%',
-                    height: '500px',
-                },
+                showWordLimit: true,
+                maxLength: 50,
             },
             valueType: 'text',
         },
