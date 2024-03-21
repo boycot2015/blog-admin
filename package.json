@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@ant-design/colors": "^7.0.2",
-    "@arco-design/web-vue": "^2.44.7",
+    "@arco-design/web-vue": "^2.55.0",
     "@types/crypto-js": "^4.2.1",
     "@types/prismjs": "^1.26.3",
     "@vueuse/core": "^9.3.0",

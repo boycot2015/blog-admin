@@ -14,8 +14,8 @@ dependencies:
     specifier: ^7.0.2
     version: 7.0.2
   '@arco-design/web-vue':
-    specifier: ^2.44.7
-    version: 2.45.0(vue@3.2.47)
+    specifier: ^2.55.0
+    version: 2.55.0(vue@3.2.47)
   '@types/crypto-js':
     specifier: ^4.2.1
     version: 4.2.1
@@ -246,8 +246,8 @@ packages:
       color: 3.2.1
     dev: false
 
-  /@arco-design/web-vue@2.45.0(vue@3.2.47):
-    resolution: {integrity: sha512-+AkoOWTRz1ZeU2NTWXTEGmrJfV3/9uWhXpJ5hcPU41ynQ0GHilAlzCEt9B6hFd79QhGEHl2gRq6GJFki0Bo0Hg==}
+  /@arco-design/web-vue@2.55.0(vue@3.2.47):
+    resolution: {integrity: sha512-aMfg9dHiDsiJsxU2Mpa0V4WKjtdAdETBBrrVEHj1E7rJYF+PmrfZcSgIvAJSbdJZC/euqSCHyYOQezi3esSzxA==}
     peerDependencies:
       vue: ^3.1.0
     dependencies:
