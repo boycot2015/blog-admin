@@ -253,7 +253,7 @@
     };
     const reset = () => {
         formRef.value?.resetFields();
-        Object.assign(formData, props.defaultValues)
+        Object.assign(formData, props.defaultValues);
         emits('reset', formData);
     };
 </script>
