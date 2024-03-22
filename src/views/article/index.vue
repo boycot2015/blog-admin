@@ -8,6 +8,7 @@
         :form-items="formItems"
         :columns="columns"
         :pagination="true"
+        :default-values="defaultValues"
         :row-selection="{
             ...rowSelection,
         }"
@@ -47,12 +48,16 @@
     } from '@arco-design/web-vue/es/table';
     import type { ColumnData } from '@/components/ProTable/types';
     import router from '@/router';
+    import { useRoute } from 'vue-router';
     import { Modal, Message } from '@arco-design/web-vue';
     import { useAppStore } from '@/store';
     import { checkPermission } from '@/directive/permission';
 
     const colors: any = reactive(useAppStore().colors as any);
-
+    const route = useRoute();
+    const defaultValues = reactive({
+        status: route.query.status ? +route.query.status : '',
+    }) as any;
     const rowSelection = reactive<TableRowSelection>({
         selectedRowKeys: [],
         showCheckedAll: true,

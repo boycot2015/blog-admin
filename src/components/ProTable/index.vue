@@ -183,6 +183,7 @@
         pagePosition?: string | undefined;
         title?: string | undefined;
         listType?: string;
+        defaultValues?: any;
         request?: ((args: any) => Promise<any>) | undefined;
         scroll?: { x?: number | string; y?: number | string | bigint | any };
         selectedKeys?: BaseType[] | undefined;
@@ -250,12 +251,11 @@
                 getHeight(true);
         });
     });
-    const fetchData = async () => {
+    const fetchData = async (params = {} as any) => {
         try {
             if (!props.request) return;
             setLoading(true);
             const { current, pageSize: size } = pageData.value;
-            let params: any = {};
             Object.keys(formData.value).forEach((key: string) => {
                 if (
                     formData.value[key] !== '' &&
@@ -285,7 +285,7 @@
             setLoading(false);
         }
     };
-    fetchData();
+    fetchData(props.defaultValues || {});
     onMounted(() => {
         nextTick(() => {
             scroll.y =
@@ -304,7 +304,7 @@
         selectedKeys.value = [];
         checkAll.value = false;
         formData.value = {};
-        fetchData();
+        fetchData(props.defaultValues || {});
     };
     const pageSizeChange = (val: any) => {
         pageData.value.pageSize = val;
@@ -318,7 +318,8 @@
     defineExpose({
         search,
         reload: reset,
-        refresh: fetchData,
+        refresh: (params = {} as any) =>
+            fetchData({ ...params, ...(props.defaultValues || {}) }),
     });
 </script>
 

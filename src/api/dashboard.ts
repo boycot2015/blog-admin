@@ -1,6 +1,7 @@
 import axios from 'axios';
 // import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import type { HttpResponse } from '@/api/interceptor';
+import type { RouteLocationRaw } from 'vue-router';
 
 export type ContentData = {
     currentTime: number;
@@ -46,6 +47,7 @@ export interface ContentDataRecord {
     title: string;
     prop: string;
     value: number;
+    link: RouteLocationRaw;
     imgUrl: string;
 }
 
