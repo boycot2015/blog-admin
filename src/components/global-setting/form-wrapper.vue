@@ -6,13 +6,22 @@
         :default-value="(defaultValue as number)"
         @change="handleChange"
     />
-    <pick-colors
+    <!-- <pick-colors
         v-else-if="type === 'color-picker'"
         :value="(defaultValue as string)"
         format="hex"
         :style="{ cursor: 'pointer' }"
         @change="handleChange"
-    />
+    /> -->
+    <a-color-picker
+        v-else-if="type === 'color-picker'"
+        format="hex"
+        show-preset
+        show-text
+        size="small"
+        :default-value="(defaultValue as string)"
+        @change="handleChange"
+    ></a-color-picker>
     <a-switch
         v-else
         :default-checked="(defaultValue as boolean)"
@@ -22,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-    import PickColors from 'vue-pick-colors';
+    // import PickColors from 'vue-pick-colors';
 
     const props = defineProps({
         type: {

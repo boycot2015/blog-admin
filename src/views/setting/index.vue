@@ -104,7 +104,7 @@
                         :label-col-props="{ span: 6 }"
                         ><pick-colors
                             v-model:value="formData.color"
-                            format="rgb"
+                            format="hex"
                     /></a-form-item>
                     <a-form-item
                         label="背景色："
@@ -112,7 +112,7 @@
                         :label-col-props="{ span: 6 }"
                         ><pick-colors
                             v-model:value="formData.background"
-                            format="rgb"
+                            format="hex"
                     /></a-form-item>
                 </template>
             </ProForm>
