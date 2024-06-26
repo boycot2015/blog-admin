@@ -12,7 +12,7 @@ export default mergeConfig(
             },
             proxy: {
                 '/webapi': {
-                    target: '',
+                    target: 'https://blog-api.boycot.top',
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/webapi/, ''),
                 },

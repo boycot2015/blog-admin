@@ -1,7 +1,7 @@
 {
-  "name": "yzh-design-pro-vue",
-  "description": "Yzh Design Pro for Vue",
-  "version": "1.0.0",
+  "name": "blog-admin",
+  "description": "blog-admin",
+  "version": "2.0.0",
   "private": true,
   "author": "YzhDesign Team",
   "license": "MIT",
@@ -40,6 +40,7 @@
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.7",
     "echarts": "^5.4.0",
+    "http-proxy-middleware": "^3.0.0",
     "js-md5": "^0.7.3",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
