@@ -1,5 +1,5 @@
 export default {
-    path: 'http://www.boycot.top',
+    path: 'https://boycot.top',
     name: 'faq',
     meta: {
         locale: 'menu.website',

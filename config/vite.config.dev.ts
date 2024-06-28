@@ -16,6 +16,11 @@ export default mergeConfig(
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/webapi/, ''),
                 },
+                '/boycot-api': {
+                    target: 'https://api.boycot.top/api',
+                    changeOrigin: true,
+                    rewrite: (path) => path.replace(/^\/boycot-api/, ''),
+                },
             },
         },
         plugins: [

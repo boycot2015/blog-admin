@@ -4,6 +4,10 @@
             "source": "/blog-api/(.*)",  
             "destination": "/api/proxy"  
         },
+        {
+            "source": "/boycot-api/(.*)",  
+            "destination": "/api/proxy"
+        },
         { "source": "/:path*", "destination": "/index.html" }
     ]
 }
