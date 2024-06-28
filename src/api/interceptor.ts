@@ -23,7 +23,7 @@ axios.interceptors.request.use(
         // this example using the JWT token
         // Authorization is a custom headers key
         // please modify it according to the actual situation
-        if (!config.url?.includes('/api')) {
+        if (!config.url?.includes('/boycot-api')) {
             config.url = baseUrl + config.url;
         }
         const token = getToken();
@@ -35,7 +35,7 @@ axios.interceptors.request.use(
         }
         return config;
     },
-    (error) => {
+    (error: any) => {
         // do something
         return Promise.reject(error);
     }
@@ -73,7 +73,7 @@ axios.interceptors.response.use(
         }
         return res;
     },
-    (error) => {
+    (error: any) => {
         const msg = error.response?.data?.message || 'Request Error';
         if (msg === 'Unauthorized') {
             Modal.error({

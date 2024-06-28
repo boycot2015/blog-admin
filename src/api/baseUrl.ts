@@ -16,11 +16,11 @@ const env =
         : 'production';
 switch (env) {
     case 'development':
-        baseUrl = '/webapi'; // aliyun预演环境url
+        baseUrl = '/blog-api'; // aliyun预演环境url
         // baseUrl = 'http://localhost:4000'; // aliyun预演环境url
         // baseUrl = 'http://doc.yunzhonghe.com/mock/422'; // mock url
-        apiUrl = 'http://localhost:8090/api';
-        // apiUrl = '/boycot-api'; // api url
+        // apiUrl = 'http://localhost:8090/api';
+        apiUrl = '/boycot-api'; // api url
         break;
     case 'test':
         baseUrl = '/blog-api';
