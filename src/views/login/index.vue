@@ -29,8 +29,12 @@
         height: 100vh;
 
         .banner {
-            width: 48%;
-            background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
+            width: 60%;
+            background: linear-gradient(
+                160deg,
+                rgb(var(--gray-5)) 0%,
+                rgb(var(--arcoblue-4)) 100%
+            );
         }
 
         .content {
@@ -72,7 +76,7 @@
     @media (max-width: @screen-lg) {
         .container {
             .banner {
-                width: 50%;
+                width: 40%;
             }
         }
     }

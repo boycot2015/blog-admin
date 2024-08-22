@@ -47,8 +47,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: url('@/assets/images/login-banner.png') center/cover
-            no-repeat !important;
+        // background: url('@/assets/images/bg.jpg') center/cover no-repeat !important;
         &-inner {
             flex: 1;
             height: 100%;
