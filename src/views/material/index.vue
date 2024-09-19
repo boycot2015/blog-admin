@@ -42,10 +42,16 @@
                     height="160"
                     show-loader
                     :title="
-                        (item.title || item.name || item.category).slice(0, 10)
+                        (
+                            item.title ||
+                            item.img_title ||
+                            item.name ||
+                            item.category ||
+                            ''
+                        ).slice(0, 10)
                     "
                     :preview-props="{
-                        src: item.realUrl,
+                        src: item.high_img || item.realUrl || item.img,
                         defaultVisible: false,
                         closable: false,
                         maskClosable: true,
@@ -58,7 +64,7 @@
                             'originalSize',
                         ],
                     }"
-                    :src="item.url"
+                    :src="item.url || item.img"
                 >
                     <template #extra>
                         <div class="actions">
@@ -70,7 +76,16 @@
                                     ><icon-download
                                 /></span>
                             </a-tooltip>
-                            <a-tooltip :content="item.tag">
+                            <a-tooltip
+                                :content="
+                                    item.tag ||
+                                    item.title ||
+                                    item.img_title ||
+                                    item.name ||
+                                    item.category ||
+                                    ''
+                                "
+                            >
                                 <span class="action" style="margin-right: 5px"
                                     ><icon-info-circle
                                 /></span>

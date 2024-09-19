@@ -318,6 +318,7 @@
     defineExpose({
         search,
         reload: reset,
+        getData: () => renderList.value,
         refresh: (params = {} as any) =>
             fetchData({ ...params, ...(props.defaultValues || {}) }),
     });

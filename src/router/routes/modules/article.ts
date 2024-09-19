@@ -48,6 +48,17 @@ const ARTICLE: AppRouteRecordRaw = {
                 roles: ['F0011'],
             },
         },
+        {
+            path: '/article/comment',
+            name: 'ArticleComment',
+            component: () => import('@/views/article/comment.vue'),
+            meta: {
+                locale: 'menu.article.comment',
+                keepAlive: true,
+                requiresAuth: true,
+                roles: ['F001'],
+            },
+        },
     ],
 };
 

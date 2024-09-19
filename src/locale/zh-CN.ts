@@ -10,6 +10,7 @@ export default {
     'menu.website': '博客前台',
     'menu.dashboard': '首页',
     'menu.article.list': '文章列表',
+    'menu.article.comment': '评论列表',
     'menu.article': '文章',
     'menu.article.add': '新增文章',
     'menu.article.edit': '编辑文章',

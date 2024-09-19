@@ -44,7 +44,10 @@
                     @click="
                         addTag({
                             value: formData.title,
-                        }).then((res) => fetchData(res))
+                        }).then((res) => {
+                            formData.title = '';
+                            fetchData(res);
+                        })
                     "
                     >+新增</a-button
                 >

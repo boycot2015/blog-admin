@@ -4,7 +4,7 @@
         v-model:selectedKeys="rowSelection.selectedRowKeys"
         row-key="id"
         check-all="全选所有结果"
-        :request="queryArticleList"
+        :request="querycommentList"
         :form-items="formItems"
         :columns="columns"
         :pagination="true"
@@ -14,17 +14,10 @@
         }"
     >
         <template #title>
-            {{ $t('menu.article.list') }}
+            {{ $t('menu.article.comment') }}
         </template>
         <template #extra>
             <a-space v-permission="['F0010', 'F0013']" :size="16">
-                <a-button
-                    v-permission="['F0010']"
-                    type="primary"
-                    @click="$router.push('/article/add')"
-                >
-                    <a-space :size="8"> <icon-plus></icon-plus>新增</a-space>
-                </a-button>
                 <a-button
                     v-permission="['F0013']"
                     :disabled="!rowSelection.selectedRowKeys?.length"
@@ -38,24 +31,21 @@
 
 <script lang="tsx" setup>
     import { ref, reactive, onActivated } from 'vue';
-    import {
-        queryArticleList,
-        deleteArticle,
-        changeStatus,
-    } from '@/api/article';
     import type {
         TableData,
         TableRowSelection,
     } from '@arco-design/web-vue/es/table';
     import type { ColumnData } from '@/components/ProTable/types';
-    import router from '@/router';
     import { useRoute } from 'vue-router';
     import { Modal, Message } from '@arco-design/web-vue';
-    import { useAppStore } from '@/store';
     import { checkPermission } from '@/directive/permission';
+    import {
+        querycommentList,
+        deletecomment,
+        changeStatus,
+    } from '@/api/comment';
     import { exportFile } from '@/utils';
 
-    const colors: any = reactive(useAppStore().colors as any);
     const route = useRoute();
     const defaultValues = reactive({
         status: route.query.status ? +route.query.status : '',
@@ -67,44 +57,22 @@
     const tableRef = ref({}) as any;
     const formItems = ref([
         {
-            field: 'title',
-            label: '标题名称',
+            field: 'name',
+            label: '用户名称',
             showColon: true,
             attrs: {
-                placeholder: '请输入标题名称 ',
+                placeholder: '请输入用户名称',
             },
             valueType: 'text',
         },
         {
-            field: 'category',
-            label: '文章分类',
+            field: 'content',
+            label: '内容',
             showColon: true,
             attrs: {
-                'allow-search': true,
-                'placeholder': '请选择或搜索文章分类 ',
+                placeholder: '请输入内容',
             },
-            valueType: 'select',
-            request: '/category/get',
-            props: {
-                label: 'value',
-                value: 'id',
-            },
-        },
-        {
-            field: 'tag',
-            label: '标签',
-            showColon: true,
-            attrs: {
-                'max-tag-count': 2,
-                'placeholder': '请选择或搜索标签 ',
-                'multiple': true,
-            },
-            valueType: 'select',
-            request: '/tag/get',
-            props: {
-                label: 'value',
-                value: 'id',
-            },
+            valueType: 'text',
         },
         {
             field: 'status',
@@ -126,14 +94,27 @@
                 },
             ],
         },
-        {
-            field: 'publishTime',
-            label: '发布时间',
-            showColon: true,
-            span: 12,
-            valueType: 'time',
-        },
+        // {
+        //     field: 'publishTime',
+        //     label: '发布时间',
+        //     showColon: true,
+        //     span: 12,
+        //     valueType: 'time',
+        // },
     ]);
+    const onDelete = (record: TableData) => {
+        Modal.warning({
+            title: '温馨提示',
+            content: '确认删除？',
+            hideCancel: false,
+            onOk: () => {
+                deletecomment({ id: record.id }).then((res: any) => {
+                    Message.success(res.data || res.message);
+                    tableRef.value?.reload();
+                });
+            },
+        });
+    };
     const onExport = () => {
         const list = tableRef.value
             .getData()
@@ -146,77 +127,62 @@
             type: 'json',
         });
     };
-    const onDelete = (record: TableData) => {
-        Modal.warning({
-            title: '温馨提示',
-            content: '确认删除？',
-            hideCancel: false,
-            onOk: () => {
-                deleteArticle({ id: record.id }).then((res: any) => {
-                    Message.success(res.data || res.message);
-                    tableRef.value?.reload();
-                });
-            },
-        });
-    };
     const columns = ref<ColumnData[]>([
         {
-            dataIndex: 'id',
-            title: 'ID',
-            fixed: 'left',
-            width: 120,
+            dataIndex: 'avatar',
+            title: '用户头像',
+            tooltip: true,
+            ellipsis: true,
+            width: 260,
+            render: ({ record }) => {
+                return (
+                    <a-avatar
+                        style={{
+                            backgroundColor: record.avatar,
+                        }}
+                        image-url={record.url}
+                        alt={record.avatar}
+                    >
+                        {record.name.substring(0, 1).toUpperCase()}
+                    </a-avatar>
+                );
+            },
         },
         {
-            dataIndex: 'title',
-            title: '文章标题',
+            dataIndex: 'name',
+            title: '用户名',
             tooltip: true,
             ellipsis: true,
             width: 260,
         },
         {
-            dataIndex: 'categoryName',
-            title: '文章分类',
+            dataIndex: 'email',
+            title: '邮箱',
+            tooltip: true,
+            ellipsis: true,
+            width: 260,
+        },
+        {
+            dataIndex: 'content',
+            title: '内容',
             width: 150,
             render: ({ record }) => {
-                return record.category?.value || record.categoryName;
+                return <div v-html={record.content}></div>;
             },
         },
         {
-            dataIndex: 'tagName',
-            title: '标签',
-            width: 220,
-            render: ({ record }) => {
-                return record.tags ? (
-                    <div>
-                        {record.tags.map((el: any) => (
-                            <a-tag
-                                color={
-                                    colors[
-                                        Math.floor(
-                                            Math.random() * colors.length
-                                        )
-                                    ]
-                                }
-                                style={{ margin: '0 5px 5px 0' }}
-                            >
-                                {el.value}
-                            </a-tag>
-                        ))}
-                    </div>
-                ) : (
-                    record.tagName
-                );
-            },
+            dataIndex: 'ip',
+            title: 'IP',
+            tooltip: true,
+            ellipsis: true,
+            width: 260,
         },
         {
-            dataIndex: 'visitor',
-            title: '阅读量',
-            width: 100,
-            sortable: {
-                sortDirections: ['descend', 'ascend'],
-                sorter: false,
-                defaultSortOrder: '',
-            },
+            dataIndex: 'userAgent',
+            title: '客户端',
+            tooltip: true,
+            ellipsis: true,
+            width: 260,
         },
         {
             dataIndex: 'createTime',
@@ -297,14 +263,6 @@
                     <span>{record.status === 1001 ? '已发布' : '未发布'}</span>
                 ),
         },
-        // {
-        //   dataIndex: 'isRecommended',
-        //   title: '是否推荐',
-        //   width: 150,
-        //   render: ({ record }) => (
-        //     <a-switch v-model={record.isRecommended}></a-switch>
-        //   ),
-        // },
         {
             dataIndex: 'operation',
             title: '操作',
@@ -317,23 +275,34 @@
                     <a-space size={8} record={record}>
                         <a-link
                             onClick={() => {
-                                router.push({
-                                    path: '/article/edit',
-                                    query: { id: record.id, readOnly: 'true' },
+                                Modal.info({
+                                    content: () => (
+                                        <div>
+                                            <a-space align="align">
+                                                <span>{record.name}:</span>
+                                                <span
+                                                    v-html={record.content}
+                                                ></span>
+                                            </a-space>
+                                            {record.parentName && (
+                                                <a-space align="align">
+                                                    &nbsp;
+                                                    {'//'}
+                                                    {record.parentName}:
+                                                    <span
+                                                        v-html={
+                                                            record.parentContent
+                                                        }
+                                                    ></span>
+                                                </a-space>
+                                            )}
+                                        </div>
+                                    ),
+                                    title: '查看详情',
                                 });
                             }}
                         >
                             查看
-                        </a-link>
-                        <a-link
-                            onClick={() => {
-                                router.push({
-                                    path: '/article/edit',
-                                    query: { id: record.id },
-                                });
-                            }}
-                        >
-                            编辑
                         </a-link>
                         {checkPermission({ value: ['F0012'] }) && (
                             <a-link onClick={() => onDelete(record)}>
@@ -351,7 +320,7 @@
 
 <script lang="tsx">
     export default {
-        name: 'ArticleList', // If you want the include property of keep-alive to take effect, you must name the component
+        name: 'Articlecomment', // If you want the include property of keep-alive to take effect, you must name the component
     };
 </script>
 

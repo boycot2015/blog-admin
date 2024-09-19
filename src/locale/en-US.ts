@@ -29,6 +29,7 @@ export default {
     'website.title': 'Blog Admin',
     'menu.article': 'Article',
     'menu.article.list': 'article-list',
+    'menu.article.comment': 'article-comment',
     'menu.article.add': 'article-add',
     'menu.article.edit': 'article-edit',
     'menu.material.category': 'Category Manage',
