@@ -12,7 +12,7 @@
                 v-bind="{
                     ...props,
                 }"
-                show-more
+                :show-more="props.spread"
                 :form-items="props.formItems"
                 @search="search"
                 @reset="reset"
@@ -38,10 +38,10 @@
         >
             <template #title>
                 <span v-if="props.title">{{ props.title }}</span>
-                <slot v-else name="title"></slot>
+                <slot v-else name="title" :form="formData"></slot>
             </template>
             <template #extra>
-                <slot name="extra"></slot>
+                <slot name="extra" :form="formData"></slot>
             </template>
             <a-space direction="vertical" :size="10" fill>
                 <a-list
@@ -172,6 +172,7 @@
     };
     type ProTableProps = {
         formItems?: FormItemProps[];
+        spread?: boolean | undefined;
         columns?: ColumnData[] | undefined;
         data?: TableData[] | undefined;
         bordered?: boolean | TableBorder | undefined;

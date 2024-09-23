@@ -8,6 +8,7 @@
         :form-items="formItems"
         :columns="columns"
         :pagination="true"
+        :spread="false"
         :default-values="defaultValues"
         :row-selection="{
             ...rowSelection,
@@ -17,9 +18,9 @@
             {{ $t('menu.article.comment') }}
         </template>
         <template #extra>
-            <a-space v-permission="['F0010', 'F0013']" :size="16">
+            <a-space v-permission="['F00142']" :size="16">
                 <a-button
-                    v-permission="['F0013']"
+                    v-permission="['F00142']"
                     :disabled="!rowSelection.selectedRowKeys?.length"
                     @click="onExport"
                     >导出</a-button
@@ -52,6 +53,7 @@
     }) as any;
     const rowSelection = reactive<TableRowSelection>({
         selectedRowKeys: [],
+        fixed: true,
         showCheckedAll: true,
     });
     const tableRef = ref({}) as any;
@@ -216,8 +218,9 @@
             dataIndex: 'status',
             title: '状态',
             width: 120,
+            fixed: 'right',
             render: ({ record }) =>
-                checkPermission({ value: ['F0011'] }) ? (
+                checkPermission({ value: ['F00141'] }) ? (
                     <a-switch
                         before-change={() => {
                             return new Promise((resolve, reject) => {
@@ -268,49 +271,45 @@
             title: '操作',
             fixed: 'right',
             width: 180,
-            permission: (): boolean =>
-                checkPermission({ value: ['F0011', 'F0012'] }),
-            render: ({ record }) =>
-                checkPermission({ value: ['F0011', 'F0012'] }) ? (
-                    <a-space size={8} record={record}>
-                        <a-link
-                            onClick={() => {
-                                Modal.info({
-                                    content: () => (
-                                        <div>
+            permission: (): boolean => checkPermission({ value: ['F00140'] }),
+            render: ({ record }) => (
+                <a-space size={8} record={record}>
+                    <a-link
+                        onClick={() => {
+                            Modal.info({
+                                content: () => (
+                                    <div>
+                                        <a-space align="align">
+                                            <span>{record.name}:</span>
+                                            <span
+                                                v-html={record.content}
+                                            ></span>
+                                        </a-space>
+                                        {record.parentName && (
                                             <a-space align="align">
-                                                <span>{record.name}:</span>
+                                                &nbsp;
+                                                {'//'}
+                                                {record.parentName}:
                                                 <span
-                                                    v-html={record.content}
+                                                    v-html={
+                                                        record.parentContent
+                                                    }
                                                 ></span>
                                             </a-space>
-                                            {record.parentName && (
-                                                <a-space align="align">
-                                                    &nbsp;
-                                                    {'//'}
-                                                    {record.parentName}:
-                                                    <span
-                                                        v-html={
-                                                            record.parentContent
-                                                        }
-                                                    ></span>
-                                                </a-space>
-                                            )}
-                                        </div>
-                                    ),
-                                    title: '查看详情',
-                                });
-                            }}
-                        >
-                            查看
-                        </a-link>
-                        {checkPermission({ value: ['F0012'] }) && (
-                            <a-link onClick={() => onDelete(record)}>
-                                删除
-                            </a-link>
-                        )}
-                    </a-space>
-                ) : null,
+                                        )}
+                                    </div>
+                                ),
+                                title: '查看详情',
+                            });
+                        }}
+                    >
+                        查看
+                    </a-link>
+                    {checkPermission({ value: ['F00140'] }) && (
+                        <a-link onClick={() => onDelete(record)}>删除</a-link>
+                    )}
+                </a-space>
+            ),
         },
     ]);
     onActivated(() => {

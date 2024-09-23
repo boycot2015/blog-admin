@@ -56,7 +56,7 @@ const ARTICLE: AppRouteRecordRaw = {
                 locale: 'menu.article.comment',
                 keepAlive: true,
                 requiresAuth: true,
-                roles: ['F001'],
+                roles: ['F0014'],
             },
         },
     ],

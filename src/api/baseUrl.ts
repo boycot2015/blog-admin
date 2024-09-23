@@ -17,7 +17,7 @@ const env =
 switch (env) {
     case 'development':
         baseUrl = '/blog-api'; // aliyun预演环境url
-        // baseUrl = 'http://localhost:4000'; // aliyun预演环境url
+        baseUrl = 'http://localhost:3000'; // aliyun预演环境url
         // baseUrl = 'http://doc.yunzhonghe.com/mock/422'; // mock url
         // apiUrl = 'http://localhost:8090/api';
         apiUrl = '/boycot-api'; // api url

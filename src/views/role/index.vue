@@ -59,7 +59,11 @@
                                 title: 'name',
                             }"
                             placeholder="请选择权限"
-                            style="width: 100%"
+                            style="
+                                width: 100%;
+                                max-height: 500px;
+                                overflow: auto;
+                            "
                             @check="onChecked"
                             @select="
                 (selectedKeys: any, { selected, node }: any) =>

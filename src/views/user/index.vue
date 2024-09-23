@@ -5,6 +5,7 @@
         :request="queryUserList"
         :form-items="formItems"
         :columns="columns"
+        :spread="true"
         :pagination="true"
     >
         <template #title>

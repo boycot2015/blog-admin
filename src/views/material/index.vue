@@ -24,8 +24,8 @@
         <template #title>
             {{ $t('menu.material.list') }}
         </template>
-        <template #extra>
-            <a-space :size="16">
+        <template #extra="{ form }">
+            <a-space v-if="form.sourceFrom != 1002" :size="16">
                 <Upload url="/upload" @change="() => tableRef.reload()">
                     <template #button>
                         <a-button type="primary" size="small">+上传</a-button>

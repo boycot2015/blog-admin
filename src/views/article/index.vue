@@ -8,6 +8,7 @@
         :form-items="formItems"
         :columns="columns"
         :pagination="true"
+        :spread="true"
         :default-values="defaultValues"
         :row-selection="{
             ...rowSelection,
@@ -62,6 +63,7 @@
     }) as any;
     const rowSelection = reactive<TableRowSelection>({
         selectedRowKeys: [],
+        fixed: true,
         showCheckedAll: true,
     });
     const tableRef = ref({}) as any;
@@ -160,12 +162,12 @@
         });
     };
     const columns = ref<ColumnData[]>([
-        {
-            dataIndex: 'id',
-            title: 'ID',
-            fixed: 'left',
-            width: 120,
-        },
+        // {
+        //     dataIndex: 'id',
+        //     title: 'ID',
+        //     fixed: 'left',
+        //     width: 120,
+        // },
         {
             dataIndex: 'title',
             title: '文章标题',
