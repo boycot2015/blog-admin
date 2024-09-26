@@ -9,6 +9,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AAvatar: typeof import('@arco-design/web-vue')['Avatar']
     AImage: typeof import('@arco-design/web-vue')['Image']
     ALink: typeof import('@arco-design/web-vue')['Link']
     ASpace: typeof import('@arco-design/web-vue')['Space']
