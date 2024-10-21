@@ -129,6 +129,12 @@
             ],
         },
         {
+            field: 'creator',
+            label: '创建人',
+            showColon: true,
+            valueType: 'text',
+        },
+        {
             field: 'publishTime',
             label: '发布时间',
             showColon: true,
@@ -299,14 +305,12 @@
                     <span>{record.status === 1001 ? '已发布' : '未发布'}</span>
                 ),
         },
-        // {
-        //   dataIndex: 'isRecommended',
-        //   title: '是否推荐',
-        //   width: 150,
-        //   render: ({ record }) => (
-        //     <a-switch v-model={record.isRecommended}></a-switch>
-        //   ),
-        // },
+        {
+            dataIndex: 'creator',
+            title: '创建人',
+            render: ({ record }) => record.user?.username || record.creator,
+            width: 150,
+        },
         {
             dataIndex: 'operation',
             title: '操作',
