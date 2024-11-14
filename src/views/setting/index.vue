@@ -159,7 +159,7 @@
                     <a-form-item field="link" label="链接">
                         <a-input
                             v-model="currentBanner.link"
-                            :max-length="30"
+                            :max-length="100"
                             show-word-limit
                             placeholder="请输入链接"
                         />

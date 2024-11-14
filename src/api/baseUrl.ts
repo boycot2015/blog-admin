@@ -15,15 +15,15 @@ switch (env) {
         break;
     case 'test':
         baseUrl = import.meta.env.VITE_API_BASE_URL; // url
-        // apiUrl = '/boycot-api'; // api url
+        apiUrl = 'https://api.boycot.top/api'; // api url
         break;
     case 'show':
         baseUrl = import.meta.env.VITE_API_BASE_URL; // url
-        // apiUrl = '/boycot-api'; // api url
+        apiUrl = 'https://api.boycot.top/api'; // api url
         break;
     case 'production':
         baseUrl = '/blog-api'; // 生产环境url
-        apiUrl = '/boycot-api'; // api url
+        apiUrl = 'https://api.boycot.top/api'; // api url
         break;
 }
 export { apiUrl };
