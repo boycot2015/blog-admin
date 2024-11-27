@@ -33,6 +33,7 @@ interface ParamsProps {
     title?: string;
     type?: string;
     id?: number | string | unknown | undefined;
+    ids?: number[] | string[] | undefined;
     content?: string;
     status?: number | string;
     category?: string;
@@ -67,8 +68,8 @@ export function editArticle(params: ParamsProps) {
 export function deleteArticle(params: ParamsProps) {
     return axios({
         method: 'post',
-        url: '/article/delete',
-        params,
+        url: '/article/delete/batch',
+        data: params,
     });
 }
 export function changeStatus(data: ParamsProps) {

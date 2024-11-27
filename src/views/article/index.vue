@@ -32,6 +32,12 @@
                     @click="onExport"
                     >导出</a-button
                 >
+                <a-button
+                    v-permission="['F0013']"
+                    :disabled="!rowSelection.selectedRowKeys?.length"
+                    @click="onDelete()"
+                    >批量删除</a-button
+                >
             </a-space>
         </template>
     </ProTable>
@@ -154,13 +160,17 @@
             type: 'json',
         });
     };
-    const onDelete = (record: TableData) => {
+    const onDelete = (record?: TableData) => {
         Modal.warning({
             title: '温馨提示',
             content: '确认删除？',
             hideCancel: false,
             onOk: () => {
-                deleteArticle({ id: record.id }).then((res: any) => {
+                deleteArticle({
+                    ids: record?.id
+                        ? record?.id
+                        : rowSelection.selectedRowKeys?.join(','),
+                }).then((res: any) => {
                     Message.success(res.data || res.message);
                     tableRef.value?.reload();
                 });
