@@ -7,7 +7,7 @@ import { prismjsPlugin } from 'vite-plugin-prismjs';
 import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
 
 export default defineConfig({
-    publicDir: '/admin/',
+    // publicDir: 'public',
     plugins: [
         vue(),
         vueJsx(),
