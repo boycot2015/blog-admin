@@ -49,24 +49,33 @@ export interface ContentDataRecord {
     value: number;
     link: RouteLocationRaw;
     imgUrl: string;
+    icon?: () => any;
 }
 
 export function queryContentData() {
-    return axios.get<ContentData>('/datas').then((res) => {
-        return axios.get<HttpResponse>('/category/get').then((cate: any) => {
-            return axios.get<HttpResponse>('/tag/get').then((tag: any) => {
-                return {
-                    data: {
-                        ...res.data,
-                        category: cate.data[1],
-                        tag: tag.data[1],
-                    },
-                };
-            });
-        });
+    return Promise.all([
+        axios.get<ContentData>('/datas'),
+        axios.get<ContentData>('/statics'),
+        axios.get<HttpResponse>('/category/get'),
+        axios.get<HttpResponse>('/tag/get'),
+    ]).then(([res, statics, cate, tag]: any) => {
+        return {
+            data: {
+                ...statics.data,
+                ...res.data,
+                category: cate.data[1],
+                tag: tag.data[1],
+            },
+        };
     });
 }
-
+export function queryStaticsData() {
+    return axios.get<ContentData>('/statics').then((statics: any) => {
+        return {
+            data: statics.data,
+        };
+    });
+}
 export interface PopularRecord {
     id: number;
     title: string;

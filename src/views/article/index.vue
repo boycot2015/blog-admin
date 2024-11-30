@@ -166,11 +166,13 @@
             content: '确认删除？',
             hideCancel: false,
             onOk: () => {
-                deleteArticle({
-                    ids: record?.id
-                        ? record?.id
-                        : rowSelection.selectedRowKeys?.join(','),
-                }).then((res: any) => {
+                deleteArticle(
+                    record?.id
+                        ? { id: record.id }
+                        : {
+                              ids: rowSelection.selectedRowKeys?.join(','),
+                          }
+                ).then((res: any) => {
                     Message.success(res.data || res.message);
                     tableRef.value?.reload();
                 });

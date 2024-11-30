@@ -29,7 +29,7 @@ export default {
     'workplace.allProject': '所有项目',
     'workplace.loadMore': '加载更多',
     'workplace.viewMore': '查看更多',
-    'workplace.contentData': '内容数据',
+    'workplace.contentData': '数据统计',
     'workplace.popularContent': '最近发布',
     'workplace.popularContent.text': '文本',
     'workplace.popularContent.image': '图片',

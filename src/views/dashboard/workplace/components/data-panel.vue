@@ -18,10 +18,18 @@
                 <a-link :hoverable="false" @click="onJump(item.link)">
                     <a-space>
                         <a-avatar :size="54" class="col-avatar">
-                            <img alt="avatar" :src="item.imgUrl" />
+                            <component
+                                :is="item.icon"
+                                v-if="item.icon"
+                            ></component>
+                            <img
+                                v-else-if="item.imgUrl"
+                                alt="avatar"
+                                :src="item.imgUrl"
+                            />
                         </a-avatar>
                         <a-statistic
-                            :title="item.title"
+                            :title="$t(item.title)"
                             :value="item.prop ? item.value : undefined"
                             :precision="0"
                             :value-from="0"
@@ -45,55 +53,69 @@
 </template>
 
 <script lang="ts" setup>
-    import { ref } from 'vue';
+    import { ref, h, compile } from 'vue';
     import useLoading from '@/hooks/loading';
     import { queryContentData } from '@/api/dashboard';
-    import { useI18n } from 'vue-i18n';
+    // import { useI18n } from 'vue-i18n';
     import { isValidKey } from '@/utils/is';
     import { useRouter } from 'vue-router';
     import type { ContentDataRecord } from '@/api/dashboard';
 
-    const { t } = useI18n();
+    // const { t } = useI18n();
 
     const { loading, setLoading } = useLoading();
     const statisticList = ref<ContentDataRecord[]>([
         {
-            title: t('workplace.totalNum'),
+            title: 'workplace.totalNum',
             value: 0,
             prop: 'total',
             link: '/article/index',
             imgUrl: '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/fdc66b07224cdf18843c6076c2587eb5.svg~tplv-49unhts6dw-image.image',
         },
         {
-            title: t('workplace.articleNum'),
+            title: 'workplace.articleNum',
             value: 0,
             prop: 'publicData',
             link: '/article/index?status=1001',
             imgUrl: '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/288b89194e657603ff40db39e8072640.svg~tplv-49unhts6dw-image.image',
         },
         {
-            title: t('workplace.visitorNum'),
+            title: 'workplace.visitorNum',
             value: 0,
             prop: 'visitorData',
             link: '/article/index',
+            icon: () =>
+                h(
+                    compile(
+                        `<icon-user-group style="color:rgb(var(--link-6))" />`
+                    )
+                ),
             imgUrl: '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/288b89194e657603ff40db39e8072640.svg~tplv-49unhts6dw-image.image',
         },
         {
-            title: t('workplace.category'),
+            title: 'workplace.category',
             value: 0,
             prop: 'category',
             link: '/material/category',
+            icon: () =>
+                h(
+                    compile(
+                        `<icon-mind-mapping style="color:rgb(var(--link-6))" />`
+                    )
+                ),
             imgUrl: '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/288b89194e657603ff40db39e8072640.svg~tplv-49unhts6dw-image.image',
         },
         {
-            title: t('workplace.tag'),
+            title: 'workplace.tag',
             value: 0,
             prop: 'tag',
             link: '/material/tag',
+            icon: () =>
+                h(compile(`<icon-tags style="color:rgb(var(--link-6))" />`)),
             imgUrl: '//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/288b89194e657603ff40db39e8072640.svg~tplv-49unhts6dw-image.image',
         },
         {
-            title: t('workplace.newFromYesterday'),
+            title: 'workplace.newFromYesterday',
             value: 0,
             prop: '',
             link: 'https://tongji.baidu.com/main/overview/demo/overview/index',

@@ -19,7 +19,6 @@ export default {
     'workplace.docs.userGuide': 'User Guide',
     'workplace.docs.workflow': 'Workflow',
     'workplace.docs.interfaceDocs': 'Interface Docs',
-    //
     'workplace.contentManagement': 'Content Management',
     'workplace.contentStatistical': 'Content Statistical',
     'workplace.advanced': 'Advanced',
@@ -33,7 +32,7 @@ export default {
     'workplace.allProject': 'All',
     'workplace.loadMore': 'More',
     'workplace.viewMore': 'More',
-    'workplace.contentData': 'Content Data',
+    'workplace.contentData': 'Data Statistics',
     'workplace.popularContent': 'Popular Content',
     'workplace.popularContent.text': 'text',
     'workplace.popularContent.image': 'image',
