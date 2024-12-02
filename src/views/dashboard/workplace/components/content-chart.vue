@@ -74,13 +74,14 @@
                     show: false,
                 },
                 splitLine: {
-                    show: true,
+                    show: false,
                     interval: (idx: number) => {
                         if (idx === 0) return false;
                         if (idx === xAxis.value.length - 1) return false;
                         return true;
                     },
                     lineStyle: {
+                        type: 'dashed',
                         color: '#E5E8EF',
                     },
                 },
@@ -121,10 +122,10 @@
                         params as ToolTipFormatterParams[];
                     return `<div>
             <p class="tooltip-title">${firstElement.axisValueLabel}</p>
-            <div class="content-panel"><span>发布数量</span><span class="tooltip-value">${Number(
+            <div class="content-panel"><span style="color:rgba(255, 66, 251, 1);">——</span><span>发布数量</span><span class="tooltip-value">${Number(
                 firstElement.value
             ).toLocaleString()}</span></div>
-            <div class="content-panel"><span>浏览数量</span><span class="tooltip-value">${Number(
+            <div class="content-panel"><span style="color:rgba(111, 66, 251, 1);">——</span><span>浏览数量</span><span class="tooltip-value">${Number(
                 secondElement.value
             ).toLocaleString()}</span></div>
           </div>`;
@@ -160,7 +161,7 @@
                             },
                             {
                                 offset: 1,
-                                color: 'rgba(111, 66, 251, 1)',
+                                color: 'rgba(255, 66, 251, 1)',
                             },
                         ]),
                     },

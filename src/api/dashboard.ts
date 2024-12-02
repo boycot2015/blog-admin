@@ -1,6 +1,6 @@
 import axios from 'axios';
 // import type { TableData } from '@arco-design/web-vue/es/table/interface';
-import type { HttpResponse } from '@/api/interceptor';
+// import type { HttpResponse } from '@/api/interceptor';
 import type { RouteLocationRaw } from 'vue-router';
 
 export type ContentData = {
@@ -23,6 +23,8 @@ export type ContentData = {
             comment: [];
         }
     ];
+    categoryCount?: number;
+    tagCount?: number;
     publicData?: {
         total?: number;
         data?: [
@@ -41,7 +43,7 @@ export type ContentData = {
             }
         ];
     };
-    total: 7362;
+    total: number;
 };
 export interface ContentDataRecord {
     title: string;
@@ -56,15 +58,13 @@ export function queryContentData() {
     return Promise.all([
         axios.get<ContentData>('/datas'),
         axios.get<ContentData>('/statics'),
-        axios.get<HttpResponse>('/category/get'),
-        axios.get<HttpResponse>('/tag/get'),
-    ]).then(([res, statics, cate, tag]: any) => {
+    ]).then(([res, statics]: any) => {
         return {
             data: {
                 ...statics.data,
                 ...res.data,
-                category: cate.data[1],
-                tag: tag.data[1],
+                category: statics.data?.categoryCount,
+                tag: statics.data?.tagCount,
             },
         };
     });
