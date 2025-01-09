@@ -53,6 +53,7 @@
                         style="width: 100%"
                         show-word-limit
                         allow-clear
+                        auto-size
                         :max-length="
                             (item.attrs && item.attrs.maxLength) || 500
                         "
@@ -139,10 +140,13 @@
                         /></a-space>
                     </a-button>
                     <slot name="actions"></slot>
-                    <a-button type="primary" @click="search">{{
-                        props.submitText || '搜索'
-                    }}</a-button>
-                    <a-button @click="reset">{{
+                    <a-button
+                        type="primary"
+                        :loading="loading"
+                        @click="search"
+                        >{{ props.submitText || '搜索' }}</a-button
+                    >
+                    <a-button :loading="loading" @click="reset">{{
                         props.resetText || '重置'
                     }}</a-button>
                 </a-space>
@@ -167,6 +171,7 @@
         defaultValues?: any;
         readOnly?: boolean;
         centered?: boolean;
+        loading?: boolean;
         formItems: FormItemProps[];
     };
     const emits = defineEmits(['search', 'reset', 'showMore']);
@@ -180,8 +185,8 @@
         formData[val.field] = val.valueType === 'time' ? [] : '';
         return val;
     });
-    watch(props, (val) => {
-        Object.assign(formData, val.defaultValues);
+    watch(props.defaultValues, (val) => {
+        Object.assign(formData, val);
     });
 
     props.formItems.map(async (el: any) => {

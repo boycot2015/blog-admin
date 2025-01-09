@@ -1,10 +1,10 @@
 export default {
-    path: 'https://arco.design/vue',
+    path: 'https://blog-api.boycot.top/api-docs',
     name: 'arco.design',
     meta: {
         hideInMenu: false,
         locale: 'navbar.docs',
-        icon: 'icon-link',
+        icon: 'icon-launch',
         requiresAuth: true,
         order: 8,
     },

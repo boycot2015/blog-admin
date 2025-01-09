@@ -7,8 +7,8 @@ let apiUrl = 'https://api.boycot.top/api';
 const env = import.meta.env.VITE_MODE || import.meta.env.MODE || 'production';
 switch (env) {
     case 'development':
-        // baseUrl = '/blog-api'; // url
-        baseUrl = 'http://localhost:3009'; // url
+        baseUrl = '/blog-api'; // url
+        // baseUrl = 'http://localhost:3009'; // url
         // baseUrl = 'http://doc.yunzhonghe.com/mock/422'; // mock url
         // apiUrl = 'http://localhost:8090/api';
         apiUrl = '/boycot-api'; // api url

@@ -6,116 +6,145 @@
         }"
     >
         <a-spin :loading="loading" style="width: 100%">
-            <ProForm
-                class="rule-form"
-                style="width: 100%"
-                submit-text="提交"
-                label-align="right"
-                layout="horizontal"
-                centered
-                :read-only="!!$route.query.readOnly"
-                :default-values="formData"
-                :form-items="formItems"
-                @search="onSubmit"
-            >
-                <template #banner>
-                    <div class="banner" style="width: 100%">
-                        <div class="banner-inner">
-                            <a-carousel
-                                v-model:current="current"
-                                class="carousel"
-                                auto-play
-                                indicator-type="line"
-                                style="width: 100%; height: 230px"
-                            >
-                                <a-carousel-item
-                                    v-for="(item, index) in formData.banner"
-                                    :key="item.url"
+            <div class="flex">
+                <a-tabs
+                    v-model="activeTab"
+                    style="height: calc(100vh - 200px)"
+                    :trigger="'click'"
+                    position="left"
+                    @tab-click="(key:string) => (activeTab = key)"
+                >
+                    <a-tab-pane key="base" title="基础配置"></a-tab-pane>
+                    <a-tab-pane key="index" title="首页配置"></a-tab-pane>
+                    <a-tab-pane key="theme">
+                        <template #title>主题配置</template>
+                    </a-tab-pane>
+                </a-tabs>
+                <ProForm
+                    class="rule-form"
+                    style="width: 100%"
+                    submit-text="提交"
+                    label-align="right"
+                    layout="horizontal"
+                    centered
+                    :loading="submitLoading"
+                    :read-only="!!$route.query.readOnly"
+                    :default-values="formData"
+                    :form-items="
+                        formItems.map((item) => ({
+                            ...item,
+                            hidden: item.key !== activeTab,
+                        }))
+                    "
+                    @search="onSubmit"
+                >
+                    <template #banner>
+                        <div class="banner" style="width: 100%">
+                            <div class="banner-inner">
+                                <a-carousel
+                                    v-model:current="current"
+                                    class="carousel"
+                                    auto-play
+                                    indicator-type="line"
+                                    style="width: 100%; height: 230px"
                                 >
-                                    <div
+                                    <a-carousel-item
+                                        v-for="(item, index) in formData.banner"
                                         :key="item.url"
-                                        class="carousel-item"
-                                        @click="
-                                            () => {
-                                                visible = true;
-                                                currentBanner = {
-                                                    ...item,
-                                                    index,
-                                                };
-                                            }
-                                        "
                                     >
-                                        <img
-                                            class="carousel-image"
-                                            style="
-                                                height: auto;
-                                                width: 100%;
-                                                cursor: pointer;
+                                        <div
+                                            :key="item.url"
+                                            class="carousel-item"
+                                            @click="
+                                                () => {
+                                                    visible = true;
+                                                    currentBanner = {
+                                                        ...item,
+                                                        index,
+                                                    };
+                                                }
                                             "
-                                            :src="item.url"
-                                        />
-                                    </div>
-                                </a-carousel-item>
-                            </a-carousel>
-                        </div>
-                        <div
-                            v-if="formData && formData.banner"
-                            class="tr"
-                            style="margin-top: 5px"
-                        >
-                            <a-button
-                                v-if="formData.banner.length < 10"
-                                type="primary"
-                                size="small"
-                                @click="
-                                    () => {
-                                        visible = true;
-                                        currentBanner = {};
-                                    }
-                                "
-                                >+新增</a-button
-                            >
-                            <a-popconfirm
-                                v-if="formData.banner.length > 3"
-                                content="确定删除?"
-                                @ok="
-                                    () => {
-                                        formData.banner = formData.banner.filter((el: any) => el.index !== current - 1).map((el: any, index: number) => ({ ...el, index }));
-                                        current = 1
-                                        currentBanner = {};
-                                    }
-                                "
+                                        >
+                                            <img
+                                                class="carousel-image"
+                                                style="
+                                                    height: auto;
+                                                    width: 100%;
+                                                    cursor: pointer;
+                                                "
+                                                :src="item.url"
+                                            />
+                                        </div>
+                                    </a-carousel-item>
+                                </a-carousel>
+                            </div>
+                            <div
+                                v-if="formData && formData.banner"
+                                class="tr"
+                                style="margin-top: 5px"
                             >
                                 <a-button
-                                    style="margin-left: 5px"
+                                    v-if="formData.banner.length < 10"
                                     type="primary"
-                                    status="danger"
                                     size="small"
-                                    >删除</a-button
+                                    @click="
+                                        () => {
+                                            visible = true;
+                                            currentBanner = {};
+                                        }
+                                    "
+                                    >+新增</a-button
                                 >
-                            </a-popconfirm>
+                                <a-popconfirm
+                                    v-if="formData.banner.length > 3"
+                                    content="确定删除?"
+                                    @ok="
+                                        () => {
+                                            formData.banner = formData.banner.filter((el: any) => el.index !== current - 1).map((el: any, index: number) => ({ ...el, index }));
+                                            current = 1
+                                            currentBanner = {};
+                                        }
+                                    "
+                                >
+                                    <a-button
+                                        style="margin-left: 5px"
+                                        type="primary"
+                                        status="danger"
+                                        size="small"
+                                        >删除</a-button
+                                    >
+                                </a-popconfirm>
+                            </div>
                         </div>
-                    </div>
-                </template>
-                <template #colorPicker>
-                    <a-form-item
-                        label="主题色："
-                        :wrapper-col-props="{ span: 4 }"
-                        :label-col-props="{ span: 6 }"
-                        ><pick-colors
-                            v-model:value="formData.color"
-                            format="rgb"
-                    /></a-form-item>
-                    <a-form-item
-                        label="背景色："
-                        :wrapper-col-props="{ span: 4 }"
-                        :label-col-props="{ span: 6 }"
-                        ><pick-colors
-                            v-model:value="formData.background"
-                            format="rgb"
-                    /></a-form-item>
-                </template>
-            </ProForm>
+                    </template>
+                    <template #colorPicker>
+                        <a-form-item
+                            label="主题色："
+                            :wrapper-col-props="{ span: 4 }"
+                            :label-col-props="{ span: 6 }"
+                            ><pick-colors
+                                v-model:value="formData.color"
+                                format="rgb"
+                        /></a-form-item>
+                        <a-form-item
+                            label="背景色："
+                            :wrapper-col-props="{ span: 4 }"
+                            :label-col-props="{ span: 6 }"
+                            ><pick-colors
+                                v-model:value="formData.background"
+                                format="rgb"
+                        /></a-form-item>
+                    </template>
+                    <template #links="{ item }">
+                        <a-form-item
+                            :wrapper-col-props="{ span: 21 }"
+                            :label-col-props="{ span: 3 }"
+                            style="text-align: left; margin-bottom: 0"
+                            >{{ item.attrs.placeholder }}</a-form-item
+                        >
+                    </template>
+                </ProForm>
+            </div>
             <a-modal
                 v-model:visible="visible"
                 title="配置轮播图"
@@ -180,24 +209,42 @@
 
     const visible = ref(false);
     const { loading, setLoading } = useLoading();
+    const { loading: submitLoading, setLoading: setSubmitLoading } =
+        useLoading();
     const formData = ref({}) as any;
     const current = ref(1);
     const currentBanner = ref({ index: 1 }) as any;
     const formRef = ref();
+    const activeTab = ref('base');
     const formItems = ref([
         {
+            key: 'index',
             slotName: 'banner',
             label: '轮播图',
             span: 24,
             labelColProps: {
                 span: 3,
             },
+            hidden: false,
             showColon: true,
             rules: [
                 { required: true, type: 'array', message: '轮播图不能为空' },
             ],
         },
         {
+            key: 'theme',
+            field: 'color',
+            label: '主题配置',
+            labelColProps: {
+                span: 3,
+            },
+            rules: [{ required: false, message: '主题色不能为空' }],
+            showColon: true,
+            span: 24,
+            slotName: 'colorPicker',
+        },
+        {
+            key: 'index',
             field: 'notice',
             label: '公告名称',
             span: 24,
@@ -213,6 +260,7 @@
             },
         },
         {
+            key: 'index',
             field: 'noticeUrl',
             label: '公告链接',
             span: 24,
@@ -228,6 +276,7 @@
             },
         },
         {
+            key: 'base',
             field: 'gitHub',
             label: 'gitHub',
             labelColProps: {
@@ -243,6 +292,7 @@
             valueType: 'text',
         },
         {
+            key: 'base',
             field: 'email',
             label: 'email',
             labelColProps: {
@@ -258,15 +308,44 @@
             valueType: 'text',
         },
         {
-            field: 'color',
-            label: '主题配置',
+            key: 'base',
+            field: 'links',
+            label: '友情链接',
             labelColProps: {
                 span: 3,
             },
-            rules: [{ required: false, message: '主题色不能为空' }],
+            rules: [
+                {
+                    required: false,
+                    message: 'links不能为空',
+                },
+            ],
             showColon: true,
             span: 24,
-            slotName: 'colorPicker',
+            style: 'text-align: left; margin-bottom: 0',
+            attrs: {
+                placeholder: '名称|链接|个性签名，多个,以逗号分隔',
+                showWordLimit: true,
+                maxLength: 500,
+            },
+            valueType: 'textarea',
+        },
+        {
+            key: 'base',
+            field: 'links',
+            labelColProps: {
+                span: 0,
+            },
+            wrapperColProps: {
+                span: 24,
+            },
+            span: 24,
+            attrs: {
+                placeholder:
+                    '多个以,分隔，例如: 名称|链接|个性签名,名称|链接|个性签名',
+                showWordLimit: true,
+            },
+            slotName: 'links',
         },
     ]);
     //   const route = useRoute();
@@ -285,6 +364,7 @@
             );
             formData.value.gitHub = JSON.parse(res.data.siteConfig).gitHub;
             formData.value.email = JSON.parse(res.data.siteConfig).email;
+            formData.value.links = JSON.parse(res.data.siteConfig).links;
             formData.value.color = JSON.parse(res.data.theme).color;
             formData.value.background = JSON.parse(res.data.theme).background;
             setLoading(false);
@@ -293,7 +373,20 @@
     fetchData();
     //   const router = useRouter();
     const onSubmit = (val: any) => {
+        // console.log(
+        //     val.links
+        //         .split(',')
+        //         .filter((el: any) => el)
+        //         .map((el: any) => ({
+        //             name: el.trim().split('|')[0],
+        //             url: el.trim().split('|')[1],
+        //             desc: el.split('|')[2],
+        //         }))
+        //         .filter((el: any) => el.name && el.url)
+        //         .flat()
+        // );
         if (formData.value.id) {
+            setSubmitLoading(true);
             updateSetting({
                 id: formData.value.id,
                 banner: JSON.stringify(val.banner),
@@ -308,11 +401,13 @@
                 siteConfig: JSON.stringify({
                     gitHub: val.gitHub,
                     email: val.email,
+                    links: val.links,
                 }),
             }).then((res: any) => {
                 Message[res.success ? 'success' : 'error'](
                     res.data || res.message
                 );
+                setSubmitLoading(false);
             });
         }
         // addArticle({ ...val }).then((res: any) => {
