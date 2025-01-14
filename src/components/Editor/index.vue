@@ -1,14 +1,53 @@
 <template>
-    <div
+    <!-- <div
         id="wangeditor"
         ref="editorElem"
         :class="(cls || '') + ' wangEditors'"
         style="text-align: left"
     >
+    </div> -->
+    <div :class="props.cls">
+        <MdEditor v-if="!props.disabled" v-model="text" />
+        <template v-else>
+            <MdPreview :editor-id="id" :model-value="text" />
+            <MdCatalog :editor-id="id" :scroll-element="scrollElement" />
+        </template>
     </div>
 </template>
 
 <script lang="ts" setup>
+    import { ref, watch } from 'vue';
+    import { MdEditor, MdPreview, MdCatalog } from 'md-editor-v3';
+    import 'md-editor-v3/lib/style.css';
+    import 'md-editor-v3/lib/preview.css';
+
+    interface Props {
+        modelValue: string;
+        cls?: string;
+        isBlind?: boolean;
+        uploadUrl?: string;
+        disabled?: boolean;
+    }
+    const emit = defineEmits(['update:modelValue']);
+    const props = defineProps<Props>();
+    const text = ref(props.modelValue || '');
+    const id = 'preview-only';
+    watch(props, (val) => {
+        text.value = val.modelValue;
+    });
+    watch(text, () => {
+        emit('update:modelValue', text.value);
+    });
+    const scrollElement = document.documentElement;
+</script>
+
+<style lang="less">
+    svg.md-editor-icon {
+        width: 22px !important;
+        height: 22px !important;
+    }
+</style>
+<!-- <script lang="ts" setup>
     import E from 'wangeditor';
     import 'prismjs/themes/prism.min.css';
     import { onMounted, ref, watch } from 'vue';
@@ -28,8 +67,7 @@
     const replaceStyle = (str: string) => {
         return str
             .replace('class="JavaScript"', 'class="language-js"')
-            .replace('class="Bash"', 'class="language-js"')
-            .replace('class="JavaScript"', 'class="language-js"');
+            .replace('class="Bash"', 'class="language-bash"');
     };
     watch(props, (val: any) => {
         editor.txt.html(replaceStyle(val.content));
@@ -86,9 +124,9 @@
             editor.disable();
         }
     });
-</script>
+</script> -->
 
-<style lang="less" scoped rel="stylesheet/less">
+<!-- <style lang="less" scoped rel="stylesheet/less">
     :deep(.w-e-text),
     #wangeditor {
         height: 100% !important;
@@ -112,4 +150,4 @@
         height: 85% !important;
         min-height: 85% !important;
     }
-</style>
+</style> -->

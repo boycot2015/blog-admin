@@ -3,7 +3,7 @@ import { AppRouteRecordRaw } from '../types';
 
 const recruit: AppRouteRecordRaw = {
     path: '/recruit',
-    name: 'recruit',
+    name: 'recruitManage',
     redirect: '/recruit/index',
     component: DEFAULT_LAYOUT,
     meta: {

@@ -107,13 +107,10 @@
                     ></a-range-picker>
                     <Editor
                         v-if="item.valueType === 'rich'"
+                        v-model="formData[item.field]"
                         :disabled="readOnly || item.attrs?.disabled"
-                        style="height: 100%; width: 100%"
+                        style="height: auto; width: 100%; overflow-y: auto"
                         :style="item.attrs && item.attrs.style"
-                        :content="formData[item.field]"
-                        :catch-data="(val: any) => {
-                formData[item.field] = val
-            }"
                     ></Editor>
                     <slot
                         v-if="item.slotName"
@@ -227,6 +224,7 @@
         }
     });
 
+    // eslint-disable-next-line vue/no-dupe-keys
     const showMore = ref(false);
     const onShowMore = () => {
         showMore.value = !showMore.value;

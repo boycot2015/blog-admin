@@ -3,7 +3,7 @@ import { AppRouteRecordRaw } from '../types';
 
 const DASHBOARD: AppRouteRecordRaw = {
     path: '/',
-    name: 'Home',
+    name: 'HomePage',
     redirect: '/home',
     component: DEFAULT_LAYOUT,
     meta: {

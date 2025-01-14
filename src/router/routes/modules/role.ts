@@ -3,7 +3,7 @@ import { AppRouteRecordRaw } from '../types';
 
 const role: AppRouteRecordRaw = {
     path: '/role',
-    name: 'role',
+    name: 'roleManage',
     redirect: '/role/index',
     component: DEFAULT_LAYOUT,
     meta: {

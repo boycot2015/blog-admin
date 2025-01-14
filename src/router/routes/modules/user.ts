@@ -3,7 +3,7 @@ import { AppRouteRecordRaw } from '../types';
 
 const user: AppRouteRecordRaw = {
     path: '/user',
-    name: 'user',
+    name: 'userManage',
     redirect: '/user/index',
     component: DEFAULT_LAYOUT,
     meta: {

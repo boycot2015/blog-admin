@@ -3,7 +3,7 @@ import { AppRouteRecordRaw } from '../types';
 
 const setting: AppRouteRecordRaw = {
     path: '/setting',
-    name: 'setting',
+    name: 'settingManage',
     redirect: '/setting/index',
     component: DEFAULT_LAYOUT,
     meta: {

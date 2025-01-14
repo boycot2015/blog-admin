@@ -70,7 +70,7 @@
                 </a-list>
                 <a-table
                     v-else
-                    v-model:selectedKeys="selectedKeys"
+                    v-model:selected-keys="selectedKeys"
                     :row-key="props.rowKey"
                     :data="renderList"
                     :pagination="false"
@@ -166,6 +166,7 @@
     const footer = computed(() => appStore.footer);
     const navbar = computed(() => appStore.navbar);
     const tabBar = computed(() => appStore.tabBar);
+    // eslint-disable-next-line vue/no-dupe-keys
     const checkAll = ref(false);
     const JsxComponent = (props: any) => {
         return props.render(props);
@@ -196,6 +197,7 @@
     const formData = ref<any>({});
     const isMore = ref<boolean>(false);
     const renderList = ref<any[]>();
+    // eslint-disable-next-line vue/no-dupe-keys
     const selectedKeys = ref<BaseType[]>();
     const pageData = ref<Pagination & PaginationProps>({
         current: 1,

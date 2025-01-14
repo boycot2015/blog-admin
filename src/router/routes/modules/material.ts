@@ -3,7 +3,7 @@ import { AppRouteRecordRaw } from '../types';
 
 const atlas: AppRouteRecordRaw = {
     path: '/material',
-    name: 'Material',
+    name: 'MaterialManage',
     redirect: '/material/index',
     component: DEFAULT_LAYOUT,
     meta: {
