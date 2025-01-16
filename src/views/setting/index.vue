@@ -12,7 +12,7 @@
                     style="height: calc(100vh - 200px)"
                     :trigger="'click'"
                     position="left"
-                    @tab-click="(key:string) => (activeTab = key)"
+                    @tab-click="(key: string | number, ev: Event) => (activeTab = key)"
                 >
                     <a-tab-pane key="base" title="基础配置"></a-tab-pane>
                     <a-tab-pane key="index" title="首页配置"></a-tab-pane>
@@ -215,7 +215,7 @@
     const current = ref(1);
     const currentBanner = ref({ index: 1 }) as any;
     const formRef = ref();
-    const activeTab = ref('base');
+    const activeTab = ref<string | number>('base');
     const formItems = ref([
         {
             key: 'index',
